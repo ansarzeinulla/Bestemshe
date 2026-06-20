@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <unordered_map>
+#include <functional>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -86,6 +87,11 @@ public:
     inline bool get_bit(uint64_t index) const {
         return (data[index / 8] >> (index % 8)) & 1;
     }
+};
+
+struct LayerFiles {
+    MmapBitArray* win;
+    MmapBitArray* draw;
 };
 
 // ========================================================================
@@ -222,116 +228,142 @@ void SolveLayer(uint8_t M) {
     std::cout << "Solving Layer " << (int)M << " (" << num_states << " states).\n";
 
     std::string layer_file = "layers/layer" + std::to_string(M) + ".bin";
-    std::string known_file = "layers_known/layer" + std::to_string(M) + "_known.bin";
+    std::string draw_file = "layers/layer" + std::to_string(M) + "_draw.bin";
 
-    RamBitArray current_layer(num_states, false);
-    RamBitArray known_mask(num_states, false);
+    // Track Wins and Losses explicitly during iteration to separate them from Unknowns (unresolved)
+    RamBitArray current_win(num_states, false);
+    RamBitArray current_loss(num_states, false);
 
-    // Map higher layers dynamically using mmap (Zero RAM consumption footprint)
-    std::unordered_map<uint8_t, MmapBitArray*> higher_layers;
+    // Map higher layers dynamically using mmap
+    std::unordered_map<uint8_t, LayerFiles> higher_layers;
     for (uint8_t hM = M + 2; hM <= 48; hM += 2) {
         std::string hFile = "layers/layer" + std::to_string(hM) + ".bin";
-        higher_layers[hM] = new MmapBitArray(hFile, GetLayerSize(hM));
+        std::string dFile = "layers/layer" + std::to_string(hM) + "_draw.bin";
+        higher_layers[hM] = {
+            new MmapBitArray(hFile, GetLayerSize(hM)),
+            new MmapBitArray(dFile, GetLayerSize(hM))
+        };
     }
 
     bool changed = true;
     int pass = 1;
-
+    std::cout << "  Running value iteration (retrograde) with draw tracking...\n";
     while (changed) {
         bool local_changed = false;
-        std::cout << "  Starting Value Iteration Pass " << pass << "...\n";
+        RamBitArray next_win = current_win;
+        RamBitArray next_loss = current_loss;
 
-        // Multi-Threading the Retrograde search
+        std::cout << "  Starting Value Iteration Pass " << pass << "...\n";
+        
         #pragma omp parallel for schedule(dynamic, 8192) reduction(|:local_changed)
         for (uint64_t i = 0; i < num_states; ++i) {
-            if (known_mask.get_bit(i)) continue;
+            if (current_win.get_bit(i) || current_loss.get_bit(i)) continue;
 
             State s = UnindexState(i, M);
             std::vector<MoveResult> moves = GenerateMoves(s);
 
+            // If no moves are possible (Bayan), it is a Loss for the current player
+            if (moves.empty()) {
+                next_loss.set_bit_atomic(i, true);
+                local_changed = true;
+                continue;
+            }
+
             bool found_winning_move = false;
-            bool all_moves_known_as_loss = true;
+            bool all_moves_resolved = true;
+            bool all_moves_win_for_next = true;
 
             for (const auto& move : moves) {
-                if (move.empties_opponent) {
-                    found_winning_move = true;
-                    break;
-                }
-                if (move.next_s.K_opp >= 26) {
+                // Instant wins
+                if (move.empties_opponent || move.next_s.K_opp >= 26) {
                     found_winning_move = true;
                     break;
                 }
 
-                bool is_next_known = false;
-                bool is_next_win_for_opp = false; // 1 = Win for opponent (player to move next)
+                bool child_win = false;
+                bool child_loss = false;
+                bool child_draw = false;
+                bool child_resolved = false;
 
                 if (move.next_s.M > M) {
-                    is_next_known = true;
+                    auto& child = higher_layers.at(move.next_s.M);
                     uint64_t next_idx = IndexState(move.next_s);
-                    is_next_win_for_opp = higher_layers[move.next_s.M]->get_bit(next_idx);
+                    child_resolved = true;
+                    child_draw = child.draw->get_bit(next_idx);
+                    if (!child_draw) {
+                        child_win = child.win->get_bit(next_idx);
+                        child_loss = !child_win; // Higher layers have no unknown states
+                    }
                 } else {
                     uint64_t next_idx = IndexState(move.next_s);
-                    is_next_known = known_mask.get_bit(next_idx);
-                    if (is_next_known) {
-                        is_next_win_for_opp = current_layer.get_bit(next_idx);
-                    }
+                    child_win = current_win.get_bit(next_idx);
+                    child_loss = current_loss.get_bit(next_idx);
+                    child_resolved = child_win || child_loss;
                 }
 
-                if (is_next_known) {
-                    if (!is_next_win_for_opp) {
-                        // Found a move where the opponent loses! So we win!
+                if (child_resolved) {
+                    if (child_loss) {
+                        // The opponent has a proven loss from this state -> This is a Win for us!
                         found_winning_move = true;
                         break;
                     }
+                    if (child_draw) {
+                        // Opponent can secure a Draw -> We cannot force a Loss on them from this branch
+                        all_moves_win_for_next = false;
+                    }
                 } else {
-                    all_moves_known_as_loss = false;
+                    // Child is unresolved (Unknown) -> We cannot prove a Loss or Win yet
+                    all_moves_resolved = false;
+                    all_moves_win_for_next = false;
                 }
             }
 
             if (found_winning_move) {
-                current_layer.set_bit_atomic(i, true);  
-                known_mask.set_bit_atomic(i, true);    
+                next_win.set_bit_atomic(i, true);
                 local_changed = true;
-            } else if (all_moves_known_as_loss) {
-                current_layer.set_bit_atomic(i, false); 
-                known_mask.set_bit_atomic(i, true);     
+            } else if (all_moves_resolved && all_moves_win_for_next) {
+                // All possible choices are proven Wins for the opponent -> This is a Loss for us
+                next_loss.set_bit_atomic(i, true);
                 local_changed = true;
             }
         }
+
+        current_win = next_win;
+        current_loss = next_loss;
         changed = local_changed;
         pass++;
     }
 
-    // ========================================================================
-    // 6. Best Practices: Exporting Unknown States / Infinite Loops
-    // ========================================================================
-    std::cout << "  Writing unresolved states to error.txt (if any)...\n";
-    std::ofstream err_file("error.txt", std::ios::app);
-    uint64_t unknown_count = 0;
-    
+    // After convergence, any state that is neither a Win nor a Loss is a Draw loop
+    std::cout << "  Finalizing draw states to " << draw_file << "...\n";
+    RamBitArray current_draw(num_states, false);
+    uint64_t draw_count = 0;
+
+    #pragma omp parallel for reduction(+:draw_count)
     for (uint64_t i = 0; i < num_states; ++i) {
-        if (!known_mask.get_bit(i)) {
-            err_file << "Layer " << (int)M << " Index " << i << " unresolved (infinite loop / draw logic).\n";
-            unknown_count++;
+        if (!current_win.get_bit(i) && !current_loss.get_bit(i)) {
+            current_draw.set_bit_atomic(i, true);
+            draw_count++;
         }
     }
-    err_file.close();
 
-    if (unknown_count > 0) {
-        std::cerr << "  WARNING: " << unknown_count << " states left unresolved! Appended to error.txt.\n";
-        // NOTE: They naturally stay 0 (Loss) in current_layer per the draw logic rule.
+    if (draw_count > 0) {
+        std::cout << "  INFO: " << draw_count << " states resolved as Draws (repetition loops).\n";
     }
 
-    // Finalize and clean memory
-    current_layer.save_to_file(layer_file);
-    for (auto& pair : higher_layers) delete pair.second;
+    current_win.save_to_file(layer_file);
+    current_draw.save_to_file(draw_file);
     
-    std::cout << "Layer " << (int)M << " completely saved to " << layer_file << "\n";
-    fs::remove(known_file); // Ensure tmp is cleared
+    for (auto& pair : higher_layers) {
+        delete pair.second.win;
+        delete pair.second.draw;
+    }
+
+    std::cout << "Layer " << (int)M << " saved to " << layer_file << " and " << draw_file << "\n";
 }
 
 // ========================================================================
-// 7. CLI & Validation entry
+// 6. CLI & Validation entry
 // ========================================================================
 int main(int argc, char* argv[]) {
     if (argc < 3 || std::string(argv[1]) != "--level") {
@@ -348,14 +380,17 @@ int main(int argc, char* argv[]) {
 
     InitCombinatorics();
     fs::create_directories("layers");
-    fs::create_directories("layers_known");
 
     // File Validation: Ensure ALL upper layers exist
     for (uint8_t hM = M + 2; hM <= 48; hM += 2) {
         std::string expected = "layers/layer" + std::to_string(hM) + ".bin";
+        std::string expected_draw = "layers/layer" + std::to_string(hM) + "_draw.bin";
         if (!fs::exists(expected)) {
             std::cerr << "FATAL: Cannot solve layer " << (int)M << ". Missing dependency: " << expected << "\n";
-            std::cerr << "Please run: ./solve --level " << (int)hM << " first.\n";
+            return 1;
+        }
+        if (!fs::exists(expected_draw)) {
+            std::cerr << "FATAL: Cannot solve layer " << (int)M << ". Missing dependency: " << expected_draw << "\n";
             return 1;
         }
     }
