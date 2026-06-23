@@ -2,8 +2,6 @@
 #include "Inference.h"
 #include <vector>
 #include <string>
-#include <queue>
-#include <mutex>
 #include <atomic>
 #include <cstddef>
 #include <omp.h>
@@ -27,37 +25,13 @@ private:
     // 00 UNKNOWN, 01 WIN, 10 LOSS, 11 DRAW
     std::vector<std::atomic<uint8_t>> state_values_2bit;
 
-    // Remaining dynamic moves that stay within layer M
-    std::vector<uint8_t> dependency_counters; 
-
-    // Tracks if a state has a transition that results in a static draw in a higher layer
-    std::vector<bool> can_force_static_draw;
-
-    // Thread-safe lock-free propagation queues
-    std::queue<uint64_t> propagation_queue;
-    std::mutex queue_mutex;
-
 public:
-    RetrogradeSolver(uint8_t target_M, InferenceEngine* db) 
+    RetrogradeSolver(uint8_t target_M, InferenceEngine* db)
         : layer_M(target_M), inference_engine(db), state_values_2bit((GetLayerSize(target_M) + 3) / 4) {
         num_states = GetLayerSize(layer_M);
         for (auto& byte : state_values_2bit) {
             byte.store(0, std::memory_order_relaxed);
         }
-        dependency_counters.resize(num_states, 0);
-        can_force_static_draw.resize(num_states, false);
-    }
-
-    // Main pipeline execution
-    void solve_layer() {
-        std::cout << "[INFO] Initializing Dependency Graph..." << std::endl;
-        initialize_dependency_graph();
-
-        std::cout << "[INFO] Executing Queue Propagation (Linear-Time Cycle Resolution)..." << std::endl;
-        propagate_proven_values();
-
-        std::cout << "[INFO] Resolving Leftover States as Loop-Based Draws..." << std::endl;
-        finalize_draws();
     }
 
     void solve_layer_lock_free();
@@ -68,17 +42,9 @@ public:
     void write_raw_monoliths(const std::string& out_dir);
 
 private:
-    // Phase 0 & Graph Init: Computes initial out-degrees and pre-resolves capturing moves
-    void initialize_dependency_graph();
-
-    // Core solver loop: Cascades proved values back to parents
-    void propagate_proven_values();
-
-    // Resolves circular dependencies into Draws
+    // Resolves any state still UNKNOWN after value-iteration convergence into a DRAW
+    // (those states form inescapable, capture-free cycles within layer M).
     void finalize_draws();
-
-    // Reverse Move Generation: Finds all predecessor states (parents) in Layer M
-    std::vector<uint64_t> generate_predecessors(uint64_t index);
 
     // Helpers from your original implementation
     uint64_t GetLayerSize(uint8_t M);

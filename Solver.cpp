@@ -10,54 +10,17 @@
 
 namespace Bestemshe {
 
-static inline void NextState(SolverState& s) {
-    int i = 9;
-    while (i >= 0 && s.board[i] == 0) {
-        --i;
+// Advance a full SolverState to the next global index in layer M (R = 50 - M on board).
+// Uses the shared StateIndex::AdvanceBoard odometer and handles the K-dimension carry when
+// the board composition (I_B) wraps. Verified against UnindexState by `--selftest` before
+// it is relied on in the hot loop.
+static inline void advance_solver_state(SolverState& s, int R) {
+    if (!StateIndex::AdvanceBoard(s.board)) {
+        s.K_self += 2;
+        s.K_opp  -= 2;
+        for (int p = 0; p < 9; ++p) s.board[p] = 0;
+        s.board[9] = static_cast<uint8_t>(R);
     }
-    if (i < 0) {
-        return;
-    }
-    --s.board[i];
-    if (i + 1 < 10) {
-        ++s.board[i + 1];
-    }
-}
-
-// Verifies if a starting board s sowed from move `m` lands in target_s (flipped)
-inline bool IsPredecessor(const SolverState& pre_s, int move, const SolverState& target_s) {
-    State s;
-    s.M = pre_s.K_self + pre_s.K_opp;
-    s.K_self = pre_s.K_self;
-    s.K_opp = pre_s.K_opp;
-    for (int p = 0; p < 10; ++p) s.board[p] = pre_s.board[p];
-
-    State flipped_out;
-    bool empties;
-    ExecuteMoveAndFlip(s, move, flipped_out, empties);
-
-    if (flipped_out.K_self != target_s.K_self || flipped_out.K_opp != target_s.K_opp) {
-        return false;
-    }
-    for (int p = 0; p < 10; ++p) {
-        if (flipped_out.board[p] != target_s.board[p]) return false;
-    }
-    return true;
-}
-
-std::vector<uint64_t> RetrogradeSolver::generate_predecessors(uint64_t target_idx) {
-    std::vector<uint64_t> parents;
-    SolverState target_s = UnindexState(target_idx, layer_M);
-
-    // To transition to target_s, P1 must have had a state where they had >= 1 stone in a pit
-    // and sowed them. We generate candidate source states by running inverse-sowing heuristic.
-    // Given Mancala rules, a board configuration change only alters pits along the sowing path.
-    // Thus, we loop through all indices in the current layer in parallel or construct candidate boards.
-    // For extreme performance, we can search candidates within Hamming distance or simply sweep valid indexes.
-    
-    // For high speed, check the 5 possible move origins and verify backward logic.
-    // To keep implementation robust and clean, we scan states.
-    return parents; 
 }
 
 // Implement ExecuteMove helper for Solver
@@ -91,12 +54,6 @@ SolverState RetrogradeSolver::UnindexState(uint64_t index, uint8_t M) {
     return s;
 }
 
-void RetrogradeSolver::initialize_dependency_graph() {
-    // Minimal compatibility implementation.
-    // The current lock-free solver path does not rely on the legacy dependency graph.
-    // Keep the hook so the existing solve_layer() entry point links and runs.
-}
-
 void RetrogradeSolver::solve_layer_lock_free() {
     auto t_init_start = std::chrono::high_resolution_clock::now();
     auto t_init_end = std::chrono::high_resolution_clock::now();
@@ -116,7 +73,11 @@ void RetrogradeSolver::solve_layer_lock_free() {
         
         std::atomic<uint64_t> states_proven_this_iter{0};
 
-        // OpenMP dynamic scheduling chunked by 8192 states per thread
+        // Static, contiguous per-thread chunking (NOT dynamic): the board odometer
+        // requires each thread to walk a contiguous index run. We decode the board once at
+        // `begin` via UnindexState, then advance in O(1) amortized per state with
+        // advance_solver_state, instead of a full combinadic decode on every state.
+        const int R = 50 - static_cast<int>(layer_M);
         #pragma omp parallel
         {
             uint64_t threads = static_cast<uint64_t>(omp_get_num_threads());
@@ -126,51 +87,51 @@ void RetrogradeSolver::solve_layer_lock_free() {
             uint64_t end = std::min(num_states, begin + chunk);
 
             if (begin < end) {
+                SolverState s = UnindexState(begin, layer_M);
                 for (uint64_t i = begin; i < end; ++i) {
                     uint8_t current_val = static_cast<uint8_t>(ReadState2Bit(i));
-                    if (current_val != static_cast<uint8_t>(GameValue::UNKNOWN)) {
-                        continue;
-                    }
-                    
-                    SolverState s = UnindexState(i, layer_M);
-                    bool all_losses_for_me = true;
-                    bool proved_win = false;
+                    if (current_val == static_cast<uint8_t>(GameValue::UNKNOWN)) {
+                        bool all_losses_for_me = true;
+                        bool proved_win = false;
 
-                    for (int move = 0; move < 5; ++move) {
-                        if (s.board[move] == 0) continue;
+                        for (int move = 0; move < 5; ++move) {
+                            if (s.board[move] == 0) continue;
 
-                        SolverState next_s;
-                        bool empties_opponent;
-                        bool is_capture = execute_and_flip(s, move, next_s, empties_opponent);
+                            SolverState next_s;
+                            bool empties_opponent;
+                            bool is_capture = execute_and_flip(s, move, next_s, empties_opponent);
 
-                        GameValue target_val;
+                            GameValue target_val;
 
-                        if (empties_opponent || next_s.K_opp >= 26) {
-                            target_val = GameValue::LOSS;
-                        } else if (is_capture) {
-                            uint64_t target_idx = IndexState(next_s);
-                            target_val = inference_engine->query_state(next_s.K_self + next_s.K_opp, next_s.K_opp, target_idx);
-                        } else {
-                            uint64_t target_idx = IndexState(next_s);
-                            target_val = ReadState2Bit(target_idx);
+                            if (empties_opponent || next_s.K_opp >= 26) {
+                                target_val = GameValue::LOSS;
+                            } else if (is_capture) {
+                                uint64_t target_idx = IndexState(next_s);
+                                target_val = inference_engine->query_state(next_s.K_self + next_s.K_opp, next_s.K_opp, target_idx);
+                            } else {
+                                uint64_t target_idx = IndexState(next_s);
+                                target_val = ReadState2Bit(target_idx);
+                            }
+
+                            if (target_val == GameValue::LOSS) {
+                                proved_win = true;
+                                break;
+                            }
+                            if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN) {
+                                all_losses_for_me = false;
+                            }
                         }
 
-                        if (target_val == GameValue::LOSS) {
-                            proved_win = true;
-                            break;
-                        }
-                        if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN) {
-                            all_losses_for_me = false;
+                        if (proved_win) {
+                            WriteState2Bit(i, GameValue::WIN);
+                            states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
+                        } else if (all_losses_for_me) {
+                            WriteState2Bit(i, GameValue::LOSS);
+                            states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
                         }
                     }
 
-                    if (proved_win) {
-                        WriteState2Bit(i, GameValue::WIN);
-                        states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
-                    } else if (all_losses_for_me) {
-                        WriteState2Bit(i, GameValue::LOSS);
-                        states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
-                    }
+                    if (i + 1 < end) advance_solver_state(s, R);
                 }
             }
         }
@@ -229,6 +190,7 @@ void RetrogradeSolver::verify_layer_consistency() {
         verification_iteration++;
         std::atomic<uint64_t> states_proven{0};
 
+        const int R = 50 - static_cast<int>(layer_M);
         #pragma omp parallel
         {
             uint64_t threads = static_cast<uint64_t>(omp_get_num_threads());
@@ -238,55 +200,54 @@ void RetrogradeSolver::verify_layer_consistency() {
             uint64_t end = std::min(total_states, begin + chunk);
 
             if (begin < end) {
+                SolverState s = UnindexState(begin, layer_M);
                 for (uint64_t i = begin; i < end; ++i) {
-                    GameValue current_val = read_local(i);
-                    if (current_val != GameValue::UNKNOWN) {
-                        continue;
-                    }
+                    if (read_local(i) == GameValue::UNKNOWN) {
+                        bool all_losses_for_me = true;
+                        bool proved_win = false;
+                        bool has_moves = false;
 
-                    SolverState s = UnindexState(i, layer_M);
-                    bool all_losses_for_me = true;
-                    bool proved_win = false;
-                    bool has_moves = false;
+                        for (int move = 0; move < 5; ++move) {
+                            if (s.board[move] == 0) continue;
+                            has_moves = true;
 
-                    for (int move = 0; move < 5; ++move) {
-                        if (s.board[move] == 0) continue;
-                        has_moves = true;
+                            SolverState next_s;
+                            bool empties_opponent;
+                            bool is_capture = execute_and_flip(s, move, next_s, empties_opponent);
 
-                        SolverState next_s;
-                        bool empties_opponent;
-                        bool is_capture = execute_and_flip(s, move, next_s, empties_opponent);
+                            GameValue target_val;
+                            if (empties_opponent || next_s.K_opp >= 26) {
+                                target_val = GameValue::LOSS;
+                            } else if (is_capture) {
+                                uint64_t target_idx = IndexState(next_s);
+                                target_val = inference_engine->query_state(next_s.K_self + next_s.K_opp, next_s.K_opp, target_idx);
+                            } else {
+                                uint64_t target_idx = IndexState(next_s);
+                                target_val = read_local(target_idx);
+                            }
 
-                        GameValue target_val;
-                        if (empties_opponent || next_s.K_opp >= 26) {
-                            target_val = GameValue::LOSS;
-                        } else if (is_capture) {
-                            uint64_t target_idx = IndexState(next_s);
-                            target_val = inference_engine->query_state(next_s.K_self + next_s.K_opp, next_s.K_opp, target_idx);
-                        } else {
-                            uint64_t target_idx = IndexState(next_s);
-                            target_val = read_local(target_idx);
+                            if (target_val == GameValue::LOSS) {
+                                proved_win = true;
+                                break;
+                            }
+                            if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN) {
+                                all_losses_for_me = false;
+                            }
                         }
 
-                        if (target_val == GameValue::LOSS) {
-                            proved_win = true;
-                            break;
-                        }
-                        if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN) {
-                            all_losses_for_me = false;
+                        if (!has_moves) {
+                            write_local(i, GameValue::LOSS);
+                            states_proven.fetch_add(1, std::memory_order_acq_rel);
+                        } else if (proved_win) {
+                            write_local(i, GameValue::WIN);
+                            states_proven.fetch_add(1, std::memory_order_acq_rel);
+                        } else if (all_losses_for_me) {
+                            write_local(i, GameValue::LOSS);
+                            states_proven.fetch_add(1, std::memory_order_acq_rel);
                         }
                     }
 
-                    if (!has_moves) {
-                        write_local(i, GameValue::LOSS);
-                        states_proven.fetch_add(1, std::memory_order_acq_rel);
-                    } else if (proved_win) {
-                        write_local(i, GameValue::WIN);
-                        states_proven.fetch_add(1, std::memory_order_acq_rel);
-                    } else if (all_losses_for_me) {
-                        write_local(i, GameValue::LOSS);
-                        states_proven.fetch_add(1, std::memory_order_acq_rel);
-                    }
+                    if (i + 1 < end) advance_solver_state(s, R);
                 }
             }
         }
@@ -472,54 +433,6 @@ bool RetrogradeSolver::load_layer_from_monoliths(const std::string& out_dir) {
         }
     }
     return true;
-}
-
-void RetrogradeSolver::propagate_proven_values() {
-    uint64_t processed = 0;
-
-    while (true) {
-        uint64_t current_state_idx;
-        {
-            std::lock_guard<std::mutex> lock(queue_mutex);
-            if (propagation_queue.empty()) break;
-            current_state_idx = propagation_queue.front();
-            propagation_queue.pop();
-        }
-
-        uint8_t value = static_cast<uint8_t>(ReadState2Bit(current_state_idx));
-        processed++;
-
-        if (processed % 1000000 == 0) {
-            std::cout << "  Proved and propagated " << processed << " states..." << std::endl;
-        }
-
-        std::vector<uint64_t> parents = generate_predecessors(current_state_idx);
-
-        for (uint64_t parent : parents) {
-            if (ReadState2Bit(parent) != GameValue::UNKNOWN) {
-                continue;
-            }
-
-            if (value == static_cast<uint8_t>(GameValue::LOSS)) {
-                WriteState2Bit(parent, GameValue::WIN);
-                std::lock_guard<std::mutex> lock(queue_mutex);
-                propagation_queue.push(parent);
-            } 
-            else if (value == static_cast<uint8_t>(GameValue::WIN)) {
-                dependency_counters[parent]--;
-
-                if (dependency_counters[parent] == 0) {
-                    if (can_force_static_draw[parent]) {
-                        WriteState2Bit(parent, GameValue::DRAW);
-                    } else {
-                        WriteState2Bit(parent, GameValue::LOSS);
-                        std::lock_guard<std::mutex> lock(queue_mutex);
-                        propagation_queue.push(parent);
-                    }
-                }
-            }
-        }
-    }
 }
 
 void RetrogradeSolver::finalize_draws() {
