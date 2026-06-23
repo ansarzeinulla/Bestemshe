@@ -90,9 +90,8 @@ void DecompressBlockRLE(const uint8_t* src, size_t src_size, uint8_t* dest, size
             if (!(byte & 0x80)) break;
             shift += 7;
         }
-        for (uint32_t c = 0; c < count && dest_idx < dest_size; ++c) {
+        for (uint32_t c = 0; c < count && dest_idx < dest_size; ++c)
             dest[dest_idx++] = value;
-        }
     }
 }
 
@@ -135,15 +134,10 @@ void Compressor::CompressMicroLayer(const std::string& input_raw_path,
         std::vector<uint8_t> block_tmp(bytes_per_block, 0); // zero padded
         std::copy(raw_data.begin() + start_idx, raw_data.begin() + start_idx + size, block_tmp.begin());
 
-        if (algorithm == "LZ4") {
-            compressed_blocks[b] = CompressBlockLZ4(block_tmp.data(), bytes_per_block);
-        } else if (algorithm == "RLE") {
-            compressed_blocks[b] = CompressBlockRLE(block_tmp.data(), bytes_per_block);
-        } else if (algorithm == "ZSTD") { // <-- ADD THIS BRANCH
-            compressed_blocks[b] = CompressBlockZSTD(block_tmp.data(), bytes_per_block);
-        } else {
-            compressed_blocks[b] = block_tmp; // Uncompressed fallback
-        }
+        if (algorithm == "LZ4") compressed_blocks[b] = CompressBlockLZ4(block_tmp.data(), bytes_per_block);
+        else if (algorithm == "RLE") compressed_blocks[b] = CompressBlockRLE(block_tmp.data(), bytes_per_block);
+        else if (algorithm == "ZSTD") compressed_blocks[b] = CompressBlockZSTD(block_tmp.data(), bytes_per_block);
+        else compressed_blocks[b] = block_tmp; // Uncompressed fallback
     }
 
     // Write structure: [Num Blocks] [Offsets Header Table] [Compressed Blocks...]
@@ -169,9 +163,8 @@ void Compressor::CompressMicroLayer(const std::string& input_raw_path,
     block_offsets[num_blocks] = static_cast<uint32_t>(current_offset);
 
     out.write(reinterpret_cast<const char*>(block_offsets.data()), block_offsets.size() * sizeof(uint32_t));
-    for (size_t b = 0; b < num_blocks; ++b) {
+    for (size_t b = 0; b < num_blocks; ++b)
         out.write(reinterpret_cast<const char*>(compressed_blocks[b].data()), compressed_blocks[b].size());
-    }
     out.close();
 }
 
@@ -180,9 +173,7 @@ std::vector<uint8_t> Compressor::DecompressMicroLayer(const std::string& input_b
                                                       size_t bytes_per_block,
                                                       size_t expected_raw_size) {
     std::ifstream in(input_bin_path, std::ios::binary);
-    if (!in.is_open()) {
-        return {};
-    }
+    if (!in.is_open()) return {};
     if (bytes_per_block == 0) {
         std::cerr << "ERROR: bytes_per_block == 0 for " << input_bin_path << "\n";
         return {};
@@ -232,13 +223,9 @@ std::vector<uint8_t> Compressor::DecompressMicroLayer(const std::string& input_b
         std::vector<uint8_t> block_raw(bytes_per_block, 0);
         const uint8_t* src = compressed_blob.data() + start;
         bool ok = true;
-        if (algorithm == "LZ4") {
-            ok = DecompressBlockLZ4(src, comp_size, block_raw.data(), block_raw.size());
-        } else if (algorithm == "RLE") {
-            DecompressBlockRLE(src, comp_size, block_raw.data(), block_raw.size());
-        } else {
-            ok = DecompressBlockZSTD(src, comp_size, block_raw.data(), block_raw.size());
-        }
+        if (algorithm == "LZ4") ok = DecompressBlockLZ4(src, comp_size, block_raw.data(), block_raw.size());
+        else if (algorithm == "RLE") DecompressBlockRLE(src, comp_size, block_raw.data(), block_raw.size());
+        else ok = DecompressBlockZSTD(src, comp_size, block_raw.data(), block_raw.size());
         if (!ok) {
             std::cerr << "ERROR: block " << b << " decompression failed in " << input_bin_path << "\n";
             return {};
@@ -246,9 +233,7 @@ std::vector<uint8_t> Compressor::DecompressMicroLayer(const std::string& input_b
         raw_out.insert(raw_out.end(), block_raw.begin(), block_raw.end());
     }
 
-    if (raw_out.size() > expected_raw_size) {
-        raw_out.resize(expected_raw_size);
-    }
+    if (raw_out.size() > expected_raw_size) raw_out.resize(expected_raw_size);
     return raw_out;
 }
 

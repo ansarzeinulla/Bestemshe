@@ -29,9 +29,7 @@ public:
     RetrogradeSolver(uint8_t target_M, InferenceEngine* db)
         : layer_M(target_M), inference_engine(db), state_values_2bit((GetLayerSize(target_M) + 3) / 4) {
         num_states = GetLayerSize(layer_M);
-        for (auto& byte : state_values_2bit) {
-            byte.store(0, std::memory_order_relaxed);
-        }
+        for (auto& byte : state_values_2bit) byte.store(0, std::memory_order_relaxed);
     }
 
     void solve_layer_lock_free();

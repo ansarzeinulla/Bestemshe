@@ -41,22 +41,17 @@ void ExecuteCommand(const std::string& cmd) {
 
 void AppendToManifest(const std::string& manifest_path, uint16_t k1, uint16_t k2, const std::string& type, const std::string& algo, const std::string& block_size) {
     std::ofstream out(manifest_path, std::ios::app);
-    if (out.is_open()) {
+    if (out.is_open())
         out << k1 << " " << k2 << " " << type << " " << algo << " " << block_size << "\n";
-    }
 }
 
 std::vector<uint8_t> ReadFileBytes(const std::string& path) {
     std::ifstream in(path, std::ios::binary | std::ios::ate);
-    if (!in.is_open()) {
-        return {};
-    }
+    if (!in.is_open()) return {};
     std::streamsize size = in.tellg();
     in.seekg(0, std::ios::beg);
     std::vector<uint8_t> bytes(static_cast<size_t>(size));
-    if (size > 0) {
-        in.read(reinterpret_cast<char*>(bytes.data()), size);
-    }
+    if (size > 0) in.read(reinterpret_cast<char*>(bytes.data()), size);
     return bytes;
 }
 
@@ -65,9 +60,7 @@ bool VerifyRoundTrip(const std::string& raw_path,
                      const std::string& algorithm,
                      size_t block_size_bits) {
     std::vector<uint8_t> raw = ReadFileBytes(raw_path);
-    if (raw.empty() && !fs::exists(raw_path)) {
-        return false;
-    }
+    if (raw.empty() && !fs::exists(raw_path)) return false;
     std::string tmp_raw = compressed_path + ".verify.tmp";
     std::string cmd = "./bestemshe --decompress " + compressed_path + " " + tmp_raw + " " + algorithm + " " +
                       std::to_string(block_size_bits) + " " + std::to_string(raw.size());

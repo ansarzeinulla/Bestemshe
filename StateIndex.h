@@ -71,9 +71,7 @@ public:
         int current_p = 0;
         for (int i = 8; i >= 0; --i) {
             int p = i;
-            while (nCr(p + 1, i + 1) <= I_B) {
-                p++;
-            }
+            while (nCr(p + 1, i + 1) <= I_B) p++;
             I_B -= nCr(p, i + 1);
             if (i == 8) s.board[9] = R + 8 - p;
             else s.board[i + 1] = current_p - p - 1;
