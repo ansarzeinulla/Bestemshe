@@ -65,6 +65,41 @@ std::vector<uint8_t> CompressBlockZSTD(const uint8_t* src, size_t src_size) {
     return comp_buf;
 }
 
+void DecompressBlockLZ4(const uint8_t* src, size_t src_size, uint8_t* dest, size_t dest_size) {
+    LZ4_decompress_safe(
+        reinterpret_cast<const char*>(src),
+        reinterpret_cast<char*>(dest),
+        static_cast<int>(src_size),
+        static_cast<int>(dest_size)
+    );
+}
+
+void DecompressBlockRLE(const uint8_t* src, size_t src_size, uint8_t* dest, size_t dest_size) {
+    size_t src_idx = 0;
+    size_t dest_idx = 0;
+    while (src_idx < src_size && dest_idx < dest_size) {
+        uint8_t value = src[src_idx++];
+        uint32_t count = 0;
+        uint8_t shift = 0;
+        while (src_idx < src_size) {
+            uint8_t byte = src[src_idx++];
+            count |= static_cast<uint32_t>(byte & 0x7F) << shift;
+            if (!(byte & 0x80)) break;
+            shift += 7;
+        }
+        for (uint32_t c = 0; c < count && dest_idx < dest_size; ++c) {
+            dest[dest_idx++] = value;
+        }
+    }
+}
+
+void DecompressBlockZSTD(const uint8_t* src, size_t src_size, uint8_t* dest, size_t dest_size) {
+    size_t d_size = ZSTD_decompress(dest, dest_size, src, src_size);
+    if (ZSTD_isError(d_size)) {
+        std::cerr << "ZSTD Decompression failed!" << std::endl;
+    }
+}
+
 void Compressor::CompressMicroLayer(const std::string& input_raw_path, 
                                      const std::string& output_bin_path, 
                                      const std::string& algorithm, 
@@ -121,6 +156,52 @@ void Compressor::CompressMicroLayer(const std::string& input_raw_path,
         out.write(reinterpret_cast<const char*>(compressed_blocks[b].data()), compressed_blocks[b].size());
     }
     out.close();
+}
+
+std::vector<uint8_t> Compressor::DecompressMicroLayer(const std::string& input_bin_path,
+                                                      const std::string& algorithm,
+                                                      size_t bytes_per_block,
+                                                      size_t expected_raw_size) {
+    std::ifstream in(input_bin_path, std::ios::binary);
+    if (!in.is_open()) {
+        return {};
+    }
+
+    uint32_t num_blocks = 0;
+    in.read(reinterpret_cast<char*>(&num_blocks), sizeof(uint32_t));
+    if (!in) return {};
+
+    std::vector<uint32_t> block_offsets(num_blocks + 1);
+    in.read(reinterpret_cast<char*>(block_offsets.data()), (num_blocks + 1) * sizeof(uint32_t));
+    if (!in) return {};
+
+    uint32_t total_size = block_offsets.back();
+    uint32_t header_size = sizeof(uint32_t) + (num_blocks + 1) * sizeof(uint32_t);
+    std::vector<uint8_t> compressed_blob(total_size - header_size);
+    in.read(reinterpret_cast<char*>(compressed_blob.data()), compressed_blob.size());
+    if (!in) return {};
+
+    std::vector<uint8_t> raw_out;
+    for (size_t b = 0; b < num_blocks; ++b) {
+        uint32_t start = block_offsets[b] - header_size;
+        uint32_t end = block_offsets[b + 1] - header_size;
+        uint32_t comp_size = end - start;
+        std::vector<uint8_t> block_raw(bytes_per_block, 0);
+        const uint8_t* src = compressed_blob.data() + start;
+        if (algorithm == "LZ4") {
+            DecompressBlockLZ4(src, comp_size, block_raw.data(), block_raw.size());
+        } else if (algorithm == "RLE") {
+            DecompressBlockRLE(src, comp_size, block_raw.data(), block_raw.size());
+        } else {
+            DecompressBlockZSTD(src, comp_size, block_raw.data(), block_raw.size());
+        }
+        raw_out.insert(raw_out.end(), block_raw.begin(), block_raw.end());
+    }
+
+    if (raw_out.size() > expected_raw_size) {
+        raw_out.resize(expected_raw_size);
+    }
+    return raw_out;
 }
 
 } // namespace Bestemshe

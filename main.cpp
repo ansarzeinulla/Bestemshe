@@ -13,6 +13,7 @@ void PrintUsage() {
               << "  ./bestemshe --solve <M> <manifest_path>\n"
               << "  ./bestemshe --split <M> <input_dir> <output_dir>\n"
               << "  ./bestemshe --compress <input_raw> <output_bin> <algo(LZ4/RLE)> <block_size>\n"
+              << "  ./bestemshe --decompress <input_bin> <output_raw> <algo(LZ4/RLE/ZSTD)> <block_size> <expected_raw_size>\n"
               << "  ./bestemshe --inference <manifest_path> <k1> <k2> <state_index>\n";
 }
 
@@ -55,6 +56,17 @@ int main(int argc, char* argv[]) {
         size_t block_size = std::stoull(argv[5]);
         Compressor::CompressMicroLayer(in_raw, out_bin, algo, block_size);
     } 
+    else if (mode == "--decompress" && argc == 7) {
+        std::string in_bin = argv[2];
+        std::string out_raw = argv[3];
+        std::string algo = argv[4];
+        size_t block_size = std::stoull(argv[5]);
+        size_t expected_raw_size = std::stoull(argv[6]);
+        size_t bytes_per_block = block_size / 8;
+        std::vector<uint8_t> raw = Compressor::DecompressMicroLayer(in_bin, algo, bytes_per_block, expected_raw_size);
+        std::ofstream out(out_raw, std::ios::binary);
+        out.write(reinterpret_cast<const char*>(raw.data()), raw.size());
+    }
     else if (mode == "--inference" && argc == 6) {
         std::string manifest = argv[2];
         uint16_t k1 = std::stoi(argv[3]);

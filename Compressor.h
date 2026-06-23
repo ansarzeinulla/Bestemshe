@@ -10,6 +10,10 @@ public:
                                    const std::string& output_bin_path, 
                                    const std::string& algorithm, 
                                    size_t block_size = 4096);
+    static std::vector<uint8_t> DecompressMicroLayer(const std::string& input_bin_path,
+                                                     const std::string& algorithm,
+                                                     size_t bytes_per_block,
+                                                     size_t expected_raw_size);
 };
 
 } // namespace Bestemshe

@@ -46,13 +46,37 @@ void AppendToManifest(const std::string& manifest_path, uint16_t k1, uint16_t k2
     }
 }
 
-bool VerifyFileIsNotEmpty(const std::string& path) {
-    std::ifstream in(path, std::ios::binary);
+std::vector<uint8_t> ReadFileBytes(const std::string& path) {
+    std::ifstream in(path, std::ios::binary | std::ios::ate);
     if (!in.is_open()) {
+        return {};
+    }
+    std::streamsize size = in.tellg();
+    in.seekg(0, std::ios::beg);
+    std::vector<uint8_t> bytes(static_cast<size_t>(size));
+    if (size > 0) {
+        in.read(reinterpret_cast<char*>(bytes.data()), size);
+    }
+    return bytes;
+}
+
+bool VerifyRoundTrip(const std::string& raw_path,
+                     const std::string& compressed_path,
+                     const std::string& algorithm,
+                     size_t block_size_bits) {
+    std::vector<uint8_t> raw = ReadFileBytes(raw_path);
+    if (raw.empty() && !fs::exists(raw_path)) {
         return false;
     }
-    in.seekg(0, std::ios::end);
-    return in.tellg() > 0;
+    std::string tmp_raw = compressed_path + ".verify.tmp";
+    std::string cmd = "./bestemshe --decompress " + compressed_path + " " + tmp_raw + " " + algorithm + " " +
+                      std::to_string(block_size_bits) + " " + std::to_string(raw.size());
+    ExecuteCommand(cmd);
+
+    std::vector<uint8_t> decompressed = ReadFileBytes(tmp_raw);
+    std::error_code ec;
+    fs::remove(tmp_raw, ec);
+    return raw == decompressed;
 }
 
 int main(int argc, char* argv[]) {
@@ -105,16 +129,18 @@ int main(int argc, char* argv[]) {
                 std::string zstd_file = "layers/compressed/layer_" + k_str + "_" + type + ".bin";
 
                 if (!fs::exists(raw_file)) continue;
-                if (!VerifyFileIsNotEmpty(raw_file)) {
-                    std::cerr << "CRITICAL ERROR: " << raw_file
-                              << " is empty. Solver output looks broken.\n";
-                    std::exit(1);
-                }
 
                 // Compress strictly with ZSTD using our 1M state L2-Cache optimized blocks
-                std::string comp_cmd = "./bestemshe --compress " + raw_file + " " + zstd_file + " ZSTD 33554432";
+                constexpr size_t block_size_bits = 33554432;
+                std::string comp_cmd = "./bestemshe --compress " + raw_file + " " + zstd_file + " ZSTD " + std::to_string(block_size_bits);
                 ExecuteCommand(comp_cmd);
                 AppendToManifest(manifest, k1, k2, type, "ZSTD", "33554432");
+
+                if (!VerifyRoundTrip(raw_file, zstd_file, "ZSTD", block_size_bits)) {
+                    std::cerr << "CRITICAL ERROR: round-trip verification failed for "
+                              << raw_file << " -> " << zstd_file << "\n";
+                    std::exit(1);
+                }
 
                 uint64_t raw_sz = GetFileSize(raw_file);
                 uint64_t zstd_sz = GetFileSize(zstd_file);
