@@ -19,7 +19,9 @@ public:
     }
 
     static inline uint64_t nCr(int n, int k) {
-        if (n < 0 || k < 0 || k > 10 || n < k) return 0;
+        // NCR_TABLE is [60][10]: valid rows 0..59, valid cols 0..9.
+        // Guard every dimension so k==10 / n>=60 can never index out of bounds.
+        if (n < 0 || k < 0 || k >= 10 || n >= 60 || n < k) return 0;
         return NCR_TABLE[n][k];
     }
 
@@ -79,6 +81,25 @@ public:
         }
         s.board[0] = current_p;
         return s;
+    }
+
+    // O(1)-amortized "board odometer": advances a board (sum == R) to the next composition
+    // in IndexState (colex combinatorial-number-system) order. Moving a stone leftward is the
+    // CNS-rank successor; the inner clear loop is the odometer "carry", amortized O(1) over a
+    // full enumeration. Returns false on wrap-around from the last composition (R,0,...,0).
+    // Bijection-equivalent to iterating UnindexState(i) for i = 0,1,2,... within a fixed K.
+    static inline bool AdvanceBoard(uint8_t b[10]) {
+        int S = b[0];                               // running prefix sum b[0..j-1]
+        for (int j = 1; j <= 9; ++j) {
+            if (b[j] > 0) {
+                b[j] -= 1;
+                for (int t = 0; t <= j - 2; ++t) b[t] = 0;
+                b[j - 1] = static_cast<uint8_t>(S + 1);
+                return true;
+            }
+            S += b[j];                              // b[j] == 0 here; keeps S == b[0..j]
+        }
+        return false;                               // wrapped (last composition reached)
     }
 };
 

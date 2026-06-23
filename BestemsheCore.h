@@ -41,7 +41,7 @@ inline bool ExecuteMoveAndFlip(const State& s, int i, State& flipped_out, bool& 
     bool is_capture = false;
     // Even Parity Capture on opponent's side (pits 5..9)
     if (current_pit >= 5 && current_pit <= 9) {
-        if (next_s.board[current_pit] % 2 == 0) {
+        if ((next_s.board[current_pit] & 1) == 0) {
             uint8_t captured = next_s.board[current_pit];
             next_s.K_self += captured;
             next_s.M += captured;
