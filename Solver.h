@@ -62,6 +62,7 @@ public:
 
     void solve_layer_lock_free();
     void verify_layer_consistency();
+    bool load_layer_from_monoliths(const std::string& out_dir);
 
     // Save final partitions in raw format for ./split
     void write_raw_monoliths(const std::string& out_dir);

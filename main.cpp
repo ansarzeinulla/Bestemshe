@@ -70,10 +70,15 @@ int main(int argc, char* argv[]) {
     }
     else if (mode == "--verify" && argc == 3) {
         uint8_t M = std::stoi(argv[2]);
-        std::string manifest = "layers/compressed/compression_map.txt";
         std::cout << "[RUNNING] Verifying Layer M = " << static_cast<int>(M) << "...\n";
+        std::string manifest = "layers/compressed/compression_map.txt";
         InferenceEngine db(manifest);
         RetrogradeSolver solver(M, &db);
+        if (!solver.load_layer_from_monoliths("layers")) {
+            std::cerr << "ERROR: Could not load layers/layer" << static_cast<int>(M)
+                      << "_win.bin and _draw.bin. Run solve before verify, or keep the monoliths around.\n";
+            return 1;
+        }
         solver.verify_layer_consistency();
     }
     else if (mode == "--inference" && argc == 6) {

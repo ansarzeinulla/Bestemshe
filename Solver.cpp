@@ -262,6 +262,43 @@ void RetrogradeSolver::verify_layer_consistency() {
     }
 }
 
+bool RetrogradeSolver::load_layer_from_monoliths(const std::string& out_dir) {
+    std::string win_file = out_dir + "/layer" + std::to_string(layer_M) + "_win.bin";
+    std::string draw_file = out_dir + "/layer" + std::to_string(layer_M) + "_draw.bin";
+
+    std::ifstream w_in(win_file, std::ios::binary | std::ios::ate);
+    std::ifstream d_in(draw_file, std::ios::binary | std::ios::ate);
+    if (!w_in.is_open() || !d_in.is_open()) {
+        return false;
+    }
+
+    size_t w_size = static_cast<size_t>(w_in.tellg());
+    size_t d_size = static_cast<size_t>(d_in.tellg());
+    w_in.seekg(0, std::ios::beg);
+    d_in.seekg(0, std::ios::beg);
+
+    std::vector<uint8_t> win_bits(w_size, 0);
+    std::vector<uint8_t> draw_bits(d_size, 0);
+    w_in.read(reinterpret_cast<char*>(win_bits.data()), static_cast<std::streamsize>(w_size));
+    d_in.read(reinterpret_cast<char*>(draw_bits.data()), static_cast<std::streamsize>(d_size));
+    if (!w_in || !d_in) {
+        return false;
+    }
+
+    for (uint64_t i = 0; i < num_states; ++i) {
+        bool is_win = (win_bits[i / 8] >> (i % 8)) & 1;
+        bool is_draw = (draw_bits[i / 8] >> (i % 8)) & 1;
+        if (is_draw) {
+            WriteState2Bit(i, GameValue::DRAW);
+        } else if (is_win) {
+            WriteState2Bit(i, GameValue::WIN);
+        } else {
+            WriteState2Bit(i, GameValue::LOSS);
+        }
+    }
+    return true;
+}
+
 void RetrogradeSolver::propagate_proven_values() {
     uint64_t processed = 0;
 
