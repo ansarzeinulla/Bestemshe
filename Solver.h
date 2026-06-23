@@ -90,10 +90,11 @@ private:
     static inline GameValue DecodeGameValue(uint8_t v) {
         return static_cast<GameValue>(v & 0x03);
     }
+public:
     inline GameValue ReadState2Bit(uint64_t idx) const {
         uint64_t byte_idx = idx / 4;
         uint8_t bit_shift = static_cast<uint8_t>((idx % 4) * 2);
-        uint8_t byte_val = state_values_2bit[byte_idx].load(std::memory_order_relaxed);
+        uint8_t byte_val = state_values_2bit[byte_idx].load(std::memory_order_acquire);
         return DecodeGameValue((byte_val >> bit_shift) & 0x03);
     }
     inline void WriteState2Bit(uint64_t idx, GameValue val) {
@@ -101,10 +102,10 @@ private:
         uint8_t bit_shift = static_cast<uint8_t>((idx % 4) * 2);
         uint8_t mask = static_cast<uint8_t>(~(0x03u << bit_shift));
         uint8_t new_bits = static_cast<uint8_t>(EncodeGameValue(val) << bit_shift);
-        uint8_t current = state_values_2bit[byte_idx].load(std::memory_order_relaxed);
+        uint8_t current = state_values_2bit[byte_idx].load(std::memory_order_acquire);
         while (!state_values_2bit[byte_idx].compare_exchange_weak(
             current, static_cast<uint8_t>((current & mask) | new_bits),
-            std::memory_order_relaxed, std::memory_order_relaxed)) {
+            std::memory_order_release, std::memory_order_acquire)) {
         }
     }
 };

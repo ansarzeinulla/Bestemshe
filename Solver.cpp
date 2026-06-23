@@ -103,13 +103,15 @@ void RetrogradeSolver::solve_layer_lock_free() {
     std::chrono::duration<double> d_init = t_init_end - t_init_start;
     std::cout << "[BENCHMARK] Memory Alloc & Init: " << d_init.count() << "s\n";
 
+    // Preload all higher layers to avoid concurrent hash map modification races.
+    inference_engine->preload_all_layers(layer_M);
+
     auto t_sweep_start = std::chrono::high_resolution_clock::now();
-    bool changed = true;
     int iteration = 0;
 
-    while (changed) {
+
+    while (true) {
         auto t_iter_start = std::chrono::high_resolution_clock::now();
-        changed = false;
         iteration++;
         
         std::atomic<uint64_t> states_proven_this_iter{0};
@@ -124,14 +126,13 @@ void RetrogradeSolver::solve_layer_lock_free() {
             uint64_t end = std::min(num_states, begin + chunk);
 
             if (begin < end) {
-                SolverState s = UnindexState(begin, layer_M);
                 for (uint64_t i = begin; i < end; ++i) {
                     uint8_t current_val = static_cast<uint8_t>(ReadState2Bit(i));
                     if (current_val != static_cast<uint8_t>(GameValue::UNKNOWN)) {
-                        NextState(s);
                         continue;
                     }
                     
+                    SolverState s = UnindexState(i, layer_M);
                     bool all_losses_for_me = true;
                     bool proved_win = false;
 
@@ -165,22 +166,24 @@ void RetrogradeSolver::solve_layer_lock_free() {
 
                     if (proved_win) {
                         WriteState2Bit(i, GameValue::WIN);
-                        changed = true;
-                        states_proven_this_iter++;
+                        states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
                     } else if (all_losses_for_me) {
                         WriteState2Bit(i, GameValue::LOSS);
-                        changed = true;
-                        states_proven_this_iter++;
+                        states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
                     }
-
-                    NextState(s);
                 }
             }
         }
         auto t_iter_end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> d_iter = t_iter_end - t_iter_start;
-        std::cout << "  Iter " << iteration << ": Proven " << states_proven_this_iter.load() 
+        std::cout << "  Iter " << iteration << ": Proven " << states_proven_this_iter.load(std::memory_order_acquire) 
                   << " states. Time: " << d_iter.count() << "s\n";
+
+        // No states proven this iteration -> we have converged.
+        // Any remaining UNKNOWN states form inescapable cycles -> they are true DRAW.
+        if (states_proven_this_iter.load(std::memory_order_acquire) == 0) {
+            break;
+        }
     }
     auto t_sweep_end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> d_sweep = t_sweep_end - t_sweep_start;
@@ -191,59 +194,127 @@ void RetrogradeSolver::solve_layer_lock_free() {
 
 void RetrogradeSolver::verify_layer_consistency() {
     uint64_t total_states = num_states;
-    std::atomic<uint64_t> errors{0};
+    std::cout << "[INFO] Verifying layer " << static_cast<int>(layer_M) << " consistency with local retrograde validation...\n";
 
+    // Allocate a thread-safe local buffer to run the verification sweep
+    std::vector<std::atomic<uint8_t>> local_db((total_states + 3) / 4);
+    for (auto& val : local_db) {
+        val.store(0, std::memory_order_relaxed);
+    }
+    auto read_local = [&](uint64_t idx) -> GameValue {
+        uint64_t byte_idx = idx / 4;
+        uint8_t shift = static_cast<uint8_t>((idx % 4) * 2);
+        uint8_t byte_val = local_db[byte_idx].load(std::memory_order_relaxed);
+        return static_cast<GameValue>((byte_val >> shift) & 0x03);
+    };
+    auto write_local = [&](uint64_t idx, GameValue val) {
+        uint64_t byte_idx = idx / 4;
+        uint8_t shift = static_cast<uint8_t>((idx % 4) * 2);
+        uint8_t mask = static_cast<uint8_t>(~(0x03u << shift));
+        uint8_t new_bits = static_cast<uint8_t>((static_cast<uint8_t>(val) & 0x03u) << shift);
+        uint8_t current = local_db[byte_idx].load(std::memory_order_relaxed);
+        while (!local_db[byte_idx].compare_exchange_weak(
+            current, static_cast<uint8_t>((current & mask) | new_bits),
+            std::memory_order_relaxed, std::memory_order_relaxed)) {
+        }
+    };
+
+    // Preload higher layers
+    inference_engine->preload_all_layers(layer_M);
+
+    // Solve locally from UNKNOWN
+    int verification_iteration = 0;
+    while (true) {
+        auto t_iter_start = std::chrono::high_resolution_clock::now();
+        verification_iteration++;
+        std::atomic<uint64_t> states_proven{0};
+
+        #pragma omp parallel
+        {
+            uint64_t threads = static_cast<uint64_t>(omp_get_num_threads());
+            uint64_t tid = static_cast<uint64_t>(omp_get_thread_num());
+            uint64_t chunk = (total_states + threads - 1) / threads;
+            uint64_t begin = tid * chunk;
+            uint64_t end = std::min(total_states, begin + chunk);
+
+            if (begin < end) {
+                for (uint64_t i = begin; i < end; ++i) {
+                    GameValue current_val = read_local(i);
+                    if (current_val != GameValue::UNKNOWN) {
+                        continue;
+                    }
+
+                    SolverState s = UnindexState(i, layer_M);
+                    bool all_losses_for_me = true;
+                    bool proved_win = false;
+                    bool has_moves = false;
+
+                    for (int move = 0; move < 5; ++move) {
+                        if (s.board[move] == 0) continue;
+                        has_moves = true;
+
+                        SolverState next_s;
+                        bool empties_opponent;
+                        bool is_capture = execute_and_flip(s, move, next_s, empties_opponent);
+
+                        GameValue target_val;
+                        if (empties_opponent || next_s.K_opp >= 26) {
+                            target_val = GameValue::LOSS;
+                        } else if (is_capture) {
+                            uint64_t target_idx = IndexState(next_s);
+                            target_val = inference_engine->query_state(next_s.K_self + next_s.K_opp, next_s.K_opp, target_idx);
+                        } else {
+                            uint64_t target_idx = IndexState(next_s);
+                            target_val = read_local(target_idx);
+                        }
+
+                        if (target_val == GameValue::LOSS) {
+                            proved_win = true;
+                            break;
+                        }
+                        if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN) {
+                            all_losses_for_me = false;
+                        }
+                    }
+
+                    if (!has_moves) {
+                        write_local(i, GameValue::LOSS);
+                        states_proven.fetch_add(1, std::memory_order_acq_rel);
+                    } else if (proved_win) {
+                        write_local(i, GameValue::WIN);
+                        states_proven.fetch_add(1, std::memory_order_acq_rel);
+                    } else if (all_losses_for_me) {
+                        write_local(i, GameValue::LOSS);
+                        states_proven.fetch_add(1, std::memory_order_acq_rel);
+                    }
+                }
+            }
+        }
+
+        auto t_iter_end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> d_iter = t_iter_end - t_iter_start;
+        std::cout << "  [Verify] Iter " << verification_iteration << ": Proven " 
+                  << states_proven.load(std::memory_order_acquire) << " states. Time: " << d_iter.count() << "s\n";
+
+        if (states_proven.load(std::memory_order_acquire) == 0) {
+            break;
+        }
+    }
+
+    // Mark remaining UNKNOWN as DRAW in local verification DB
+    #pragma omp parallel for schedule(static)
+    for (uint64_t i = 0; i < total_states; ++i) {
+        if (read_local(i) == GameValue::UNKNOWN) {
+            write_local(i, GameValue::DRAW);
+        }
+    }
+
+    // Now check for discrepancies against the stored database
+    std::atomic<uint64_t> errors{0};
     #pragma omp parallel for schedule(dynamic, 8192)
     for (uint64_t i = 0; i < total_states; ++i) {
-        SolverState s = UnindexState(i, layer_M);
         GameValue stored_val = ReadState2Bit(i);
-
-        bool has_win_move = false;
-        bool has_draw_move = false;
-        bool has_moves = false;
-
-        for (int move = 0; move < 5; ++move) {
-            if (s.board[move] == 0) continue;
-            has_moves = true;
-
-            SolverState next_s;
-            bool empties_opponent = false;
-            bool is_capture = execute_and_flip(s, move, next_s, empties_opponent);
-
-            GameValue child_val;
-            if (empties_opponent || next_s.K_opp >= 26) {
-                child_val = GameValue::LOSS;
-            } else if (is_capture) {
-                uint64_t target_idx = IndexState(next_s);
-                child_val = inference_engine->query_state(
-                    static_cast<uint8_t>(next_s.K_self + next_s.K_opp),
-                    next_s.K_opp,
-                    target_idx
-                );
-            } else {
-                uint64_t target_idx = IndexState(next_s);
-                child_val = ReadState2Bit(target_idx);
-            }
-
-            if (child_val == GameValue::LOSS) {
-                has_win_move = true;
-                break;
-            }
-            if (child_val == GameValue::DRAW || child_val == GameValue::UNKNOWN) {
-                has_draw_move = true;
-            }
-        }
-
-        GameValue computed_val;
-        if (!has_moves) {
-            computed_val = GameValue::LOSS;
-        } else if (has_win_move) {
-            computed_val = GameValue::WIN;
-        } else if (has_draw_move) {
-            computed_val = GameValue::DRAW;
-        } else {
-            computed_val = GameValue::LOSS;
-        }
+        GameValue computed_val = read_local(i);
 
         if (stored_val != computed_val) {
             uint64_t err_idx = errors.fetch_add(1, std::memory_order_relaxed);
@@ -378,15 +449,26 @@ bool RetrogradeSolver::load_layer_from_monoliths(const std::string& out_dir) {
         return false;
     }
 
-    for (uint64_t i = 0; i < num_states; ++i) {
-        bool is_win = (win_bits[i / 8] >> (i % 8)) & 1;
-        bool is_draw = (draw_bits[i / 8] >> (i % 8)) & 1;
-        if (is_draw) {
-            WriteState2Bit(i, GameValue::DRAW);
-        } else if (is_win) {
-            WriteState2Bit(i, GameValue::WIN);
-        } else {
-            WriteState2Bit(i, GameValue::LOSS);
+    int min_K = StateIndex::GetMinK(layer_M);
+    int k_count = StateIndex::GetKCount(layer_M);
+    int R = 50 - layer_M;
+    uint64_t b_count = StateIndex::nCr(R + 9, 9);
+    uint64_t b_bytes = (b_count + 7) / 8;
+
+    for (int k_idx = 0; k_idx < k_count; ++k_idx) {
+        uint64_t base_idx = k_idx * b_count;
+        uint64_t byte_offset = k_idx * b_bytes;
+        for (uint64_t j = 0; j < b_count; ++j) {
+            uint64_t i = base_idx + j;
+            bool is_win = (win_bits[byte_offset + j / 8] >> (j % 8)) & 1;
+            bool is_draw = (draw_bits[byte_offset + j / 8] >> (j % 8)) & 1;
+            if (is_draw) {
+                WriteState2Bit(i, GameValue::DRAW);
+            } else if (is_win) {
+                WriteState2Bit(i, GameValue::WIN);
+            } else {
+                WriteState2Bit(i, GameValue::LOSS);
+            }
         }
     }
     return true;
@@ -458,19 +540,28 @@ void RetrogradeSolver::write_raw_monoliths(const std::string& out_dir) {
     std::string win_file = out_dir + "/layer" + std::to_string(layer_M) + "_win.bin";
     std::string draw_file = out_dir + "/layer" + std::to_string(layer_M) + "_draw.bin";
 
-    uint64_t num_bytes = (num_states + 7) / 8;
-    std::vector<uint8_t> win_bits(num_bytes, 0);
-    std::vector<uint8_t> draw_bits(num_bytes, 0);
+    int min_K = StateIndex::GetMinK(layer_M);
+    int k_count = StateIndex::GetKCount(layer_M);
+    int R = 50 - layer_M;
+    uint64_t b_count = StateIndex::nCr(R + 9, 9);
+    uint64_t b_bytes = (b_count + 7) / 8;
+
+    uint64_t total_bytes = k_count * b_bytes;
+    std::vector<uint8_t> win_bits(total_bytes, 0);
+    std::vector<uint8_t> draw_bits(total_bytes, 0);
 
     #pragma omp parallel for
-    for (uint64_t i = 0; i < num_states; ++i) {
-        uint8_t val = static_cast<uint8_t>(ReadState2Bit(i));
-        if (val == static_cast<uint8_t>(GameValue::WIN)) {
-            #pragma omp atomic
-            win_bits[i / 8] |= (1 << (i % 8));
-        } else if (val == static_cast<uint8_t>(GameValue::DRAW)) {
-            #pragma omp atomic
-            draw_bits[i / 8] |= (1 << (i % 8));
+    for (int k_idx = 0; k_idx < k_count; ++k_idx) {
+        uint64_t base_idx = k_idx * b_count;
+        uint64_t byte_offset = k_idx * b_bytes;
+        for (uint64_t j = 0; j < b_count; ++j) {
+            uint64_t i = base_idx + j;
+            uint8_t val = static_cast<uint8_t>(ReadState2Bit(i));
+            if (val == static_cast<uint8_t>(GameValue::WIN)) {
+                win_bits[byte_offset + j / 8] |= (1 << (j % 8));
+            } else if (val == static_cast<uint8_t>(GameValue::DRAW)) {
+                draw_bits[byte_offset + j / 8] |= (1 << (j % 8));
+            }
         }
     }
 
