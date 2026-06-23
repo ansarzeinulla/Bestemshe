@@ -103,9 +103,7 @@ public:
     // same thread (or preload_uncompressed_layer for the specific (M,k2) pair).
     // After preloading, the map is never modified, so reads are lock-free.
     GameValue query_state(uint8_t M, uint8_t k2, uint64_t state_index) {
-        if (k2 > M) {
-            return GameValue::UNKNOWN;
-        }
+        if (k2 > M) return GameValue::UNKNOWN;
         const std::string layer_key = layer_cache_key(M, k2);
         auto it = raw_layer_cache.find(layer_key);
         if (it == raw_layer_cache.end() || it->second.loaded.load(std::memory_order_relaxed) == 0) {
@@ -123,12 +121,8 @@ public:
         uint64_t local_idx = state_index % b_count;
 
         const auto& entry = it->second;
-        if (extract_bit(entry.draw_bits, local_idx)) {
-            return GameValue::DRAW;
-        }
-        if (extract_bit(entry.win_bits, local_idx)) {
-            return GameValue::WIN;
-        }
+        if (extract_bit(entry.draw_bits, local_idx)) return GameValue::DRAW;
+        if (extract_bit(entry.win_bits, local_idx)) return GameValue::WIN;
         return GameValue::LOSS;
     }
 
@@ -174,18 +168,16 @@ private:
         {
             std::lock_guard<std::mutex> lock(cache_mutex);
             auto it = raw_layer_cache.find(cache_key);
-            if (it != raw_layer_cache.end() && it->second.loaded.load(std::memory_order_acquire) == 1) {
+            if (it != raw_layer_cache.end() && it->second.loaded.load(std::memory_order_acquire) == 1)
                 return true;
-            }
         }
 
         // Slow path: serialise the actual load so only one thread does it.
         std::lock_guard<std::mutex> lock(cache_mutex);
         // Double-check now that we hold the lock.
         auto it = raw_layer_cache.find(cache_key);
-        if (it != raw_layer_cache.end() && it->second.loaded.load(std::memory_order_relaxed) == 1) {
+        if (it != raw_layer_cache.end() && it->second.loaded.load(std::memory_order_relaxed) == 1)
             return true;
-        }
 
         uint16_t k1 = static_cast<uint16_t>(M) - static_cast<uint16_t>(k2);
         std::string win_path = "layers/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_win.raw";
@@ -206,9 +198,7 @@ private:
             draw_bits.resize(draw_size);
             win_file.read(reinterpret_cast<char*>(win_bits.data()), static_cast<std::streamsize>(win_size));
             draw_file.read(reinterpret_cast<char*>(draw_bits.data()), static_cast<std::streamsize>(draw_size));
-            if (!win_file || !draw_file) {
-                return false;
-            }
+            if (!win_file || !draw_file) return false;
         } else {
             int R = 50 - M;
             uint64_t b_count = StateIndex::nCr(R + 9, 9);
@@ -220,9 +210,8 @@ private:
             std::string comp_win = "ZSTD";
             size_t block_win = 33554432;
             std::string path_win = "layers/compressed/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_win.bin";
-            if (!std::filesystem::exists(path_win)) {
+            if (!std::filesystem::exists(path_win))
                 path_win = "layers/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_win.bin";
-            }
 
             if (manifest.find(win_key) != manifest.end()) {
                 block_win = manifest[win_key].block_size;
@@ -235,9 +224,8 @@ private:
             std::string comp_draw = "ZSTD";
             size_t block_draw = 33554432;
             std::string path_draw = "layers/compressed/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_draw.bin";
-            if (!std::filesystem::exists(path_draw)) {
+            if (!std::filesystem::exists(path_draw))
                 path_draw = "layers/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_draw.bin";
-            }
 
             if (manifest.find(draw_key) != manifest.end()) {
                 block_draw = manifest[draw_key].block_size;

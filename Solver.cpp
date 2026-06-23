@@ -117,9 +117,8 @@ void RetrogradeSolver::solve_layer_lock_free() {
                                 proved_win = true;
                                 break;
                             }
-                            if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN) {
+                            if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN)
                                 all_losses_for_me = false;
-                            }
                         }
 
                         if (proved_win) {
@@ -142,9 +141,7 @@ void RetrogradeSolver::solve_layer_lock_free() {
 
         // No states proven this iteration -> we have converged.
         // Any remaining UNKNOWN states form inescapable cycles -> they are true DRAW.
-        if (states_proven_this_iter.load(std::memory_order_acquire) == 0) {
-            break;
-        }
+        if (states_proven_this_iter.load(std::memory_order_acquire) == 0) break;
     }
     auto t_sweep_end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> d_sweep = t_sweep_end - t_sweep_start;
@@ -159,9 +156,7 @@ void RetrogradeSolver::verify_layer_consistency() {
 
     // Allocate a thread-safe local buffer to run the verification sweep
     std::vector<std::atomic<uint8_t>> local_db((total_states + 3) / 4);
-    for (auto& val : local_db) {
-        val.store(0, std::memory_order_relaxed);
-    }
+    for (auto& val : local_db) val.store(0, std::memory_order_relaxed);
     auto read_local = [&](uint64_t idx) -> GameValue {
         uint64_t byte_idx = idx / 4;
         uint8_t shift = static_cast<uint8_t>((idx % 4) * 2);
@@ -230,9 +225,8 @@ void RetrogradeSolver::verify_layer_consistency() {
                                 proved_win = true;
                                 break;
                             }
-                            if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN) {
+                            if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN)
                                 all_losses_for_me = false;
-                            }
                         }
 
                         if (!has_moves) {
@@ -257,18 +251,13 @@ void RetrogradeSolver::verify_layer_consistency() {
         std::cout << "  [Verify] Iter " << verification_iteration << ": Proven " 
                   << states_proven.load(std::memory_order_acquire) << " states. Time: " << d_iter.count() << "s\n";
 
-        if (states_proven.load(std::memory_order_acquire) == 0) {
-            break;
-        }
+        if (states_proven.load(std::memory_order_acquire) == 0) break;
     }
 
     // Mark remaining UNKNOWN as DRAW in local verification DB
     #pragma omp parallel for schedule(static)
-    for (uint64_t i = 0; i < total_states; ++i) {
-        if (read_local(i) == GameValue::UNKNOWN) {
-            write_local(i, GameValue::DRAW);
-        }
-    }
+    for (uint64_t i = 0; i < total_states; ++i)
+        if (read_local(i) == GameValue::UNKNOWN) write_local(i, GameValue::DRAW);
 
     // Now check for discrepancies against the stored database
     std::atomic<uint64_t> errors{0};
@@ -315,9 +304,7 @@ bool RetrogradeSolver::load_layer_from_monoliths(const std::string& out_dir) {
 
         std::unordered_map<std::string, std::pair<std::string, size_t>> comp_info;
         std::ifstream map_in("layers/compressed/compression_map.txt");
-        if (!map_in.is_open()) {
-            map_in.open("layers/compression_map.txt");
-        }
+        if (!map_in.is_open()) map_in.open("layers/compression_map.txt");
         if (map_in.is_open()) {
             std::string line;
             while (std::getline(map_in, line)) {
@@ -344,9 +331,7 @@ bool RetrogradeSolver::load_layer_from_monoliths(const std::string& out_dir) {
                 std::string base_name = "layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_" + type;
                 std::string raw_path = out_dir + "/" + base_name + ".raw";
                 std::string bin_path = out_dir + "/compressed/" + base_name + ".bin";
-                if (!std::filesystem::exists(bin_path)) {
-                    bin_path = out_dir + "/" + base_name + ".bin";
-                }
+                if (!std::filesystem::exists(bin_path)) bin_path = out_dir + "/" + base_name + ".bin";
 
                 std::vector<uint8_t> data;
                 std::ifstream raw_in(raw_path, std::ios::binary | std::ios::ate);
@@ -372,11 +357,8 @@ bool RetrogradeSolver::load_layer_from_monoliths(const std::string& out_dir) {
                     return false;
                 }
 
-                if (type == "win") {
-                    win_bits = std::move(data);
-                } else {
-                    draw_bits = std::move(data);
-                }
+                if (type == "win") win_bits = std::move(data);
+                else draw_bits = std::move(data);
             }
 
             uint64_t base_idx = k_idx * b_count;
@@ -384,13 +366,9 @@ bool RetrogradeSolver::load_layer_from_monoliths(const std::string& out_dir) {
                 uint64_t i = base_idx + j;
                 bool is_win = (win_bits[j / 8] >> (j % 8)) & 1;
                 bool is_draw = (draw_bits[j / 8] >> (j % 8)) & 1;
-                if (is_draw) {
-                    WriteState2Bit(i, GameValue::DRAW);
-                } else if (is_win) {
-                    WriteState2Bit(i, GameValue::WIN);
-                } else {
-                    WriteState2Bit(i, GameValue::LOSS);
-                }
+                if (is_draw) WriteState2Bit(i, GameValue::DRAW);
+                else if (is_win) WriteState2Bit(i, GameValue::WIN);
+                else WriteState2Bit(i, GameValue::LOSS);
             }
         }
         std::cout << "[INFO] Successfully loaded all micro-layers for M = " << static_cast<int>(layer_M) << std::endl;
@@ -406,9 +384,7 @@ bool RetrogradeSolver::load_layer_from_monoliths(const std::string& out_dir) {
     std::vector<uint8_t> draw_bits(d_size, 0);
     w_in.read(reinterpret_cast<char*>(win_bits.data()), static_cast<std::streamsize>(w_size));
     d_in.read(reinterpret_cast<char*>(draw_bits.data()), static_cast<std::streamsize>(d_size));
-    if (!w_in || !d_in) {
-        return false;
-    }
+    if (!w_in || !d_in) return false;
 
     int min_K = StateIndex::GetMinK(layer_M);
     int k_count = StateIndex::GetKCount(layer_M);
@@ -423,13 +399,9 @@ bool RetrogradeSolver::load_layer_from_monoliths(const std::string& out_dir) {
             uint64_t i = base_idx + j;
             bool is_win = (win_bits[byte_offset + j / 8] >> (j % 8)) & 1;
             bool is_draw = (draw_bits[byte_offset + j / 8] >> (j % 8)) & 1;
-            if (is_draw) {
-                WriteState2Bit(i, GameValue::DRAW);
-            } else if (is_win) {
-                WriteState2Bit(i, GameValue::WIN);
-            } else {
-                WriteState2Bit(i, GameValue::LOSS);
-            }
+            if (is_draw) WriteState2Bit(i, GameValue::DRAW);
+            else if (is_win) WriteState2Bit(i, GameValue::WIN);
+            else WriteState2Bit(i, GameValue::LOSS);
         }
     }
     return true;
@@ -470,11 +442,8 @@ void RetrogradeSolver::write_raw_monoliths(const std::string& out_dir) {
         for (uint64_t j = 0; j < b_count; ++j) {
             uint64_t i = base_idx + j;
             uint8_t val = static_cast<uint8_t>(ReadState2Bit(i));
-            if (val == static_cast<uint8_t>(GameValue::WIN)) {
-                win_bits[byte_offset + j / 8] |= (1 << (j % 8));
-            } else if (val == static_cast<uint8_t>(GameValue::DRAW)) {
-                draw_bits[byte_offset + j / 8] |= (1 << (j % 8));
-            }
+            if (val == static_cast<uint8_t>(GameValue::WIN)) win_bits[byte_offset + j / 8] |= (1 << (j % 8));
+            else if (val == static_cast<uint8_t>(GameValue::DRAW)) draw_bits[byte_offset + j / 8] |= (1 << (j % 8));
         }
     }
 
