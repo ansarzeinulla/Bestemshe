@@ -61,6 +61,7 @@ public:
     }
 
     void solve_layer_lock_free();
+    void verify_layer_consistency();
 
     // Save final partitions in raw format for ./split
     void write_raw_monoliths(const std::string& out_dir);

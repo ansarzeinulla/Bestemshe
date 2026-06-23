@@ -186,6 +186,82 @@ void RetrogradeSolver::solve_layer_lock_free() {
     finalize_draws();
 }
 
+void RetrogradeSolver::verify_layer_consistency() {
+    uint64_t total_states = num_states;
+    std::atomic<uint64_t> errors{0};
+
+    #pragma omp parallel for schedule(dynamic, 8192)
+    for (uint64_t i = 0; i < total_states; ++i) {
+        SolverState s = UnindexState(i, layer_M);
+        GameValue stored_val = ReadState2Bit(i);
+
+        bool has_win_move = false;
+        bool has_draw_move = false;
+        bool has_moves = false;
+
+        for (int move = 0; move < 5; ++move) {
+            if (s.board[move] == 0) continue;
+            has_moves = true;
+
+            SolverState next_s;
+            bool empties_opponent = false;
+            bool is_capture = execute_and_flip(s, move, next_s, empties_opponent);
+
+            GameValue child_val;
+            if (empties_opponent || next_s.K_opp >= 26) {
+                child_val = GameValue::LOSS;
+            } else if (is_capture) {
+                uint64_t target_idx = IndexState(next_s);
+                child_val = inference_engine->query_state(
+                    static_cast<uint8_t>(next_s.K_self + next_s.K_opp),
+                    next_s.K_opp,
+                    target_idx
+                );
+            } else {
+                uint64_t target_idx = IndexState(next_s);
+                child_val = ReadState2Bit(target_idx);
+            }
+
+            if (child_val == GameValue::LOSS) {
+                has_win_move = true;
+                break;
+            }
+            if (child_val == GameValue::DRAW || child_val == GameValue::UNKNOWN) {
+                has_draw_move = true;
+            }
+        }
+
+        GameValue computed_val;
+        if (!has_moves) {
+            computed_val = GameValue::LOSS;
+        } else if (has_win_move) {
+            computed_val = GameValue::WIN;
+        } else if (has_draw_move) {
+            computed_val = GameValue::DRAW;
+        } else {
+            computed_val = GameValue::LOSS;
+        }
+
+        if (stored_val != computed_val) {
+            uint64_t err_idx = errors.fetch_add(1, std::memory_order_relaxed);
+            if (err_idx < 10) {
+                std::cerr << "DISCREPANCY at index " << i
+                          << ": Stored=" << static_cast<int>(stored_val)
+                          << ", Computed=" << static_cast<int>(computed_val) << "\n";
+            }
+        }
+    }
+
+    uint64_t err_count = errors.load(std::memory_order_relaxed);
+    if (err_count == 0) {
+        std::cout << "[VERIFICATION SUCCESS] Layer " << static_cast<int>(layer_M)
+                  << " is 100% self-consistent.\n";
+    } else {
+        std::cerr << "[VERIFICATION FAILURE] Found " << err_count
+                  << " errors in Layer " << static_cast<int>(layer_M) << "\n";
+    }
+}
+
 void RetrogradeSolver::propagate_proven_values() {
     uint64_t processed = 0;
 

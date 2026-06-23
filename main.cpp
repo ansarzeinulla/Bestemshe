@@ -14,6 +14,7 @@ void PrintUsage() {
               << "  ./bestemshe --split <M> <input_dir> <output_dir>\n"
               << "  ./bestemshe --compress <input_raw> <output_bin> <algo(LZ4/RLE)> <block_size>\n"
               << "  ./bestemshe --decompress <input_bin> <output_raw> <algo(LZ4/RLE/ZSTD)> <block_size> <expected_raw_size>\n"
+              << "  ./bestemshe --verify <M>\n"
               << "  ./bestemshe --inference <manifest_path> <k1> <k2> <state_index>\n";
 }
 
@@ -66,6 +67,14 @@ int main(int argc, char* argv[]) {
         std::vector<uint8_t> raw = Compressor::DecompressMicroLayer(in_bin, algo, bytes_per_block, expected_raw_size);
         std::ofstream out(out_raw, std::ios::binary);
         out.write(reinterpret_cast<const char*>(raw.data()), raw.size());
+    }
+    else if (mode == "--verify" && argc == 3) {
+        uint8_t M = std::stoi(argv[2]);
+        std::string manifest = "layers/compressed/compression_map.txt";
+        std::cout << "[RUNNING] Verifying Layer M = " << static_cast<int>(M) << "...\n";
+        InferenceEngine db(manifest);
+        RetrogradeSolver solver(M, &db);
+        solver.verify_layer_consistency();
     }
     else if (mode == "--inference" && argc == 6) {
         std::string manifest = argv[2];
