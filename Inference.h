@@ -7,6 +7,9 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
+#include <filesystem>
+#include "StateIndex.h"
+#include "Compressor.h"
 
 namespace Bestemshe {
 
@@ -118,26 +121,72 @@ private:
 
         std::ifstream win_file(win_path, std::ios::binary | std::ios::ate);
         std::ifstream draw_file(draw_path, std::ios::binary | std::ios::ate);
-        if (!win_file.is_open() || !draw_file.is_open()) {
-            return false;
-        }
+        
+        std::vector<uint8_t> win_bits;
+        std::vector<uint8_t> draw_bits;
 
-        size_t win_size = static_cast<size_t>(win_file.tellg());
-        size_t draw_size = static_cast<size_t>(draw_file.tellg());
-        win_file.seekg(0, std::ios::beg);
-        draw_file.seekg(0, std::ios::beg);
+        if (win_file.is_open() && draw_file.is_open()) {
+            size_t win_size = static_cast<size_t>(win_file.tellg());
+            size_t draw_size = static_cast<size_t>(draw_file.tellg());
+            win_file.seekg(0, std::ios::beg);
+            draw_file.seekg(0, std::ios::beg);
+            win_bits.resize(win_size);
+            draw_bits.resize(draw_size);
+            win_file.read(reinterpret_cast<char*>(win_bits.data()), static_cast<std::streamsize>(win_size));
+            draw_file.read(reinterpret_cast<char*>(draw_bits.data()), static_cast<std::streamsize>(draw_size));
+            if (!win_file || !draw_file) {
+                return false;
+            }
+        } else {
+            int R = 50 - M;
+            uint64_t b_count = StateIndex::nCr(R + 9, 9);
+            uint64_t b_bytes = (b_count + 7) / 8;
+
+            std::string win_key = "win_" + std::to_string(k1) + "_" + std::to_string(k2);
+            std::string draw_key = "draw_" + std::to_string(k1) + "_" + std::to_string(k2);
+
+            std::string comp_win = "ZSTD";
+            size_t block_win = 33554432;
+            std::string path_win = "layers/compressed/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_win.bin";
+            if (!std::filesystem::exists(path_win)) {
+                path_win = "layers/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_win.bin";
+            }
+
+            if (manifest.find(win_key) != manifest.end()) {
+                block_win = manifest[win_key].block_size;
+                if (manifest[win_key].compression == CompressionType::LZ4) comp_win = "LZ4";
+                else if (manifest[win_key].compression == CompressionType::RLE) comp_win = "RLE";
+                else if (manifest[win_key].compression == CompressionType::ZSTD) comp_win = "ZSTD";
+                else comp_win = "NONE";
+            }
+
+            std::string comp_draw = "ZSTD";
+            size_t block_draw = 33554432;
+            std::string path_draw = "layers/compressed/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_draw.bin";
+            if (!std::filesystem::exists(path_draw)) {
+                path_draw = "layers/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_draw.bin";
+            }
+
+            if (manifest.find(draw_key) != manifest.end()) {
+                block_draw = manifest[draw_key].block_size;
+                if (manifest[draw_key].compression == CompressionType::LZ4) comp_draw = "LZ4";
+                else if (manifest[draw_key].compression == CompressionType::RLE) comp_draw = "RLE";
+                else if (manifest[draw_key].compression == CompressionType::ZSTD) comp_draw = "ZSTD";
+                else comp_draw = "NONE";
+            }
+
+            win_bits = Compressor::DecompressMicroLayer(path_win, comp_win, block_win / 8, b_bytes);
+            draw_bits = Compressor::DecompressMicroLayer(path_draw, comp_draw, block_draw / 8, b_bytes);
+
+            if (win_bits.size() < b_bytes || draw_bits.size() < b_bytes) {
+                return false;
+            }
+        }
 
         RawLayerCacheEntry entry;
-        entry.win_bits.resize(win_size);
-        entry.draw_bits.resize(draw_size);
-        win_file.read(reinterpret_cast<char*>(entry.win_bits.data()), static_cast<std::streamsize>(win_size));
-        draw_file.read(reinterpret_cast<char*>(entry.draw_bits.data()), static_cast<std::streamsize>(draw_size));
+        entry.win_bits = std::move(win_bits);
+        entry.draw_bits = std::move(draw_bits);
         entry.loaded = true;
-
-        if (!win_file || !draw_file) {
-            return false;
-        }
-
         raw_layer_cache[cache_key] = std::move(entry);
         return true;
     }

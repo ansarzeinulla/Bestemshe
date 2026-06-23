@@ -1,9 +1,12 @@
 #include "Solver.h"
 #include "StateIndex.h"
+#include "Compressor.h"
 #include <filesystem>
 #include <atomic>
 #include <iostream>
 #include <chrono>
+#include <sstream>
+#include <unordered_map>
 
 namespace Bestemshe {
 
@@ -269,7 +272,97 @@ bool RetrogradeSolver::load_layer_from_monoliths(const std::string& out_dir) {
     std::ifstream w_in(win_file, std::ios::binary | std::ios::ate);
     std::ifstream d_in(draw_file, std::ios::binary | std::ios::ate);
     if (!w_in.is_open() || !d_in.is_open()) {
-        return false;
+        std::cout << "[INFO] Monolith files not found for Layer " << static_cast<int>(layer_M)
+                  << ". Attempting to load from micro-layer pair files..." << std::endl;
+        
+        int min_K = StateIndex::GetMinK(layer_M);
+        int k_count = StateIndex::GetKCount(layer_M);
+        int R = 50 - layer_M;
+        uint64_t b_count = StateIndex::nCr(R + 9, 9);
+        uint64_t b_bytes = (b_count + 7) / 8;
+
+        std::unordered_map<std::string, std::pair<std::string, size_t>> comp_info;
+        std::ifstream map_in("layers/compressed/compression_map.txt");
+        if (!map_in.is_open()) {
+            map_in.open("layers/compression_map.txt");
+        }
+        if (map_in.is_open()) {
+            std::string line;
+            while (std::getline(map_in, line)) {
+                if (line.empty() || line[0] == '#') continue;
+                std::stringstream ss(line);
+                uint16_t k1, k2;
+                std::string db_type, comp_str;
+                size_t block_size;
+                if (ss >> k1 >> k2 >> db_type >> comp_str >> block_size) {
+                    std::string key = std::to_string(k1) + "_" + std::to_string(k2) + "_" + db_type;
+                    comp_info[key] = {comp_str, block_size};
+                }
+            }
+        }
+
+        for (int k_idx = 0; k_idx < k_count; ++k_idx) {
+            uint16_t k1 = min_K + k_idx * 2;
+            uint16_t k2 = layer_M - k1;
+
+            std::vector<uint8_t> win_bits(b_bytes, 0);
+            std::vector<uint8_t> draw_bits(b_bytes, 0);
+
+            for (const std::string& type : {"win", "draw"}) {
+                std::string base_name = "layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_" + type;
+                std::string raw_path = out_dir + "/" + base_name + ".raw";
+                std::string bin_path = out_dir + "/compressed/" + base_name + ".bin";
+                if (!std::filesystem::exists(bin_path)) {
+                    bin_path = out_dir + "/" + base_name + ".bin";
+                }
+
+                std::vector<uint8_t> data;
+                std::ifstream raw_in(raw_path, std::ios::binary | std::ios::ate);
+                if (raw_in.is_open()) {
+                    size_t sz = raw_in.tellg();
+                    raw_in.seekg(0, std::ios::beg);
+                    data.resize(sz);
+                    raw_in.read(reinterpret_cast<char*>(data.data()), sz);
+                } else {
+                    std::string key = std::to_string(k1) + "_" + std::to_string(k2) + "_" + type;
+                    std::string comp_str = "ZSTD";
+                    size_t block_size = 33554432;
+                    if (comp_info.find(key) != comp_info.end()) {
+                        comp_str = comp_info[key].first;
+                        block_size = comp_info[key].second;
+                    }
+                    size_t bytes_per_block = block_size / 8;
+                    data = Compressor::DecompressMicroLayer(bin_path, comp_str, bytes_per_block, b_bytes);
+                }
+
+                if (data.size() < b_bytes) {
+                    std::cerr << "ERROR: Failed to load pair file for k1=" << k1 << ", k2=" << k2 << ", type=" << type << std::endl;
+                    return false;
+                }
+
+                if (type == "win") {
+                    win_bits = std::move(data);
+                } else {
+                    draw_bits = std::move(data);
+                }
+            }
+
+            uint64_t base_idx = k_idx * b_count;
+            for (uint64_t j = 0; j < b_count; ++j) {
+                uint64_t i = base_idx + j;
+                bool is_win = (win_bits[j / 8] >> (j % 8)) & 1;
+                bool is_draw = (draw_bits[j / 8] >> (j % 8)) & 1;
+                if (is_draw) {
+                    WriteState2Bit(i, GameValue::DRAW);
+                } else if (is_win) {
+                    WriteState2Bit(i, GameValue::WIN);
+                } else {
+                    WriteState2Bit(i, GameValue::LOSS);
+                }
+            }
+        }
+        std::cout << "[INFO] Successfully loaded all micro-layers for M = " << static_cast<int>(layer_M) << std::endl;
+        return true;
     }
 
     size_t w_size = static_cast<size_t>(w_in.tellg());
