@@ -35,10 +35,12 @@ int main(int argc, char* argv[]) {
     if (mode == "--solve" && argc == 4) {
         uint8_t M = std::stoi(argv[2]);
         std::string manifest = argv[3];
+        std::cout << "[RUNNING] Solving Layer M = " << static_cast<int>(M) << "...\n";
         InferenceEngine db(manifest);
         RetrogradeSolver solver(M, &db);
-        solver.solve_layer();
-        solver.write_raw_monoliths("layers"); // <-- ADD THIS LINE
+        solver.solve_layer_lock_free();
+        solver.write_raw_monoliths("layers");
+        std::cout << "[SUCCESS] Monoliths written for Layer M = " << static_cast<int>(M) << "\n";
     } 
     else if (mode == "--split" && argc == 5) {
         uint8_t M = std::stoi(argv[2]);

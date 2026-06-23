@@ -19,10 +19,10 @@ enum class CompressionType {
 };
 
 enum class GameValue : uint8_t {
-    LOSS = 0,
+    UNKNOWN = 0,
     WIN = 1,
-    DRAW = 2,
-    UNKNOWN = 3
+    LOSS = 2,
+    DRAW = 3
 };
 
 // Represents metadata for a specific micro-layer (K1, K2)
@@ -37,40 +37,46 @@ struct MicroLayerMeta {
 
 class InferenceEngine {
 private:
-    // LRU Cache entry for holding decompressed blocks
-    struct CacheEntry {
-        std::string layer_key; // e.g., "win_k1_k2"
-        size_t block_id;
-        std::vector<uint8_t> decompressed_data;
-        uint64_t last_accessed_tick;
+    struct RawLayerCacheEntry {
+        std::vector<uint8_t> win_bits;
+        std::vector<uint8_t> draw_bits;
+        bool loaded = false;
     };
 
     std::unordered_map<std::string, MicroLayerMeta> manifest;
-    std::vector<CacheEntry> lru_cache;
-    const size_t CACHE_CAPACITY = 128; // Tune to fit within CPU L3 cache boundaries
-    uint64_t access_ticker = 0;
+    std::unordered_map<std::string, RawLayerCacheEntry> raw_layer_cache;
 
 public:
     InferenceEngine(const std::string& manifest_path) {
         load_manifest(manifest_path);
     }
 
-    // High-performance single-state query
-    // Transparently handles block loading, decompression algorithm selection, and bit extraction
-    GameValue query_state(uint16_t k1, uint16_t k2, uint64_t state_index) {
-        std::string win_key = "win_" + std::to_string(k1) + "_" + std::to_string(k2);
-        std::string draw_key = "draw_" + std::to_string(k1) + "_" + std::to_string(k2);
-
-        bool is_draw = query_micro_layer(draw_key, state_index);
-        if (is_draw) {
-            return GameValue::DRAW;
+    // High-performance single-state query.
+    // The caller passes the target layer M and the target state's k2 coordinate.
+    GameValue query_state(uint8_t M, uint8_t k2, uint64_t state_index) {
+        if (k2 > M) {
+            return GameValue::UNKNOWN;
+        }
+        if (!preload_uncompressed_layer(M, k2)) {
+            return GameValue::UNKNOWN;
         }
 
-        bool is_win = query_micro_layer(win_key, state_index);
-        return is_win ? GameValue::WIN : GameValue::LOSS;
+        const std::string layer_key = layer_cache_key(M, k2);
+        const auto& entry = raw_layer_cache.find(layer_key)->second;
+        if (extract_bit(entry.draw_bits, state_index)) {
+            return GameValue::DRAW;
+        }
+        if (extract_bit(entry.win_bits, state_index)) {
+            return GameValue::WIN;
+        }
+        return GameValue::LOSS;
     }
 
 private:
+    static std::string layer_cache_key(uint8_t M, uint8_t k2) {
+        return std::to_string(M) + "_" + std::to_string(k2);
+    }
+
     void load_manifest(const std::string& manifest_path) {
         std::ifstream file(manifest_path);
         if (!file.is_open()) {
@@ -99,50 +105,45 @@ private:
         }
     }
 
-    bool query_micro_layer(const std::string& layer_key, uint64_t index) {
-        auto it = manifest.find(layer_key);
-        if (it == manifest.end()) {
-            // Default fallback if micro-layer not in manifest (assume raw uncompressed)
-            return query_uncompressed_file(layer_key, index);
+    bool preload_uncompressed_layer(uint8_t M, uint8_t k2) {
+        const std::string cache_key = layer_cache_key(M, k2);
+        auto cache_it = raw_layer_cache.find(cache_key);
+        if (cache_it != raw_layer_cache.end() && cache_it->second.loaded) {
+            return true;
         }
 
-        const auto& meta = it->second;
-        size_t block_id = index / meta.block_size;
-        size_t offset_within_block = index % meta.block_size;
+        uint16_t k1 = static_cast<uint16_t>(M) - static_cast<uint16_t>(k2);
+        std::string win_path = "layers/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_win.raw";
+        std::string draw_path = "layers/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_draw.raw";
 
-        // 1. Check LRU Cache
-        for (auto& entry : lru_cache) {
-            if (entry.layer_key == layer_key && entry.block_id == block_id) {
-                entry.last_accessed_tick = ++access_ticker;
-                return extract_bit(entry.decompressed_data, offset_within_block);
-            }
+        std::ifstream win_file(win_path, std::ios::binary | std::ios::ate);
+        std::ifstream draw_file(draw_path, std::ios::binary | std::ios::ate);
+        if (!win_file.is_open() || !draw_file.is_open()) {
+            return false;
         }
 
-        // 2. Cache Miss: Read compressed block and decompress
-        std::vector<uint8_t> decompressed = load_and_decompress_block(meta, block_id);
-        
-        // Push to Cache (with LRU eviction logic)
-        if (lru_cache.size() >= CACHE_CAPACITY) {
-            auto lru_it = std::min_element(lru_cache.begin(), lru_cache.end(), 
-                [](const CacheEntry& a, const CacheEntry& b) {
-                    return a.last_accessed_tick < b.last_accessed_tick;
-                });
-            lru_cache.erase(lru_it);
+        size_t win_size = static_cast<size_t>(win_file.tellg());
+        size_t draw_size = static_cast<size_t>(draw_file.tellg());
+        win_file.seekg(0, std::ios::beg);
+        draw_file.seekg(0, std::ios::beg);
+
+        RawLayerCacheEntry entry;
+        entry.win_bits.resize(win_size);
+        entry.draw_bits.resize(draw_size);
+        win_file.read(reinterpret_cast<char*>(entry.win_bits.data()), static_cast<std::streamsize>(win_size));
+        draw_file.read(reinterpret_cast<char*>(entry.draw_bits.data()), static_cast<std::streamsize>(draw_size));
+        entry.loaded = true;
+
+        if (!win_file || !draw_file) {
+            return false;
         }
 
-        lru_cache.push_back({layer_key, block_id, decompressed, ++access_ticker});
-        return extract_bit(decompressed, offset_within_block);
+        raw_layer_cache[cache_key] = std::move(entry);
+        return true;
     }
-
-    std::vector<uint8_t> load_and_decompress_block(const MicroLayerMeta& meta, size_t block_id);
 
     inline bool extract_bit(const std::vector<uint8_t>& block_data, size_t offset) const {
         return (block_data[offset / 8] >> (offset % 8)) & 1;
-    }
-
-    bool query_uncompressed_file(const std::string& key, uint64_t index) {
-        // Fallback fallback mmap or simple stream lookup for uncompressed legacy runs
-        return false;
     }
 };
 

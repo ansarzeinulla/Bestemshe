@@ -24,13 +24,15 @@ inline bool ExecuteMoveAndFlip(const State& s, int i, State& flipped_out, bool& 
 
     int current_pit = i;
     if (pieces == 1) {
-        current_pit = (current_pit + 1) % 10;
+        current_pit++;
+        if (current_pit==10) current_pit = 0;
         next_s.board[current_pit]++;
     } else {
         next_s.board[i] = 1;
         pieces--;
         while (pieces > 0) {
-            current_pit = (current_pit + 1) % 10;
+            current_pit++;
+            if (current_pit==10) current_pit = 0;
             next_s.board[current_pit]++;
             pieces--;
         }

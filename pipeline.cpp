@@ -6,6 +6,23 @@
 #include <cstdlib>
 #include <algorithm>
 #include <iomanip>
+#include <chrono>
+#include <iomanip>
+
+// Helper to run command and benchmark it
+double ExecuteAndBenchmark(const std::string& cmd) {
+    auto start = std::chrono::high_resolution_clock::now();
+    
+    int ret = std::system(cmd.c_str());
+    if (ret != 0) {
+        std::cerr << "FATAL ERROR: Command failed: " << cmd << "\n";
+        std::exit(1);
+    }
+    
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff = end - start;
+    return diff.count();
+}
 
 namespace fs = std::filesystem;
 
@@ -27,6 +44,15 @@ void AppendToManifest(const std::string& manifest_path, uint16_t k1, uint16_t k2
     if (out.is_open()) {
         out << k1 << " " << k2 << " " << type << " " << algo << " " << block_size << "\n";
     }
+}
+
+bool VerifyFileIsNotEmpty(const std::string& path) {
+    std::ifstream in(path, std::ios::binary);
+    if (!in.is_open()) {
+        return false;
+    }
+    in.seekg(0, std::ios::end);
+    return in.tellg() > 0;
 }
 
 int main(int argc, char* argv[]) {
@@ -61,11 +87,11 @@ int main(int argc, char* argv[]) {
     for (int M = 48; M >= target_M; M -= 2) {
         std::cout << "\n>>> PROCESSING LAYER M = " << M << " <<<\n" << std::endl;
 
-        std::string solve_cmd = "./bestemshe --solve " + std::to_string(M) + " " + manifest;
-        ExecuteCommand(solve_cmd);
+        double t_solve = ExecuteAndBenchmark("./bestemshe --solve " + std::to_string(M) + " " + manifest);
+        double t_split = ExecuteAndBenchmark("./bestemshe --split " + std::to_string(M) + " layers/ layers/");
 
-        std::string split_cmd = "./bestemshe --split " + std::to_string(M) + " layers/ layers/";
-        ExecuteCommand(split_cmd);
+        std::cout << "[TELEMETRY] Layer " << M << " Solver: " << std::fixed << std::setprecision(4) << t_solve << "s\n";
+        std::cout << "[TELEMETRY] Layer " << M << " Splitter: " << t_split << "s\n";
 
         int min_K = std::max(0, M - 24);
         int max_K = std::min(24, M);
@@ -79,6 +105,11 @@ int main(int argc, char* argv[]) {
                 std::string zstd_file = "layers/compressed/layer_" + k_str + "_" + type + ".bin";
 
                 if (!fs::exists(raw_file)) continue;
+                if (!VerifyFileIsNotEmpty(raw_file)) {
+                    std::cerr << "CRITICAL ERROR: " << raw_file
+                              << " is empty. Solver output looks broken.\n";
+                    std::exit(1);
+                }
 
                 // Compress strictly with ZSTD using our 1M state L2-Cache optimized blocks
                 std::string comp_cmd = "./bestemshe --compress " + raw_file + " " + zstd_file + " ZSTD 33554432";
