@@ -4,6 +4,7 @@
 #include "Compressor.h"
 #include <iostream>
 #include <string>
+#include "StartSearch.h"
 
 
 using namespace Bestemshe;
@@ -19,7 +20,8 @@ void PrintUsage() {
               << "  ./bestemshe --verify <M>\n"
               << "  ./bestemshe --selftest <M>   (bijection + board-odometer check; use small high-M layers)\n"
               << "  ./bestemshe --inference <manifest_path> <k1> <k2> <state_index>\n"
-              << "  ./bestemshe --solveBegin <k1_k2_filepath>   (expands variations and routes captures to higher files)\n";
+              << "  ./bestemshe --solveBegin <k1_k2_filepath>   (expands variations and routes captures to higher files)\n"
+              << "  ./bestemshe --start <manifest_path>         (solves the starting position using tablebases >= 18)\n";
 }
 
 // Exhaustively validates, for layer M, that:
@@ -350,6 +352,13 @@ int main(int argc, char* argv[]) {
         InferenceEngine db(manifest);
         RetrogradeSolver solver(M, &db);
         solver.solve_pair_lock_free(K1, K2);
+    }
+    else if (mode == "--start" && argc == 3) {
+        std::string manifest = argv[2];
+        std::cout << "[RUNNING] Solving Bestemshe Starting Position...\n";
+        InferenceEngine db(manifest);
+        StartSearch searcher(&db);
+        searcher.SolveStartingPosition();
     }
     else {
         PrintUsage();
