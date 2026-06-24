@@ -498,8 +498,16 @@ void RetrogradeSolver::solve_pair_lock_free(uint16_t K1, uint16_t K2) {
     std::chrono::duration<double> d_init = t_init_end - t_init_start;
     std::cout << "[BENCHMARK] Memory Alloc & Init: " << d_init.count() << "s\n";
 
-    // 1. Preload ONLY the selective dependencies for this pair
-    inference_engine->preload_pair(K1, K2, layer_M);
+    // 1. Preload ONLY the selective dependencies for this pair.
+    if (!inference_engine->preload_pair(K1, K2, layer_M)) {
+        std::cerr << "[FATAL] preload_pair failed for (" << K1 << "," << K2
+                  << "): a reachable higher-layer file is missing/corrupt. "
+                  << "Aborting pair to avoid writing corrupt output.\n";
+        return;
+    }
+
+    constexpr uint64_t BLOCK = 65536;
+    uint64_t num_blocks = (local_size + BLOCK - 1) / BLOCK;
 
     auto t_sweep_start = std::chrono::high_resolution_clock::now();
     int iteration = 0;
@@ -510,82 +518,75 @@ void RetrogradeSolver::solve_pair_lock_free(uint16_t K1, uint16_t K2) {
         
         std::atomic<uint64_t> states_proven_this_iter{0};
 
-        #pragma omp parallel
-        {
-            uint64_t threads = static_cast<uint64_t>(omp_get_num_threads());
-            uint64_t tid = static_cast<uint64_t>(omp_get_thread_num());
-            uint64_t chunk = (local_size + threads - 1) / threads;
-            uint64_t begin = tid * chunk;
-            uint64_t end = std::min(local_size, begin + chunk);
+        // Dynamic 64K-block scheduling: each block decodes its start board once via
+        // UnindexState, then walks it with the O(1) odometer. Blocks are independent, so
+        // dynamic stealing load-balances late sweeps (where the few remaining UNKNOWN states
+        // cluster unevenly) without changing the converged result.
+        #pragma omp parallel for schedule(dynamic, 1)
+        for (uint64_t blk = 0; blk < num_blocks; ++blk) {
+            uint64_t begin = blk * BLOCK;
+            uint64_t end = std::min(local_size, begin + BLOCK);
 
-            if (begin < end) {
-                uint64_t m_idx = begin / b_count; // 0 or 1
-                uint64_t b_idx = begin % b_count;
+            uint64_t m_idx = begin / b_count; // 0 or 1
+            uint64_t b_idx = begin % b_count;
+            uint16_t current_k1 = (m_idx == 0) ? K1 : K2;
 
-                uint16_t current_k1 = (m_idx == 0) ? K1 : K2;
-                uint16_t current_k2 = (m_idx == 0) ? K2 : K1;
+            uint64_t global_start = ((current_k1 - min_K) / 2) * b_count + b_idx;
+            SolverState s = UnindexState(global_start, layer_M);
 
-                // Reconstruct starting board using UnindexState on simulated global index
-                uint64_t global_start = ((current_k1 - min_K) / 2) * b_count + b_idx;
-                SolverState s = UnindexState(global_start, layer_M);
+            for (uint64_t i = begin; i < end; ++i) {
+                uint8_t current_val = static_cast<uint8_t>(read_pair(i));
+                if (current_val == static_cast<uint8_t>(GameValue::UNKNOWN)) {
+                    bool all_losses_for_me = true;
+                    bool proved_win = false;
 
-                for (uint64_t i = begin; i < end; ++i) {
-                    uint8_t current_val = static_cast<uint8_t>(read_pair(i));
-                    if (current_val == static_cast<uint8_t>(GameValue::UNKNOWN)) {
-                        bool all_losses_for_me = true;
-                        bool proved_win = false;
+                    for (int move = 0; move < 5; ++move) {
+                        if (s.board[move] == 0) continue;
 
-                        for (int move = 0; move < 5; ++move) {
-                            if (s.board[move] == 0) continue;
+                        SolverState next_s;
+                        bool empties_opponent;
+                        bool is_capture = execute_and_flip(s, move, next_s, empties_opponent);
 
-                            SolverState next_s;
-                            bool empties_opponent;
-                            bool is_capture = execute_and_flip(s, move, next_s, empties_opponent);
+                        GameValue target_val;
 
-                            GameValue target_val;
-
-                            if (empties_opponent || next_s.K_opp >= 26) {
-                                target_val = GameValue::LOSS;
-                            } else if (is_capture) {
-                                uint64_t target_idx = IndexState(next_s);
-                                target_val = inference_engine->query_state(next_s.K_self + next_s.K_opp, next_s.K_opp, target_idx);
-                            } else {
-                                // Non-capturing transition stays within layer M.
-                                // Map (next_s.K_self, next_s.K_opp) to our local 2-bit pair buffer
-                                uint64_t next_j = IndexState(next_s) % b_count;
-                                uint64_t next_m_idx = (next_s.K_self == K1) ? 0 : 1;
-                                uint64_t next_local_idx = next_m_idx * b_count + next_j;
-
-                                target_val = read_pair(next_local_idx);
-                            }
-
-                            if (target_val == GameValue::LOSS) {
-                                proved_win = true;
-                                break;
-                            }
-                            if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN) {
-                                all_losses_for_me = false;
-                            }
+                        if (empties_opponent || next_s.K_opp >= 26) {
+                            target_val = GameValue::LOSS;
+                        } else if (is_capture) {
+                            uint64_t target_idx = IndexState(next_s);
+                            target_val = inference_engine->query_state(next_s.K_self + next_s.K_opp, next_s.K_opp, target_idx);
+                        } else {
+                            // Non-capturing transition stays within layer M.
+                            // Map (next_s.K_self, next_s.K_opp) to our local 2-bit pair buffer.
+                            uint64_t next_j = IndexState(next_s) % b_count;
+                            uint64_t next_m_idx = (next_s.K_self == K1) ? 0 : 1;
+                            uint64_t next_local_idx = next_m_idx * b_count + next_j;
+                            target_val = read_pair(next_local_idx);
                         }
 
-                        if (proved_win) {
-                            write_pair(i, GameValue::WIN);
-                            states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
-                        } else if (all_losses_for_me) {
-                            write_pair(i, GameValue::LOSS);
-                            states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
+                        if (target_val == GameValue::LOSS) {
+                            proved_win = true;
+                            break;
                         }
+                        if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN)
+                            all_losses_for_me = false;
                     }
 
-                    if (i + 1 < end) {
-                        // Advance board odometer
-                        if (!StateIndex::AdvanceBoard(s.board)) {
-                            // Carry to the second micro-layer of the pair (only if P == 2)
-                            s.K_self = K2;
-                            s.K_opp = K1;
-                            for (int p = 0; p < 9; ++p) s.board[p] = 0;
-                            s.board[9] = static_cast<uint8_t>(R);
-                        }
+                    if (proved_win) {
+                        write_pair(i, GameValue::WIN);
+                        states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
+                    } else if (all_losses_for_me) {
+                        write_pair(i, GameValue::LOSS);
+                        states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
+                    }
+                }
+
+                if (i + 1 < end) {
+                    // Advance board odometer; on wrap, carry into slice 1 of the pair (K2,K1).
+                    if (!StateIndex::AdvanceBoard(s.board)) {
+                        s.K_self = K2;
+                        s.K_opp = K1;
+                        for (int p = 0; p < 9; ++p) s.board[p] = 0;
+                        s.board[9] = static_cast<uint8_t>(R);
                     }
                 }
             }
