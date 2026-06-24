@@ -41,6 +41,37 @@ struct MicroLayerMeta {
 };
 
 class InferenceEngine {
+    public:
+    // Evicts all preloaded data from memory to prevent heap accumulation
+    void clear_cache() {
+        std::lock_guard<std::mutex> lock(cache_mutex);
+        raw_layer_cache.clear();
+    }
+
+    // Preloads ONLY the higher micro-layers reachable from pair (K1, K2)
+    void preload_pair(uint16_t K1, uint16_t K2, uint8_t layer_M) {
+        clear_cache(); // Wipe previous pair's dependencies
+
+        std::cout << "[INFO] InferenceEngine: Preloading selective reach set for Pair (" 
+                  << K1 << "," << K2 << ") in Layer M=" << static_cast<int>(layer_M) << "...\n";
+
+        // Reach(K1, K2) Derivation from §3.3 [1]:
+        // 1. (K2, j) where j is even and K1 < j <= 24
+        for (int j = K1 + 2; j <= 24; j += 2) {
+            uint8_t M_next = K2 + j;
+            if (M_next <= 48) {
+                preload_uncompressed_layer(M_next, static_cast<uint8_t>(j));
+            }
+        }
+
+        // 2. (K1, j) where j is even and K2 < j <= 24
+        for (int j = K2 + 2; j <= 24; j += 2) {
+            uint8_t M_next = K1 + j;
+            if (M_next <= 48) {
+                preload_uncompressed_layer(M_next, static_cast<uint8_t>(j));
+            }
+        }
+    }
 private:
     struct RawLayerCacheEntry {
         std::vector<uint8_t> win_bits;

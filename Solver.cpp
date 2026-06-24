@@ -458,4 +458,197 @@ void RetrogradeSolver::write_raw_monoliths(const std::string& out_dir) {
     std::cout << "[INFO] Saved monoliths to: " << win_file << " and " << draw_file << std::endl;
 }
 
+void RetrogradeSolver::solve_pair_lock_free(uint16_t K1, uint16_t K2) {
+    auto t_init_start = std::chrono::high_resolution_clock::now();
+
+    int min_K = StateIndex::GetMinK(layer_M);
+    int R = 50 - static_cast<int>(layer_M);
+    uint64_t b_count = StateIndex::nCr(R + 9, 9);
+    uint64_t b_bytes = (b_count + 7) / 8;
+
+    int P = (K1 == K2) ? 1 : 2;
+    uint64_t local_size = P * b_count;
+
+    // Allocate 2-bit packed local array strictly for this pair
+    std::vector<std::atomic<uint8_t>> pair_db((local_size + 3) / 4);
+    for (auto& val : pair_db) {
+        val.store(0, std::memory_order_relaxed);
+    }
+
+    auto read_pair = [&](uint64_t idx) -> GameValue {
+        uint64_t byte_idx = idx / 4;
+        uint8_t shift = static_cast<uint8_t>((idx % 4) * 2);
+        uint8_t byte_val = pair_db[byte_idx].load(std::memory_order_relaxed);
+        return static_cast<GameValue>((byte_val >> shift) & 0x03);
+    };
+
+    auto write_pair = [&](uint64_t idx, GameValue val) {
+        uint64_t byte_idx = idx / 4;
+        uint8_t shift = static_cast<uint8_t>((idx % 4) * 2);
+        uint8_t mask = static_cast<uint8_t>(~(0x03u << shift));
+        uint8_t new_bits = static_cast<uint8_t>((static_cast<uint8_t>(val) & 0x03u) << shift);
+        uint8_t current = pair_db[byte_idx].load(std::memory_order_relaxed);
+        while (!pair_db[byte_idx].compare_exchange_weak(
+            current, static_cast<uint8_t>((current & mask) | new_bits),
+            std::memory_order_relaxed, std::memory_order_relaxed)) {
+        }
+    };
+
+    auto t_init_end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> d_init = t_init_end - t_init_start;
+    std::cout << "[BENCHMARK] Memory Alloc & Init: " << d_init.count() << "s\n";
+
+    // 1. Preload ONLY the selective dependencies for this pair
+    inference_engine->preload_pair(K1, K2, layer_M);
+
+    auto t_sweep_start = std::chrono::high_resolution_clock::now();
+    int iteration = 0;
+
+    while (true) {
+        auto t_iter_start = std::chrono::high_resolution_clock::now();
+        iteration++;
+        
+        std::atomic<uint64_t> states_proven_this_iter{0};
+
+        #pragma omp parallel
+        {
+            uint64_t threads = static_cast<uint64_t>(omp_get_num_threads());
+            uint64_t tid = static_cast<uint64_t>(omp_get_thread_num());
+            uint64_t chunk = (local_size + threads - 1) / threads;
+            uint64_t begin = tid * chunk;
+            uint64_t end = std::min(local_size, begin + chunk);
+
+            if (begin < end) {
+                uint64_t m_idx = begin / b_count; // 0 or 1
+                uint64_t b_idx = begin % b_count;
+
+                uint16_t current_k1 = (m_idx == 0) ? K1 : K2;
+                uint16_t current_k2 = (m_idx == 0) ? K2 : K1;
+
+                // Reconstruct starting board using UnindexState on simulated global index
+                uint64_t global_start = ((current_k1 - min_K) / 2) * b_count + b_idx;
+                SolverState s = UnindexState(global_start, layer_M);
+
+                for (uint64_t i = begin; i < end; ++i) {
+                    uint8_t current_val = static_cast<uint8_t>(read_pair(i));
+                    if (current_val == static_cast<uint8_t>(GameValue::UNKNOWN)) {
+                        bool all_losses_for_me = true;
+                        bool proved_win = false;
+
+                        for (int move = 0; move < 5; ++move) {
+                            if (s.board[move] == 0) continue;
+
+                            SolverState next_s;
+                            bool empties_opponent;
+                            bool is_capture = execute_and_flip(s, move, next_s, empties_opponent);
+
+                            GameValue target_val;
+
+                            if (empties_opponent || next_s.K_opp >= 26) {
+                                target_val = GameValue::LOSS;
+                            } else if (is_capture) {
+                                uint64_t target_idx = IndexState(next_s);
+                                target_val = inference_engine->query_state(next_s.K_self + next_s.K_opp, next_s.K_opp, target_idx);
+                            } else {
+                                // Non-capturing transition stays within layer M.
+                                // Map (next_s.K_self, next_s.K_opp) to our local 2-bit pair buffer
+                                uint64_t next_j = IndexState(next_s) % b_count;
+                                uint64_t next_m_idx = (next_s.K_self == K1) ? 0 : 1;
+                                uint64_t next_local_idx = next_m_idx * b_count + next_j;
+
+                                target_val = read_pair(next_local_idx);
+                            }
+
+                            if (target_val == GameValue::LOSS) {
+                                proved_win = true;
+                                break;
+                            }
+                            if (target_val == GameValue::DRAW || target_val == GameValue::UNKNOWN) {
+                                all_losses_for_me = false;
+                            }
+                        }
+
+                        if (proved_win) {
+                            write_pair(i, GameValue::WIN);
+                            states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
+                        } else if (all_losses_for_me) {
+                            write_pair(i, GameValue::LOSS);
+                            states_proven_this_iter.fetch_add(1, std::memory_order_acq_rel);
+                        }
+                    }
+
+                    if (i + 1 < end) {
+                        // Advance board odometer
+                        if (!StateIndex::AdvanceBoard(s.board)) {
+                            // Carry to the second micro-layer of the pair (only if P == 2)
+                            s.K_self = K2;
+                            s.K_opp = K1;
+                            for (int p = 0; p < 9; ++p) s.board[p] = 0;
+                            s.board[9] = static_cast<uint8_t>(R);
+                        }
+                    }
+                }
+            }
+        }
+
+        auto t_iter_end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> d_iter = t_iter_end - t_iter_start;
+        std::cout << "  Iter " << iteration << ": Proven " << states_proven_this_iter.load(std::memory_order_acquire) 
+                  << " states. Time: " << d_iter.count() << "s\n";
+
+        if (states_proven_this_iter.load(std::memory_order_acquire) == 0) break;
+    }
+
+    auto t_sweep_end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> d_sweep = t_sweep_end - t_sweep_start;
+    std::cout << "[BENCHMARK] Total Value Iteration: " << d_sweep.count() << "s\n";
+
+    // 2. Finalize draws for unresolved states
+    uint64_t draw_count = 0;
+    #pragma omp parallel for reduction(+:draw_count)
+    for (uint64_t i = 0; i < local_size; ++i) {
+        if (read_pair(i) == GameValue::UNKNOWN) {
+            write_pair(i, GameValue::DRAW);
+            draw_count++;
+        }
+    }
+    std::cout << "[INFO] Iteration complete. Detected " << draw_count << " loop-based Draws." << std::endl;
+
+    // 3. Write raw binary files directly to disk
+    std::filesystem::create_directories("layers");
+
+    for (int m = 0; m < P; ++m) {
+        uint16_t k1 = (m == 0) ? K1 : K2;
+        uint16_t k2 = (m == 0) ? K2 : K1;
+
+        std::string win_file = "layers/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_win.raw";
+        std::string draw_file = "layers/layer_" + std::to_string(k1) + "_" + std::to_string(k2) + "_draw.raw";
+
+        std::vector<uint8_t> win_bits(b_bytes, 0);
+        std::vector<uint8_t> draw_bits(b_bytes, 0);
+
+        uint64_t offset = m * b_count;
+        #pragma omp parallel for
+        for (uint64_t j = 0; j < b_count; ++j) {
+            uint64_t i = offset + j;
+            GameValue val = read_pair(i);
+            if (val == GameValue::WIN) win_bits[j / 8] |= (1 << (j % 8));
+            else if (val == GameValue::DRAW) draw_bits[j / 8] |= (1 << (j % 8));
+        }
+
+        std::ofstream w_out(win_file, std::ios::binary);
+        w_out.write(reinterpret_cast<const char*>(win_bits.data()), win_bits.size());
+        w_out.close();
+
+        std::ofstream d_out(draw_file, std::ios::binary);
+        d_out.write(reinterpret_cast<const char*>(draw_bits.data()), draw_bits.size());
+        d_out.close();
+
+        std::cout << "[SUCCESS] Saved pair raw files to: " << win_file << " and " << draw_file << std::endl;
+    }
+
+    inference_engine->clear_cache(); // Free system RAM after write
+}
+
 } // namespace Bestemshe
+

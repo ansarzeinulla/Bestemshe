@@ -16,6 +16,8 @@ struct SolverState {
 };
 
 class RetrogradeSolver {
+public:
+    void solve_pair_lock_free(uint16_t K1, uint16_t K2);
 private:
     uint8_t layer_M;
     uint64_t num_states;
