@@ -81,8 +81,8 @@ private:
             return tt_it->second;
         }
 
-        // 2. Tablebase Boundary Check (M >= 14 - Newly solved layers active!) [1]
-        if (s.M >= 14) {
+        // 2. Tablebase Boundary Check (M >= 8 - Newly solved layers active!) [1]
+        if (s.M >= 8) {
             int min_K = StateIndex::GetMinK(s.M);
             if (s.K_self < min_K || s.K_self > 24) return 0; // Fallback
             
@@ -161,11 +161,11 @@ public:
     StartSearch(InferenceEngine* engine) : inference_engine(engine) {}
 
     void SolveStartingPosition() {
-        std::cout << "[INFO] Preloading solved database (M >= 14) into memory..." << std::endl;
+        std::cout << "[INFO] Preloading solved database (M >= 8) into memory..." << std::endl;
         auto t_load_start = std::chrono::high_resolution_clock::now();
         
         // Pass 12 to preload layers 14 through 48 [1]
-        inference_engine->preload_all_layers(12);
+        inference_engine->preload_all_layers(6);
         
         auto t_load_end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> d_load = t_load_end - t_load_start;
