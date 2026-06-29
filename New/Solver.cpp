@@ -5,10 +5,30 @@
 #include <omp.h>
 #include <algorithm>
 #include <filesystem>
+#include <csignal>
+#include <atomic>
 
 namespace Bestemshe {
 
+// Global interrupt flag
+static std::atomic<bool> interrupt_requested{false};
+
+extern "C" void handle_sigint(int) {
+    if (!interrupt_requested.load()) {
+        interrupt_requested.store(true);
+        std::cout << "\n[INTERRUPT] Ctrl+C detected! Gracefully halting threads. DO NOT PRESS IT AGAIN...\n";
+        
+        // ABSOLUTE SHIELD: Tell the OS to completely ignore any further Ctrl+C mashes.
+        std::signal(SIGINT, SIG_IGN); 
+    }
+}
+
+
 void RetrogradeSolver::solve_pair_lock_free(uint16_t K1, uint16_t K2) {
+    // Register Ctrl+C listener
+    interrupt_requested.store(false);
+    std::signal(SIGINT, handle_sigint);
+    
     auto t_init_start = std::chrono::high_resolution_clock::now();
 
     int R = 50 - static_cast<int>(layer_M);
@@ -21,6 +41,54 @@ void RetrogradeSolver::solve_pair_lock_free(uint16_t K1, uint16_t K2) {
     // Allocate 2-bit packed local array for this isolated pair
     std::vector<std::atomic<uint8_t>> pair_db((local_size + 3) / 4);
     for (auto& val : pair_db) val.store(0, std::memory_order_relaxed);
+
+    // -------------------------------------------------------------------------
+    // AUTO-RESUME CHECKPOINT LOGIC (CHUNKED I/O)
+    // -------------------------------------------------------------------------
+    std::string chk_file = "layers/checkpoint_" + std::to_string(K1) + "_" + std::to_string(K2) + ".tmp";
+    if (std::filesystem::exists(chk_file)) {
+        std::cout << "[INFO] Found checkpoint! Resuming progress from: " << chk_file << "\n";
+        std::ifstream in(chk_file, std::ios::binary);
+        if (in) {
+            std::vector<uint8_t> buffer(pair_db.size());
+            
+            // Chunked read to bypass macOS POSIX limits
+            const size_t chunk_size = 64 * 1024 * 1024; // 64 MB
+            char* data_ptr = reinterpret_cast<char*>(buffer.data());
+            size_t remaining = buffer.size();
+            size_t offset = 0;
+            
+            while (remaining > 0) {
+                size_t to_read = std::min(chunk_size, remaining);
+                in.read(data_ptr + offset, to_read);
+                if (!in && in.gcount() == 0) break; 
+                offset += to_read;
+                remaining -= to_read;
+            }
+            
+            #pragma omp parallel for schedule(static)
+            for (size_t i = 0; i < pair_db.size(); ++i) {
+                pair_db[i].store(buffer[i], std::memory_order_relaxed);
+            }
+            // -----------------------------------------------------------------
+            // NEW: PROGRESS TELEMETRY (RESUME)
+            // -----------------------------------------------------------------
+            uint64_t unknown_states = 0;
+            #pragma omp parallel for reduction(+:unknown_states)
+            for (size_t i = 0; i < buffer.size(); ++i) {
+                uint8_t b = buffer[i];
+                unknown_states += ((b & 0x03) == 0) + ((b & 0x0C) == 0) + ((b & 0x30) == 0) + ((b & 0xC0) == 0);
+            }
+            unknown_states -= (buffer.size() * 4 - local_size); // subtract unused padding bits
+            uint64_t done_states = local_size - unknown_states;
+            std::cout << "[PROGRESS] Resumed with " << done_states << " / " << local_size 
+                      << " states resolved (" << std::fixed << std::setprecision(2) 
+                      << (done_states * 100.0 / local_size) << "%). Remaining: " 
+                      << unknown_states << "\n";
+            // -----------------------------------------------------------------
+        }
+    }
+    // -------------------------------------------------------------------------
 
     auto read_pair = [&](uint64_t idx) -> GameValue {
         uint8_t shift = static_cast<uint8_t>((idx % 4) * 2);
@@ -61,6 +129,8 @@ void RetrogradeSolver::solve_pair_lock_free(uint16_t K1, uint16_t K2) {
 
         #pragma omp parallel for schedule(dynamic, 1)
         for (uint64_t blk = 0; blk < num_blocks; ++blk) {
+            if (interrupt_requested.load(std::memory_order_relaxed)) continue; 
+
             uint64_t begin = blk * BLOCK;
             uint64_t end = std::min(local_size, begin + BLOCK);
 
@@ -145,8 +215,58 @@ void RetrogradeSolver::solve_pair_lock_free(uint16_t K1, uint16_t K2) {
         std::cout << "  Iter " << iteration << ": Proven " 
                   << states_proven_this_iter.load(std::memory_order_acquire) << " states. Time: " 
                   << std::chrono::duration<double>(t_iter_end - t_iter_start).count() << "s\n";
+        
+        // -------------------------------------------------------------------------
+        // UNIFIED: SAVE CHECKPOINT & HANDLE GRACEFUL EXIT (CHUNKED I/O)
+        // -------------------------------------------------------------------------
+        if (states_proven_this_iter.load(std::memory_order_acquire) > 0 || interrupt_requested.load()) {
+            std::cout << "  [CHECKPOINT] Flushing RAM to disk in 64MB chunks (Do not close terminal!)...\n";
+            std::vector<uint8_t> buffer(pair_db.size());
+            
+            #pragma omp parallel for schedule(static)
+            for (size_t i = 0; i < pair_db.size(); ++i) {
+                buffer[i] = pair_db[i].load(std::memory_order_relaxed);
+            }
+            
+            std::ofstream out(chk_file, std::ios::binary);
+            if (!out.is_open()) {
+                std::cerr << "  [FATAL] Could not open file for writing: " << chk_file << "\n";
+            } else {
+                const size_t chunk_size = 64 * 1024 * 1024; // 64 MB
+                const char* data_ptr = reinterpret_cast<const char*>(buffer.data());
+                size_t remaining = buffer.size();
+                size_t offset = 0;
+                
+                while (remaining > 0) {
+                    size_t to_write = std::min(chunk_size, remaining);
+                    out.write(data_ptr + offset, to_write);
+                    if (!out) {
+                        std::cerr << "  [FATAL] Write failed at offset " << offset << "!\n";
+                        break;
+                    }
+                    offset += to_write;
+                    remaining -= to_write;
+                }
+                out.flush();
+                out.close();
+                
+                if (remaining == 0) {
+                    std::cout << "  [CHECKPOINT] 100% written successfully (" << buffer.size() << " bytes) to " << chk_file << ".\n";
+                }
+            }
+            
+            if (interrupt_requested.load()) {
+                std::cout << "[INFO] Safely aborted. Run exactly the same command later to resume.\n";
+                inference_engine->clear_cache();
+                return; 
+            }
+        }
+        // -------------------------------------------------------------------------
 
-        if (states_proven_this_iter.load(std::memory_order_acquire) == 0) break;
+        if (states_proven_this_iter.load(std::memory_order_acquire) == 0) {
+            std::cout << "[INFO] Value iteration converged! Proceeding to finalize draws...\n";
+            break; 
+        }
     }
 
     auto t_sweep_end = std::chrono::high_resolution_clock::now();
@@ -163,8 +283,7 @@ void RetrogradeSolver::solve_pair_lock_free(uint16_t K1, uint16_t K2) {
         }
     }
     std::cout << "[INFO] Iteration complete. Detected " << draw_count << " loop-based Draws.\n";
-
-    // Write directly to raw binary files
+// Write directly to raw binary files (Chunked I/O to bypass POSIX limits)
     std::filesystem::create_directories("layers");
 
     for (int m = 0; m < P; ++m) {
@@ -185,17 +304,39 @@ void RetrogradeSolver::solve_pair_lock_free(uint16_t K1, uint16_t K2) {
             else if (val == GameValue::DRAW) draw_bits[j / 8] |= (1 << (j % 8));
         }
 
-        std::ofstream w_out(win_file, std::ios::binary);
-        w_out.write(reinterpret_cast<const char*>(win_bits.data()), win_bits.size());
-        
-        std::ofstream d_out(draw_file, std::ios::binary);
-        d_out.write(reinterpret_cast<const char*>(draw_bits.data()), draw_bits.size());
+        auto write_chunked = [](const std::string& path, const std::vector<uint8_t>& data) {
+            std::ofstream out(path, std::ios::binary);
+            const size_t chunk_size = 64 * 1024 * 1024; // 64 MB
+            const char* ptr = reinterpret_cast<const char*>(data.data());
+            size_t rem = data.size();
+            size_t off = 0;
+            while (rem > 0) {
+                size_t to_write = std::min(chunk_size, rem);
+                out.write(ptr + off, to_write);
+                off += to_write;
+                rem -= to_write;
+            }
+        };
+
+        write_chunked(win_file, win_bits);
+        write_chunked(draw_file, draw_bits);
 
         std::cout << "[SUCCESS] Saved pair raw files to: " << win_file << " and " << draw_file << "\n";
     }
 
+
+
+    // -------------------------------------------------------------------------
+    // NEW: CLEANUP CHECKPOINT
+    // -------------------------------------------------------------------------
+    if (std::filesystem::exists(chk_file)) {
+        std::filesystem::remove(chk_file);
+        std::cout << "[INFO] Cleaned up temporary checkpoint file.\n";
+    }
+
     inference_engine->clear_cache();
 }
+
 
 void RetrogradeSolver::verify_pair_consistency(uint16_t K1, uint16_t K2) {
     // This is identical to solve_pair_lock_free conceptually, but instead of solving from scratch,

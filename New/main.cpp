@@ -101,6 +101,137 @@ int main(int argc, char* argv[]) {
         std::cout << "--------------------------------------------------------\n";
         std::cout << "Root Query Execution Time: " << d_query.count() << " seconds\n";
         std::cout << "========================================================\n";
+    }else if (mode == "--analyze") {
+        State s;
+        // Accept either a custom board, or default to the starting position
+        if (argc == 14) {
+            s.K_self = static_cast<uint8_t>(std::stoi(argv[2]));
+            s.K_opp  = static_cast<uint8_t>(std::stoi(argv[3]));
+            s.M      = s.K_self + s.K_opp;
+            for (int i = 0; i < 10; ++i) s.board[i] = static_cast<uint8_t>(std::stoi(argv[4 + i]));
+        } else if (argc == 2) {
+            s.M = 0; s.K_self = 0; s.K_opp = 0;
+            for (int i = 0; i < 10; ++i) s.board[i] = 5;
+        } else {
+            std::cout << "Usage: ./bestemshe --analyze  [OR]  ./bestemshe --analyze K1 K2 p0..p9\n";
+            return 1;
+        }
+
+        InferenceEngine db;
+        int ply = 0;
+
+        while (true) {
+            bool is_p1_turn = (ply % 2 == 0);
+            std::string current_player = is_p1_turn ? "Player 1 (White)" : "Player 2 (Black)";
+
+            // 1. Construct Absolute Board for Fixed Human Perspective
+            uint8_t abs_board[10];
+            int abs_k1, abs_k2;
+            if (is_p1_turn) {
+                for (int i = 0; i < 10; ++i) abs_board[i] = s.board[i];
+                abs_k1 = s.K_self;
+                abs_k2 = s.K_opp;
+            } else {
+                for (int i = 0; i < 5; ++i) {
+                    abs_board[i] = s.board[i + 5];   // P1's pits are in 5-9 of canonical state
+                    abs_board[i + 5] = s.board[i];   // P2's pits are in 0-4 of canonical state
+                }
+                abs_k1 = s.K_opp;
+                abs_k2 = s.K_self;
+            }
+
+            std::cout << "\n========================================================\n"
+                      << "   BESTEMSHE ORACLE: PLY " << ply << " | " << current_player << " to move\n"
+                      << "========================================================\n";
+                      
+            std::cout << "                 [P2 Kazan (Black): " << abs_k2 << "]\n\n";
+            std::cout << "        (9)   (8)   (7)   (6)   (5)    <- P2 Pits\n       ";
+            for (int i = 9; i >= 5; --i) printf("[%2d]  ", (int)abs_board[i]);
+            std::cout << "\n\n       ";
+            for (int i = 0; i < 5; ++i) printf("[%2d]  ", (int)abs_board[i]);
+            std::cout << "\n        (0)   (1)   (2)   (3)   (4)    <- P1 Pits\n\n";
+            std::cout << "                 [P1 Kazan (White): " << abs_k1 << "]\n";
+            std::cout << "--------------------------------------------------------\n";
+            std::cout << "EVALUATING MOVES (1-0 = P1 Wins, 0-1 = P2 Wins)\n";
+
+            int start_move = is_p1_turn ? 0 : 5;
+            int end_move   = is_p1_turn ? 4 : 9;
+            bool has_moves = false;
+
+            for (int abs_move = start_move; abs_move <= end_move; ++abs_move) {
+                int canonical_move = is_p1_turn ? abs_move : (abs_move - 5);
+
+                if (s.board[canonical_move] == 0) {
+                    std::cout << "Move " << abs_move << ": INVALID (Empty pit)\n";
+                    continue;
+                }
+                has_moves = true;
+                
+                State next_s;
+                bool empties;
+                ExecuteMoveAndFlip(s, canonical_move, next_s, empties);
+                
+                std::string result_str;
+                
+                if (empties || next_s.K_opp >= 26) {
+                    if (is_p1_turn) result_str = "\033[1;32m1-0 (P1 forces WIN - Immediate)\033[0m";
+                    else            result_str = "\033[1;31m0-1 (P2 forces WIN - Immediate)\033[0m";
+                } else {
+                    uint64_t next_idx = StateIndex::IndexState(next_s);
+                    GameValue val = db.query_state(next_s.M, next_s.K_opp, next_idx);
+                    
+                    if (val == GameValue::DRAW) {
+                        result_str = "\033[1;33m0.5-0.5 (Forced DRAW)\033[0m";
+                    } else if (val == GameValue::UNKNOWN) {
+                        result_str = "\033[1;31mUNKNOWN (Error: Layer missing)\033[0m";
+                    } else {
+                        bool next_player_wins = (val == GameValue::WIN);
+                        bool p1_wins = is_p1_turn ? !next_player_wins : next_player_wins;
+                        
+                        if (p1_wins) result_str = "\033[1;32m1-0 (P1 forces WIN)\033[0m";
+                        else         result_str = "\033[1;31m0-1 (P2 forces WIN)\033[0m";
+                    }
+                }
+                std::cout << "Move " << abs_move << ": " << result_str << "\n";
+            }
+
+            if (!has_moves) {
+                std::cout << "\n*** No valid moves. Game Over. ***\n";
+                break;
+            }
+
+            std::cout << "--------------------------------------------------------\n";
+            int chosen_abs_move = -1;
+            int chosen_canonical = -1;
+            while (true) {
+                std::cout << "Enter move (" << start_move << "-" << end_move << ") or 'q' to quit: ";
+                std::string input;
+                if (!(std::cin >> input) || input == "q") {
+                    std::cout << "Exiting Oracle.\n";
+                    return 0;
+                }
+                try {
+                    chosen_abs_move = std::stoi(input);
+                    if (chosen_abs_move >= start_move && chosen_abs_move <= end_move) {
+                        chosen_canonical = is_p1_turn ? chosen_abs_move : (chosen_abs_move - 5);
+                        if (s.board[chosen_canonical] > 0) break;
+                    }
+                } catch (...) {}
+                std::cout << "Invalid move. Try again.\n";
+            }
+
+            // Execute chosen move and update canonical state
+            bool empties;
+            ExecuteMoveAndFlip(s, chosen_canonical, s, empties);
+
+            if (empties || s.K_opp >= 26) {
+                std::cout << "\n========================================================\n";
+                std::cout << "*** GAME OVER: " << current_player << " Wins! ***\n";
+                std::cout << "========================================================\n";
+                break;
+            }
+            ply++;
+        }
     }
     else {
         PrintUsage();
