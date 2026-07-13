@@ -31,6 +31,12 @@ OBJS = $(SRCS:.cpp=.o)
 # Default Rule
 all: $(TARGET)
 
+# Tablebase Explorer CLI (mmap single-block reader, no solver deps)
+query: query.cpp Oracle.h StateIndex.h BestemsheCore.h
+	@echo "[BUILDING] query..."
+	$(CXX) $(CXXFLAGS) query.cpp -o query $(LDFLAGS)
+	@echo "[SUCCESS] Build complete: ./query"
+
 # Linking
 $(TARGET): $(OBJS)
 	@echo "[LINKING for $(UNAME_S)] $(TARGET)..."
@@ -45,6 +51,6 @@ $(TARGET): $(OBJS)
 # Clean Up
 clean:
 	@echo "[CLEANING] Removing object files and binary..."
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET) query
 
 .PHONY: all clean
