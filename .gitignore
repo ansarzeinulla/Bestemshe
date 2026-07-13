@@ -1,6 +1,9 @@
 .DS_Store
 layers/
-layers_known/
 error.txt
-layers18/
-openings/
+*.o
+*.so
+build/
+__pycache__/
+bestemshe
+query

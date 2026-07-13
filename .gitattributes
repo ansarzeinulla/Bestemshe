@@ -1,0 +1,4 @@
+# LFS tracking for the tablebase (takes effect in the Hugging Face Space repo,
+# where layers/ is committed; the GitHub repo keeps layers/ gitignored).
+layers/compressed/*.bin filter=lfs diff=lfs merge=lfs -text
+layers/compressed/compression_map.txt filter=lfs diff=lfs merge=lfs -text
