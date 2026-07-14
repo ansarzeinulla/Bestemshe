@@ -101,11 +101,11 @@ def oracle_bridge(payload):
 INDEX_MARKUP = r"""
 <style>
   #oracle_in, #oracle_out, #oracle_btn { display: none !important; }
-  #bb-wrap { max-width: 980px; margin: 0 auto; font-family: system-ui, sans-serif; color: #2a2118; }
+  #bb-wrap { max-width: 1280px; margin: 0 auto; font-family: system-ui, sans-serif; color: #2a2118; }
   #bb-wrap * { box-sizing: border-box; }
-  #bb-cols { display: flex; gap: 20px; align-items: flex-start; }
-  #bb-main { flex: 1 1 620px; min-width: 0; }
-  #bb-side { flex: 0 0 280px; display: flex; flex-direction: column; gap: 12px; }
+  #bb-cols { display: flex; gap: 24px; align-items: flex-start; }
+  #bb-main { flex: 1 1 auto; min-width: 0; }
+  #bb-side { flex: 0 0 260px; display: flex; flex-direction: column; gap: 12px; }
   @media (max-width: 860px) {
     #bb-cols { flex-direction: column; }
     #bb-side { flex: 1 1 auto; width: 100%; }
@@ -118,15 +118,15 @@ INDEX_MARKUP = r"""
   .bb-status.end { color: #1b5e20; }
 
   .bb-board { background: linear-gradient(160deg, #fffdf2 0%, #fdf0bf 100%);
-              border: 2px solid #e9cf7a; border-radius: 22px; padding: 18px 14px;
+              border: 2px solid #e9cf7a; border-radius: 26px; padding: 26px 18px;
               box-shadow: 0 6px 18px rgba(160,120,30,0.10); }
-  .bb-kazan { display: flex; justify-content: center; align-items: center; gap: 10px;
-              font-weight: 800; color: #6d500e; font-size: 15px; margin: 4px 0; }
-  .bb-kazan .num { background: #f6e2a0; border-radius: 12px; padding: 3px 14px; font-size: 20px; }
-  .bb-row { display: flex; gap: 3.5%; justify-content: center; margin: 14px 0; }
-  .bb-pit { width: 15%; max-width: 74px; aspect-ratio: 1; border-radius: 50%;
+  .bb-kazan { display: flex; justify-content: center; align-items: center; gap: 12px;
+              font-weight: 800; color: #6d500e; font-size: 19px; margin: 6px 0; }
+  .bb-kazan .num { background: #f6e2a0; border-radius: 14px; padding: 4px 20px; font-size: 27px; }
+  .bb-row { display: flex; gap: 3.5%; justify-content: center; margin: 20px 0; }
+  .bb-pit { width: 16.5%; max-width: 128px; aspect-ratio: 1; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: clamp(17px, 3vw, 24px); font-weight: 800; color: #14100a;
+            font-size: clamp(22px, 3.6vw, 40px); font-weight: 800; color: #14100a;
             background: radial-gradient(circle at 35% 30%, #f4ad55 0%, #d9822b 55%, #b5661d 100%);
             box-shadow: inset 0 -3px 6px rgba(0,0,0,0.25), 0 2px 3px rgba(0,0,0,0.2);
             border: 4px solid transparent; transition: transform .08s ease; }
@@ -146,16 +146,19 @@ INDEX_MARKUP = r"""
                 border: 1px solid #e2c98a; background: #fffdf5; color: #2a2118; cursor: pointer; }
   .bb-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .bb-icon { cursor: pointer; border: 1px solid #e2c98a; background: #fff8e6; border-radius: 12px;
-             font-size: 19px; padding: 10px 0; line-height: 1; text-align: center; }
-  .bb-icon:hover { background: #ffedc2; }
+             font-size: 20px; font-weight: 800; color: #8a5a00; padding: 10px 0; line-height: 1;
+             text-align: center; font-family: system-ui, sans-serif; }
+  .bb-icon:hover { background: #ffedc2; color: #5c3c00; }
 
   .bb-hist-title { font-weight: 700; color: #6d500e; margin: 0 0 8px; font-size: 14px;
                    text-transform: uppercase; letter-spacing: .04em; }
-  .bb-hist { font-family: ui-monospace, monospace; line-height: 2.0; font-size: 15px;
-             max-height: 340px; overflow-y: auto; }
+  .bb-hist { font-family: ui-monospace, monospace; font-size: 15px;
+             height: 300px; overflow-y: auto; overflow-x: hidden; }
   .bb-hist:empty::after { content: "—"; color: #c9b98e; }
-  .bb-turn { color: #b3a276; margin-right: 4px; }
-  .bb-mv { cursor: pointer; padding: 2px 7px; border-radius: 7px; margin-right: 4px; }
+  .bb-hrow { display: grid; grid-template-columns: 34px 1fr 1fr; gap: 4px; align-items: center;
+             line-height: 1.5; padding: 2px 0; }
+  .bb-turn { color: #b3a276; text-align: right; padding-right: 4px; }
+  .bb-mv { cursor: pointer; padding: 3px 8px; border-radius: 7px; text-align: center; }
   .bb-mv:hover { background: #ffedc2; }
   .bb-mv.on { background: #d9822b; color: #fff; }
 
@@ -198,9 +201,9 @@ INDEX_MARKUP = r"""
       </select>
       <div class="bb-actions">
         <button class="bb-icon" data-act="new" id="bb-btn-new">↺</button>
-        <button class="bb-icon" data-act="open" data-modal="bb-setup" id="bb-btn-setup">⚙️</button>
-        <button class="bb-icon" data-act="open" data-modal="bb-help" id="bb-btn-help">❔</button>
-        <button class="bb-icon" data-act="pgn" id="bb-btn-pgn">⬇️</button>
+        <button class="bb-icon" data-act="open" data-modal="bb-setup" id="bb-btn-setup">⚙</button>
+        <button class="bb-icon" data-act="open" data-modal="bb-help" id="bb-btn-help">?</button>
+        <button class="bb-icon" data-act="pgn" id="bb-btn-pgn">⤓</button>
       </div>
       <div class="bb-card">
         <div class="bb-hist-title" id="bb-hist-title"></div>
@@ -435,13 +438,21 @@ INDEX_JS = r"""
 
     let hist = "";
     for (let i = 0; i < played.length; i += 2) {
-      hist += '<span class="bb-turn">' + (i / 2 + 1) + ".</span>";
-      for (let j = i; j < Math.min(i + 2, played.length); j++) {
-        hist += '<span class="bb-mv' + (j + 1 === cursor ? " on" : "") + '" data-act="hist" data-idx="' + j + '">' + played[j] + "</span>";
+      hist += '<div class="bb-hrow"><span class="bb-turn">' + (i / 2 + 1) + ".</span>";
+      for (let j = i; j < i + 2; j++) {
+        hist += (j < played.length)
+          ? '<span class="bb-mv' + (j + 1 === cursor ? " on" : "") + '" data-act="hist" data-idx="' + j + '">' + played[j] + "</span>"
+          : "<span></span>";
       }
+      hist += "</div>";
     }
-    document.getElementById("bb-hist").innerHTML = hist;
+    const histEl = document.getElementById("bb-hist");
+    histEl.innerHTML = hist;
     document.getElementById("bb-hist-title").textContent = t("history");
+    // keep the list scrolled to the current move (bottom while playing forward)
+    const onEl = histEl.querySelector(".bb-mv.on");
+    if (onEl) onEl.scrollIntoView({ block: "nearest" });
+    else histEl.scrollTop = histEl.scrollHeight;
 
     // toolbar tooltips + modal labels
     document.getElementById("bb-btn-new").title = t("newGame");
