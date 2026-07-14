@@ -125,11 +125,10 @@ int main(int argc, char* argv[]) {
             << ", \"result\": \"" << result << "\""
             << ", \"terminal\": " << (terminal ? "true" : "false");
 
-        // Raw canonical child (opponent to move) so the caller can continue play.
-        if (!terminal) {
-            out << ", \"child\": {\"K1\": " << (int)child.K_self
-                << ", \"K2\": " << (int)child.K_opp << ", \"board\": " << board_json(child) << "}";
-        }
+        // Raw canonical child (opponent to move). Emitted even for terminal moves
+        // so the UI can show the final board before freezing the game.
+        out << ", \"child\": {\"K1\": " << (int)child.K_self
+            << ", \"K2\": " << (int)child.K_opp << ", \"board\": " << board_json(child) << "}";
         out << "}";
     }
     out << "\n]}";
