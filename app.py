@@ -7,12 +7,18 @@ import tempfile
 
 import gradio as gr
 
-try:  # ZeroGPU Spaces require one @spaces.GPU entry point (a no-op for this CPU app)
+# This is a CPU-only app. If the Space happens to be provisioned on ZeroGPU
+# hardware, its startup check demands at least one @spaces.GPU function — so we
+# define a dummy probe that is never called. The real handlers run on the CPU
+# that is always available, so nothing ever tries (and fails) to grab a GPU slot.
+try:
     import spaces
-    gpu_entry = spaces.GPU
+
+    @spaces.GPU
+    def _zerogpu_probe():  # never invoked; satisfies ZeroGPU startup detection only
+        return None
 except ImportError:
-    def gpu_entry(fn):
-        return fn
+    pass
 
 QUERY_BIN = os.environ.get("BESTEMSHE_QUERY_BIN", "./query")
 DATA_DIR = os.environ.get("BESTEMSHE_DATA_DIR", "layers/compressed")
@@ -188,7 +194,6 @@ def new_game(pos_str):
             state, 0, [], moves, state, over)
 
 
-@gpu_entry
 def play_move(evt: gr.SelectData, state, ply, history, moves, over):
     # No-op if game is finished or the click didn't land on a valid row.
     if over or evt.index is None or evt.index[0] >= len(moves):
