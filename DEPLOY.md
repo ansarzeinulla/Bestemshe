@@ -21,20 +21,40 @@ Nothing under `layers/` is committed (see `.gitignore`), so no LFS needed on Git
 
 ## 2. Hugging Face Space
 
-Create the Space once: https://huggingface.co/new-space — SDK: **Docker**, public,
-free CPU basic (16GB RAM, 50GB disk — both sufficient).
+The Space `ansarzeinulla/Bestemshe-God-Algorithm` already exists as a free **Gradio SDK**
+space (Docker Spaces require a PRO subscription; Gradio ones are free). The C++ CLI is
+compiled at app startup — `packages.txt` installs g++/make/libzstd-dev via apt, and
+`app.py` builds `./query` on first launch. Do NOT upload the Dockerfile or a README
+with `sdk: docker` — that converts the Space to Docker and triggers a 402.
 
 ```bash
 pip install -U "huggingface_hub[cli]"
-huggingface-cli login
+hf auth login    # the CLI is `hf` (huggingface-cli is deprecated)
 ```
 
-### Option A (recommended): HTTP upload — resumable, no git-lfs juggling
+### Option A (recommended): HfApi.upload_folder
 
-```bash
-huggingface-cli upload <you>/bestemshe-explorer . . \
-  --repo-type space \
-  --exclude ".git/*" "*.o" "bestemshe" "query" "build/*" "*.so" "docs/*"
+NOTE: `hf upload` fails with `402 Payment Required` on free-tier Gradio Spaces because
+the CLI always hits the `repos/create` endpoint first (even for existing repos). The
+Python API commits directly to the existing repo and works. Run from the repo root:
+
+```python
+from huggingface_hub import HfApi
+api = HfApi()
+
+# Code
+api.upload_folder(
+    repo_id="ansarzeinulla/Bestemshe-God-Algorithm", repo_type="space",
+    folder_path=".",
+    allow_patterns=["app.py", "requirements.txt", "packages.txt", "query.cpp",
+                    "Oracle.h", "StateIndex.h", "BestemsheCore.h", ".gitattributes", "README.md"],
+)
+
+# Tablebase (8.3GB, LFS automatically)
+api.upload_folder(
+    repo_id="ansarzeinulla/Bestemshe-God-Algorithm", repo_type="space",
+    folder_path="layers/compressed", path_in_repo="layers/compressed",
+)
 ```
 
 This uploads code + `layers/compressed` (large files automatically stored as LFS
@@ -44,7 +64,7 @@ Dockerfile and serves the Gradio app on port 7860.
 ### Option B: pure git-lfs push
 
 ```bash
-git clone https://huggingface.co/spaces/<you>/bestemshe-explorer hf-space
+git clone https://huggingface.co/spaces/ansarzeinulla/Bestemshe-God-Algorithm hf-space
 cd hf-space
 git lfs install
 cp -R ../{app.py,requirements.txt,Dockerfile,README.md,.gitattributes,query.cpp,Oracle.h,StateIndex.h,BestemsheCore.h} .

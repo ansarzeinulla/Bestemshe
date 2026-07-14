@@ -23,6 +23,20 @@ static void emit_error(const std::string& msg) {
     std::cout << "{\"error\": \"" << msg << "\"}\n";
 }
 
+// Mirrors the sowing in ExecuteMoveAndFlip to find the pit (0..9) where the
+// last stone lands. Used only for move notation.
+static int landing_pit(const State& s, int i) {
+    int pieces = s.board[i];
+    int current = i;
+    if (pieces == 1) {
+        current = (current + 1) % 10;
+    } else {
+        pieces--;
+        while (pieces > 0) { current = (current + 1) % 10; pieces--; }
+    }
+    return current;
+}
+
 static std::string board_json(const State& s) {
     std::ostringstream o;
     o << "[";
@@ -79,23 +93,22 @@ int main(int argc, char* argv[]) {
 
     bool first = true;
     for (int pit = 0; pit < 5; ++pit) {
-        if (!first) out << ",";
-        first = false;
-        out << "\n  {\"pit\": " << pit << ", ";
+        if (s.board[pit] == 0) continue; // illegal move: omit entirely
 
-        if (s.board[pit] == 0) {
-            out << "\"result\": \"INVALID\"}";
-            continue;
-        }
+        int land = landing_pit(s, pit);
+        int from_idx = pit + 1;          // 1..5
+        int to_idx = (land % 5) + 1;     // 1..5 (either side)
 
         State child;
         bool empties;
-        ExecuteMoveAndFlip(s, pit, child, empties);
+        bool capture = ExecuteMoveAndFlip(s, pit, child, empties);
 
         const char* result;
+        bool terminal = false;
         if (empties || child.K_opp >= 26) {
             // Terminal: the mover wins immediately.
             result = "WIN";
+            terminal = true;
         } else {
             OracleValue v = oracle.query(child);
             if (v == OracleValue::ERROR) { emit_error("lookup failed for move child"); return 1; }
@@ -105,12 +118,19 @@ int main(int argc, char* argv[]) {
             else                             result = "DRAW";
         }
 
-        // Child reported in absolute mover coordinates (flip back for display).
-        out << "\"result\": \"" << result << "\", \"child\": {\"K1\": " << (int)child.K_opp
-            << ", \"K2\": " << (int)child.K_self << ", \"board\": [";
-        for (int i = 0; i < 10; ++i)
-            out << (i ? "," : "") << static_cast<int>(child.board[(i + 5) % 10]);
-        out << "]}}";
+        if (!first) out << ",";
+        first = false;
+        out << "\n  {\"from\": " << from_idx << ", \"to\": " << to_idx
+            << ", \"capture\": " << (capture ? "true" : "false")
+            << ", \"result\": \"" << result << "\""
+            << ", \"terminal\": " << (terminal ? "true" : "false");
+
+        // Raw canonical child (opponent to move) so the caller can continue play.
+        if (!terminal) {
+            out << ", \"child\": {\"K1\": " << (int)child.K_self
+                << ", \"K2\": " << (int)child.K_opp << ", \"board\": " << board_json(child) << "}";
+        }
+        out << "}";
     }
     out << "\n]}";
 
