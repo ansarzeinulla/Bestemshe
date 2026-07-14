@@ -146,8 +146,9 @@ INDEX_MARKUP = r"""
                 border: 1px solid #e2c98a; background: #fffdf5; color: #2a2118; cursor: pointer; }
   .bb-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .bb-icon { cursor: pointer; border: 1px solid #e2c98a; background: #fff8e6; border-radius: 12px;
-             font-size: 20px; font-weight: 800; color: #8a5a00; padding: 10px 0; line-height: 1;
-             text-align: center; font-family: system-ui, sans-serif; }
+             height: 46px; font-size: 22px; font-weight: 800; color: #8a5a00; padding: 0;
+             line-height: 1; display: flex; align-items: center; justify-content: center;
+             font-family: system-ui, sans-serif; }
   .bb-icon:hover { background: #ffedc2; color: #5c3c00; }
 
   .bb-hist-title { font-weight: 700; color: #6d500e; margin: 0 0 8px; font-size: 14px;
@@ -178,9 +179,9 @@ INDEX_MARKUP = r"""
                         padding: 2px 8px; font-family: ui-monospace, monospace; font-size: 13px;
                         text-align: center; }
   .bb-modal .err { color: #c62828; font-size: 14px; margin-top: 8px; min-height: 18px; }
-  .bb-modal .btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
-  .bb-modal .btns button { cursor: pointer; border-radius: 10px; padding: 9px 18px; font-weight: 700;
-                           border: 1px solid #d9822b; font-size: 14px; }
+  .bb-modal .btns { display: flex; gap: 10px; justify-content: stretch; margin-top: 16px; }
+  .bb-modal .btns button { flex: 1 1 0; cursor: pointer; border-radius: 10px; padding: 11px 0;
+                           font-weight: 700; border: 1px solid #d9822b; font-size: 15px; }
   .bb-modal .primary { background: #d9822b; color: #fff; }
   .bb-modal .ghost { background: #fff; color: #6d500e; }
 </style>
