@@ -1,4 +1,6 @@
 .DS_Store
+.claude/
+docs/
 layers/
 error.txt
 *.o

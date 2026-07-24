@@ -4,6 +4,8 @@ A custom HTML/JS front end (multilingual, keyboard-driven, rewritable history)
 talks to the C++ tablebase oracle through a hidden Gradio bridge. Keeping the
 UI client-side lets us do global keyboard handling, arrow navigation, clickable
 history and language switching that Gradio's own components cannot express.
+
+All user-facing copy, flags and language names live in i18n.py.
 """
 
 import json
@@ -11,6 +13,8 @@ import os
 import subprocess
 
 import gradio as gr
+
+from i18n import LANGUAGES, TRANSLATIONS, PLAYER_WHITE, PLAYER_BLACK
 
 # CPU-only app. If the Space is provisioned on ZeroGPU hardware its startup
 # check demands a @spaces.GPU function; this dummy probe (never called) satisfies
@@ -27,7 +31,6 @@ except ImportError:
 QUERY_BIN = os.environ.get("BESTEMSHE_QUERY_BIN", "./query")
 DATA_DIR = os.environ.get("BESTEMSHE_DATA_DIR", "layers/compressed")
 TABLEBASE_DATASET = os.environ.get("BESTEMSHE_DATASET", "ansarzeinulla/bestemshe-tablebase")
-START_POSITION = "0 0 5 5 5 5 5 5 5 5 5 5"
 
 
 def ensure_tablebase():
@@ -98,6 +101,10 @@ def oracle_bridge(payload):
 # --------------------------------------------------------------------------- #
 # Front end
 # --------------------------------------------------------------------------- #
+LANG_OPTIONS = "".join(
+    f'<option value="{l["code"]}">{l["flag"]} {l["name"]}</option>' for l in LANGUAGES
+)
+
 INDEX_MARKUP = r"""
 <style>
   #oracle_in, #oracle_out, #oracle_btn { display: none !important; }
@@ -112,10 +119,6 @@ INDEX_MARKUP = r"""
   }
 
   .bb-card { background: #fffdf5; border: 1px solid #ecdfb8; border-radius: 16px; padding: 14px; }
-
-  .bb-status { text-align: center; font-weight: 700; font-size: 19px; margin: 0 0 12px;
-               min-height: 26px; color: #6d500e; }
-  .bb-status.end { color: #1b5e20; }
 
   .bb-board { background: linear-gradient(160deg, #fffdf2 0%, #fdf0bf 100%);
               border: 2px solid #e9cf7a; border-radius: 26px; padding: 26px 18px;
@@ -136,11 +139,6 @@ INDEX_MARKUP = r"""
   .bb-pit.DRAW { border-color: #f0a020; }
   .bb-pit.LOSS { border-color: #c62828; }
 
-  .bb-legend { display: flex; gap: 16px; justify-content: center; font-size: 13px; color: #7a6a4a;
-               margin: 12px 0 0; flex-wrap: wrap; }
-  .bb-legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .bb-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-
   .bb-side-row { display: flex; gap: 8px; align-items: center; }
   #bb-langsel { width: 100%; font-size: 15px; padding: 9px 10px; border-radius: 12px;
                 border: 1px solid #e2c98a; background: #fffdf5; color: #2a2118; cursor: pointer; }
@@ -150,6 +148,8 @@ INDEX_MARKUP = r"""
              line-height: 1; display: flex; align-items: center; justify-content: center;
              font-family: system-ui, sans-serif; }
   .bb-icon:hover { background: #ffedc2; color: #5c3c00; }
+  /* the gear glyph reads optically smaller than the others — enlarge it */
+  #bb-btn-setup { font-size: 30px; }
 
   .bb-hist-title { font-weight: 700; color: #6d500e; margin: 0 0 8px; font-size: 14px;
                    text-transform: uppercase; letter-spacing: .04em; }
@@ -163,6 +163,9 @@ INDEX_MARKUP = r"""
   .bb-mv:hover { background: #ffedc2; }
   .bb-mv.on { background: #d9822b; color: #fff; }
 
+  .bb-credit { font-size: 12px; color: #8a7a54; line-height: 1.5; text-align: center;
+               padding: 4px 6px 0; }
+
   .bb-overlay { position: fixed; inset: 0; background: rgba(30,22,8,0.5); display: none;
                 align-items: center; justify-content: center; z-index: 1000; }
   .bb-overlay.open { display: flex; }
@@ -173,33 +176,29 @@ INDEX_MARKUP = r"""
                        padding: 10px; border: 1px solid #d8c692; border-radius: 10px; background: #fff; }
   .bb-modal .hint { font-size: 14.5px; color: #4c4130; margin: 10px 0 4px; line-height: 1.65; }
   .bb-modal .hint b { color: #6d500e; }
-  .bb-modal .keys { display: grid; grid-template-columns: 64px 1fr; gap: 6px 12px;
+  .bb-modal .keys { display: grid; grid-template-columns: 74px 1fr; gap: 6px 12px;
                     font-size: 14.5px; color: #4c4130; margin: 10px 0; align-items: center; }
   .bb-modal .keys kbd { background: #f1e5c0; border: 1px solid #d8c692; border-radius: 6px;
                         padding: 2px 8px; font-family: ui-monospace, monospace; font-size: 13px;
                         text-align: center; }
   .bb-modal .err { color: #c62828; font-size: 14px; margin-top: 8px; min-height: 18px; }
+  .bb-modal .credit { font-size: 13px; color: #6d500e; margin-top: 14px; line-height: 1.6;
+                      border-top: 1px solid #ecdfb8; padding-top: 12px; }
   .bb-modal .btns { display: flex; gap: 10px; justify-content: stretch; margin-top: 16px; }
+  /* Start and Close buttons are visually identical (item 4). */
   .bb-modal .btns button { flex: 1 1 0; cursor: pointer; border-radius: 10px; padding: 11px 0;
-                           font-weight: 700; border: 1px solid #d9822b; font-size: 15px; }
-  .bb-modal .primary { background: #d9822b; color: #fff; }
-  .bb-modal .ghost { background: #fff; color: #6d500e; }
+                           font-weight: 700; font-size: 15px; border: 1px solid #d9822b;
+                           background: #d9822b; color: #fff; }
+  .bb-modal .btns button:hover { background: #c4741f; }
+  .bb-end-title { text-align: center; font-size: 22px; }
 </style>
 <div id="bb-wrap">
   <div id="bb-cols">
     <div id="bb-main">
-      <div class="bb-status" id="bb-status"></div>
       <div class="bb-board" id="bb-board"></div>
-      <div class="bb-legend" id="bb-legend"></div>
     </div>
     <div id="bb-side">
-      <select id="bb-langsel">
-        <option value="EN">🇬🇧 English</option>
-        <option value="KZ">🇰🇿 Қазақша</option>
-        <option value="RU">🇷🇺 Русский</option>
-        <option value="KG">🇰🇬 Кыргызча</option>
-        <option value="TR">🇹🇷 Türkçe</option>
-      </select>
+      <select id="bb-langsel">__LANG_OPTIONS__</select>
       <div class="bb-actions">
         <button class="bb-icon" data-act="new" id="bb-btn-new">↺</button>
         <button class="bb-icon" data-act="open" data-modal="bb-setup" id="bb-btn-setup">⚙</button>
@@ -210,6 +209,7 @@ INDEX_MARKUP = r"""
         <div class="bb-hist-title" id="bb-hist-title"></div>
         <div class="bb-hist" id="bb-hist"></div>
       </div>
+      <div class="bb-credit" id="bb-credit"></div>
     </div>
   </div>
 
@@ -218,87 +218,90 @@ INDEX_MARKUP = r"""
     <textarea id="bb-fen" rows="2"></textarea>
     <div class="hint" id="bb-fen-help"></div>
     <div class="err" id="bb-setup-err"></div>
-    <div class="btns"><button class="ghost" data-act="close" data-modal="bb-setup" id="bb-setup-close"></button>
-      <button class="primary" data-act="apply" id="bb-setup-apply"></button></div>
+    <div class="btns"><button data-act="close" data-modal="bb-setup" id="bb-setup-close"></button>
+      <button data-act="apply" id="bb-setup-apply"></button></div>
   </div></div>
   <div class="bb-overlay" id="bb-help"><div class="bb-modal">
     <h3 id="bb-help-title"></h3>
     <div class="hint" id="bb-help-intro"></div>
     <div class="keys" id="bb-help-keys"></div>
     <div class="hint" id="bb-help-extra"></div>
-    <div class="btns"><button class="primary" data-act="close" data-modal="bb-help" id="bb-help-close"></button></div>
+    <div class="credit" id="bb-help-credit"></div>
+    <div class="btns"><button data-act="close" data-modal="bb-help" id="bb-help-close"></button></div>
+  </div></div>
+  <div class="bb-overlay" id="bb-end"><div class="bb-modal">
+    <h3 class="bb-end-title" id="bb-end-title"></h3>
+    <div class="hint" id="bb-end-msg" style="text-align:center"></div>
+    <div class="btns"><button data-act="close" data-modal="bb-end" id="bb-end-close"></button>
+      <button data-act="pgn" id="bb-end-pgn"></button></div>
   </div></div>
 </div>
-"""
+""".replace("__LANG_OPTIONS__", LANG_OPTIONS)
 
 INDEX_JS = r"""
 () => {
   if (window.__bbInit) return; window.__bbInit = true;
-  const DEFAULT = "0 0 5 5 5 5 5 5 5 5 5 5";
+  const DEFAULT_FEN = "5,5,5,5,5/5,5,5,5,5 0,0 w 1";
 
-  const I18N = {
-    EN: { toMove:"to move", wins:"wins!", drawLoop:"Infinite loop — draw",
-      history:"Moves", newGame:"New game", setup:"Set position", help:"How to play", pgn:"Download PGN",
-      apply:"Start", close:"Close",
-      fenHelp:"Enter 12 numbers separated by spaces: Bastaushi's kazan, Kostaushi's kazan, Bastaushi's 5 pits, then Kostaushi's 5 pits. All stones together must total 50. Bastaushi always moves first.",
-      helpIntro:"Bestemshe is completely solved. The colored ring on each pit shows the outcome of that move with perfect play afterwards: <b>green</b> — the player who moves wins, <b>amber</b> — draw, <b>red</b> — the player who moves loses. Click a pit to play it.",
-      keys:[["1–5","play a pit: counted from each player's own left hand (bottom player left→right, top player right→left)"],
-            ["0","play a random optimal move"],["←","previous position"],["→","next position"],
-            ["↑","back to the starting position"],["↓","jump to the last move"]],
-      helpExtra:"Click any move in the list to jump back to it. Playing a different move from there rewrites the rest of the line. If a position ever repeats, the game stops as an infinite-loop draw.",
-      legWin:"win", legDraw:"draw", legLoss:"loss" },
-    KZ: { toMove:"жүреді", wins:"жеңеді!", drawLoop:"Шексіз цикл — тең ойын",
-      history:"Жүрістер", newGame:"Жаңа ойын", setup:"Позиция қою", help:"Қалай ойнау", pgn:"PGN жүктеу",
-      apply:"Бастау", close:"Жабу",
-      fenHelp:"Бос орынмен бөлінген 12 сан енгізіңіз: Бастаушының қазаны, Қостаушының қазаны, Бастаушының 5 ұясы, содан кейін Қостаушының 5 ұясы. Барлық тастардың қосындысы 50 болуы керек. Әрқашан Бастаушы бірінші жүреді.",
-      helpIntro:"Бестемше толық шешілген ойын. Әр ұядағы түсті сақина сол жүрістен кейін мінсіз ойында кім жеңетінін көрсетеді: <b>жасыл</b> — жүруші жеңеді, <b>сары</b> — тең, <b>қызыл</b> — жүруші жеңіледі. Жүру үшін ұяны басыңыз.",
-      keys:[["1–5","ұяны ойнау: әр ойыншы өз сол қолынан санайды (төменгі — солдан оңға, жоғарғы — оңнан солға)"],
-            ["0","кездейсоқ оңтайлы жүріс"],["←","алдыңғы позиция"],["→","келесі позиция"],
-            ["↑","бастапқы позицияға"],["↓","соңғы жүріске"]],
-      helpExtra:"Тізімдегі кез келген жүрісті басып, соған ораласыз. Ол жерден басқа жүріс жасасаңыз, қалған тарих қайта жазылады. Позиция қайталанса, ойын шексіз цикл — тең деп тоқтайды.",
-      legWin:"жеңіс", legDraw:"тең", legLoss:"жеңіліс" },
-    RU: { toMove:"ходит", wins:"выигрывает!", drawLoop:"Бесконечный цикл — ничья",
-      history:"Ходы", newGame:"Новая игра", setup:"Задать позицию", help:"Как играть", pgn:"Скачать PGN",
-      apply:"Начать", close:"Закрыть",
-      fenHelp:"Введите 12 чисел через пробел: казан Бастаушы, казан Костаушы, 5 лунок Бастаушы, затем 5 лунок Костаушы. Сумма всех камней должна быть 50. Первым всегда ходит Бастаушы.",
-      helpIntro:"Бестемше полностью решена. Цветное кольцо на лунке показывает исход этого хода при идеальной игре дальше: <b>зелёное</b> — ходящий выигрывает, <b>жёлтое</b> — ничья, <b>красное</b> — ходящий проигрывает. Нажмите на лунку, чтобы сделать ход.",
-      keys:[["1–5","сыграть лунку: каждый считает от своей левой руки (нижний — слева направо, верхний — справа налево)"],
-            ["0","случайный оптимальный ход"],["←","предыдущая позиция"],["→","следующая позиция"],
-            ["↑","к начальной позиции"],["↓","к последнему ходу"]],
-      helpExtra:"Нажмите на любой ход в списке, чтобы вернуться к нему. Сыграв оттуда другой ход, вы перепишете остаток партии. Если позиция повторяется, игра останавливается как ничья из-за бесконечного цикла.",
-      legWin:"выигрыш", legDraw:"ничья", legLoss:"проигрыш" },
-    KG: { toMove:"жүрөт", wins:"жеңет!", drawLoop:"Түгөнбөс цикл — тең",
-      history:"Жүрүштөр", newGame:"Жаңы оюн", setup:"Позиция коюу", help:"Кантип ойноо", pgn:"PGN жүктөө",
-      apply:"Баштоо", close:"Жабуу",
-      fenHelp:"Боштук менен бөлүнгөн 12 сан киргизиңиз: Бастаушынын казаны, Костаушунун казаны, Бастаушынын 5 уясы, андан кийин Костаушунун 5 уясы. Бардык таштардын суммасы 50 болушу керек. Ар дайым Бастаушы биринчи жүрөт.",
-      helpIntro:"Бестемше толук чечилген оюн. Ар бир уядагы түстүү шакек ошол жүрүштөн кийин мыкты оюнда ким утаарын көрсөтөт: <b>жашыл</b> — жүрүүчү утат, <b>сары</b> — тең, <b>кызыл</b> — жүрүүчү утулат. Жүрүш үчүн уяны басыңыз.",
-      keys:[["1–5","уяны ойноо: ар ким өз сол колунан санайт (ылдыйкы — солдон оңго, үстүнкү — оңдон солго)"],
-            ["0","кокус оптималдуу жүрүш"],["←","мурунку позиция"],["→","кийинки позиция"],
-            ["↑","баштапкы позицияга"],["↓","акыркы жүрүшкө"]],
-      helpExtra:"Тизмедеги каалаган жүрүштү басып, ага кайтасыз. Ошол жерден башка жүрүш жасасаңыз, калган тарых кайра жазылат. Позиция кайталанса, оюн түгөнбөс цикл — тең деп токтойт.",
-      legWin:"утуш", legDraw:"тең", legLoss:"утулуш" },
-    TR: { toMove:"oynayacak", wins:"kazanır!", drawLoop:"Sonsuz döngü — beraberlik",
-      history:"Hamleler", newGame:"Yeni oyun", setup:"Konum ayarla", help:"Nasıl oynanır", pgn:"PGN indir",
-      apply:"Başlat", close:"Kapat",
-      fenHelp:"Boşlukla ayrılmış 12 sayı girin: Bastauşı'nın kazanı, Kostauşı'nın kazanı, Bastauşı'nın 5 kuyusu, sonra Kostauşı'nın 5 kuyusu. Tüm taşların toplamı 50 olmalı. İlk hamleyi her zaman Bastauşı yapar.",
-      helpIntro:"Bestemshe tamamen çözülmüş bir oyundur. Her kuyudaki renkli halka, o hamleden sonra kusursuz oyunla sonucu gösterir: <b>yeşil</b> — hamleyi yapan kazanır, <b>sarı</b> — beraberlik, <b>kırmızı</b> — hamleyi yapan kaybeder. Oynamak için bir kuyuya tıklayın.",
-      keys:[["1–5","kuyu oyna: her oyuncu kendi solundan sayar (alttaki soldan sağa, üstteki sağdan sola)"],
-            ["0","rastgele en iyi hamle"],["←","önceki konum"],["→","sonraki konum"],
-            ["↑","başlangıç konumuna"],["↓","son hamleye"]],
-      helpExtra:"Listedeki herhangi bir hamleye tıklayarak oraya dönün. Oradan farklı bir hamle oynarsanız devamı yeniden yazılır. Bir konum tekrarlanırsa oyun sonsuz döngü beraberliğiyle durur.",
-      legWin:"galibiyet", legDraw:"beraberlik", legLoss:"mağlubiyet" }
-  };
+  const I18N = __I18N_JSON__;
+  const NAMES = __NAMES_JSON__;   // { white: "Bastaushi", black: "Kostaushi" }
+  const SITE = "https://huggingface.co/spaces/ansarzeinulla/Bestemshe-God-Algorithm";
 
   let lang = "EN";
-  let initialFen = DEFAULT;
+  let initialFen = DEFAULT_FEN;
   let line = [];      // nodes {state, ply, moveIn, key, moves, gameOver, winner}
   let played = [];    // notations, aligned to line transitions
   let cursor = 0;
   let busy = false;
   const t = (k) => (I18N[lang][k] !== undefined ? I18N[lang][k] : I18N.EN[k]);
-  const playerName = (ply) => (ply % 2 === 0 ? "Bastaushi" : "Kostaushi");
+  // ply parity picks the absolute player: even = White (Bastaushi), odd = Black (Kostaushi).
+  const playerName = (ply) => (ply % 2 === 0 ? NAMES.white : NAMES.black);
 
-  // ---- oracle bridge ----
+  // ---- FEN <-> internal state -------------------------------------------- #
+  // Internal state is mover-relative "K1 K2 p0..p9" (K1/p0-4 = side to move).
+  // FEN is colour-absolute:  w1..w5/b1..b5 wKazan,bKazan side moveNo  (White=Bastaushi).
+  function absView(state, ply) {
+    const v = state.split(" ").map(Number);
+    const kM = v[0], kO = v[1], b = v.slice(2);
+    if (ply % 2 === 0) return { bk: kM, kk: kO, bp: b.slice(0, 5), kp: b.slice(5, 10), moverBottom: true };
+    return { bk: kO, kk: kM, bp: b.slice(5, 10), kp: b.slice(0, 5), moverBottom: false };
+  }
+  function nodeToFen(node) {
+    const av = absView(node.state, node.ply);
+    const side = node.ply % 2 === 0 ? "w" : "b";
+    const moveNo = Math.floor(node.ply / 2) + 1;
+    return av.bp.join(",") + "/" + av.kp.join(",") + " " +
+           av.bk + "," + av.kk + " " + side + " " + moveNo;
+  }
+  // Returns {state, ply} or {error}.
+  function fenToInternal(fen) {
+    try {
+      const parts = fen.trim().split(/\s+/);
+      if (parts.length < 3) return { error: "bad" };
+      const cells = parts[0].split("/");
+      if (cells.length !== 2) return { error: "bad" };
+      const white = cells[0].split(",").map(Number);
+      const black = cells[1].split(",").map(Number);
+      const kaz = parts[1].split(",").map(Number);
+      if (white.length !== 5 || black.length !== 5 || kaz.length !== 2) return { error: "bad" };
+      const all = white.concat(black, kaz);
+      if (all.some((n) => !Number.isInteger(n) || n < 0)) return { error: "bad" };
+      const side = (parts[2] || "w").toLowerCase();
+      const moveNo = parts[3] !== undefined ? parseInt(parts[3], 10) : 1;
+      const wk = kaz[0], bk = kaz[1];
+      let state, ply;
+      if (side === "b") {                       // Black (Kostaushi) to move
+        state = bk + " " + wk + " " + black.concat(white).join(" ");
+        ply = (Math.max(1, moveNo) - 1) * 2 + 1;
+      } else {                                  // White (Bastaushi) to move
+        state = wk + " " + bk + " " + white.concat(black).join(" ");
+        ply = (Math.max(1, moveNo) - 1) * 2;
+      }
+      return { state, ply };
+    } catch (e) { return { error: "bad" }; }
+  }
+
+  // ---- oracle bridge ----------------------------------------------------- #
   function setNative(el, val) {
     const set = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
     set.call(el, val); el.dispatchEvent(new Event("input", { bubbles: true }));
@@ -338,7 +341,9 @@ INDEX_JS = r"""
   }
 
   async function newGame(fen) {
-    const n0 = await makeNode(fen, 0, null);
+    const parsed = fenToInternal(fen);
+    if (parsed.error) return "bad";
+    const n0 = await makeNode(parsed.state, parsed.ply, null);
     if (n0.error) return n0.error;
     initialFen = fen; line = [n0]; played = []; cursor = 0; render();
     return null;
@@ -357,12 +362,15 @@ INDEX_JS = r"""
         child = { state: cs, ply: cp, moveIn: notation, key: (cp % 2) + ":" + cs,
                   moves: [], gameOver: "win", winner: playerName(node.ply) };
       } else {
+        // Loop detection: we keep every position (side-to-move + board) of the
+        // current line; if this child repeats one of them, it is an infinite-loop draw.
         const repeat = line.some((nd) => nd.key === (cp % 2) + ":" + cs);
         child = await makeNode(cs, cp, notation);
         child.moveIn = notation;
         if (repeat) { child.gameOver = "draw"; child.winner = null; child.moves = []; }
       }
       line.push(child); played.push(notation); cursor = line.length - 1; render();
+      if (child.gameOver) announceEnd(child);
     } finally { busy = false; }
   }
 
@@ -374,39 +382,78 @@ INDEX_JS = r"""
   async function inputIndex(i) {
     const node = line[cursor];
     if (!node || node.gameOver || node.error) return;
-    if (i === 0) { const b = optimal(node); if (b.length) await playMove(node, b[Math.floor(Math.random() * b.length)]); return; }
+    if (i === 0) {                              // random OPTIMAL move
+      const b = optimal(node);
+      if (b.length) await playMove(node, b[Math.floor(Math.random() * b.length)]);
+      return;
+    }
+    if (i === 9) {                              // random move — optimality ignored
+      if (node.moves.length) await playMove(node, node.moves[Math.floor(Math.random() * node.moves.length)]);
+      return;
+    }
     const m = node.moves.find((x) => x.from === i);
     if (m) await playMove(node, m);
   }
   function go(idx) { cursor = Math.max(0, Math.min(line.length - 1, idx)); render(); }
 
-  function absView(state, ply) {
-    const v = state.split(" ").map(Number);
-    const kM = v[0], kO = v[1], b = v.slice(2);
-    if (ply % 2 === 0) return { bk: kM, kk: kO, bp: b.slice(0, 5), kp: b.slice(5, 10), moverBottom: true };
-    return { bk: kO, kk: kM, bp: b.slice(5, 10), kp: b.slice(0, 5), moverBottom: false };
+  // ---- PGN --------------------------------------------------------------- #
+  function resultToken() {
+    const last = line[line.length - 1];
+    if (last.gameOver === "draw") return "1/2-1/2";
+    if (last.gameOver === "win" || last.gameOver === "nomove")
+      return last.winner === NAMES.white ? "1-0" : "0-1";
+    return "*";
   }
-
-  function pgnBody() {
+  function pgnMoves() {
     let out = [];
     for (let i = 0; i < played.length; i += 2) {
       out.push((i / 2 + 1) + ". " + played.slice(i, i + 2).join(" "));
     }
-    return out.join("\n");
+    let body = out.join(" ");
+    const last = line[line.length - 1];
+    if (last.gameOver === "draw") body += " {Loop is reached}";
+    const res = resultToken();
+    if (res !== "*") body += " " + res;
+    return body;
   }
   function downloadPgn() {
-    const pgn = '[Event "Bestemshe Perfect-Play Analysis"]\n[Site "Bestemshe Explorer"]\n[FEN "' +
-      initialFen + '"]\n\n' + pgnBody() + "\n";
+    const d = new Date();
+    const date = d.getFullYear() + "." +
+      String(d.getMonth() + 1).padStart(2, "0") + "." + String(d.getDate()).padStart(2, "0");
+    const header =
+      '[Event "Single Play Versus God"]\n' +
+      '[Site "' + SITE + '"]\n' +
+      '[Date "' + date + '"]\n' +
+      '[White "Player"]\n' +
+      '[Black "God"]\n' +
+      '[Result "' + resultToken() + '"]\n' +
+      '[PlyCount "' + played.length + '"]\n' +
+      '[Annotator "God"]\n' +
+      '[Mode "online"]\n';
+    const pgn = header + "\n" + pgnMoves() + "\n";
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([pgn], { type: "text/plain" }));
     a.download = "bestemshe.pgn"; a.click();
   }
 
-  // ---- rendering ----
+  // ---- rendering --------------------------------------------------------- #
   function pitHtml(count, idx, isMover, move) {
     const cls = "bb-pit" + (isMover && move ? " mv " + move.result : "");
     const data = isMover && move ? ' data-act="pit" data-i="' + idx + '"' : "";
     return '<div class="' + cls + '"' + data + ">" + count + "</div>";
+  }
+
+  function announceEnd(node) {
+    const titleEl = document.getElementById("bb-end-title");
+    const msgEl = document.getElementById("bb-end-msg");
+    if (node.gameOver === "draw") {
+      titleEl.textContent = "🔁 " + t("drawLoop");
+      msgEl.textContent = t("loopHint");
+    } else {
+      titleEl.textContent = "🏆 " + node.winner + " " + t("wins");
+      msgEl.textContent = "";
+    }
+    document.getElementById("bb-end").classList.add("open");
   }
 
   function render() {
@@ -420,22 +467,12 @@ INDEX_JS = r"""
     let bottom = "";
     for (let i = 1; i <= 5; i++) bottom += pitHtml(av.bp[i - 1], i, av.moverBottom, moverMoves.get(i));
 
-    const statusEl = document.getElementById("bb-status");
-    statusEl.classList.remove("end");
-    if (node.error) statusEl.textContent = "⚠️ " + node.error;
-    else if (node.gameOver === "draw") { statusEl.textContent = "🔁 " + t("drawLoop"); statusEl.classList.add("end"); }
-    else if (node.gameOver) { statusEl.textContent = "🏆 " + node.winner + " " + t("wins"); statusEl.classList.add("end"); }
-    else statusEl.textContent = playerName(node.ply) + " " + t("toMove");
-
+    // Board only — no status/legend text on the left (colours carry the meaning).
+    // Kazans show just the number, no player-name labels.
     document.getElementById("bb-board").innerHTML =
-      '<div class="bb-kazan">Kostaushi<span class="num">' + av.kk + "</span></div>" +
+      '<div class="bb-kazan"><span class="num">' + av.kk + "</span></div>" +
       '<div class="bb-row">' + top + "</div><div class=\"bb-row\">" + bottom + "</div>" +
-      '<div class="bb-kazan">Bastaushi<span class="num">' + av.bk + "</span></div>";
-
-    document.getElementById("bb-legend").innerHTML =
-      '<span><i class="bb-dot" style="background:#2e7d32"></i>' + t("legWin") + "</span>" +
-      '<span><i class="bb-dot" style="background:#f0a020"></i>' + t("legDraw") + "</span>" +
-      '<span><i class="bb-dot" style="background:#c62828"></i>' + t("legLoss") + "</span>";
+      '<div class="bb-kazan"><span class="num">' + av.bk + "</span></div>";
 
     let hist = "";
     for (let i = 0; i < played.length; i += 2) {
@@ -450,12 +487,12 @@ INDEX_JS = r"""
     const histEl = document.getElementById("bb-hist");
     histEl.innerHTML = hist;
     document.getElementById("bb-hist-title").textContent = t("history");
-    // keep the list scrolled to the current move (bottom while playing forward)
     const onEl = histEl.querySelector(".bb-mv.on");
     if (onEl) onEl.scrollIntoView({ block: "nearest" });
     else histEl.scrollTop = histEl.scrollHeight;
 
-    // toolbar tooltips + modal labels
+    // credit + toolbar tooltips + modal labels
+    document.getElementById("bb-credit").textContent = t("authors");
     document.getElementById("bb-btn-new").title = t("newGame");
     document.getElementById("bb-btn-setup").title = t("setup");
     document.getElementById("bb-btn-help").title = t("help");
@@ -469,25 +506,28 @@ INDEX_JS = r"""
     document.getElementById("bb-help-keys").innerHTML =
       t("keys").map((k) => "<kbd>" + k[0] + "</kbd><span>" + k[1] + "</span>").join("");
     document.getElementById("bb-help-extra").textContent = t("helpExtra");
+    document.getElementById("bb-help-credit").textContent = t("authors");
     document.getElementById("bb-help-close").textContent = t("close");
+    document.getElementById("bb-end-close").textContent = t("close");
+    document.getElementById("bb-end-pgn").textContent = t("pgn");
   }
 
   function anyModalOpen() {
     return document.querySelector(".bb-overlay.open") !== null;
   }
 
-  // ---- events ----
+  // ---- events ------------------------------------------------------------ #
   document.getElementById("bb-langsel").addEventListener("change", (e) => { lang = e.target.value; render(); });
 
   document.getElementById("bb-wrap").addEventListener("click", async (e) => {
     const el = e.target.closest("[data-act]"); if (!el) return;
     const act = el.dataset.act;
-    if (act === "new") { await newGame(DEFAULT); }
+    if (act === "new") { await newGame(DEFAULT_FEN); }
     else if (act === "pgn") { downloadPgn(); }
     else if (act === "open") {
       const m = document.getElementById(el.dataset.modal);
       if (el.dataset.modal === "bb-setup") {
-        document.getElementById("bb-fen").value = initialFen;
+        document.getElementById("bb-fen").value = nodeToFen(line[cursor]);
         document.getElementById("bb-setup-err").textContent = "";
       }
       m.classList.add("open");
@@ -496,7 +536,7 @@ INDEX_JS = r"""
     else if (act === "apply") {
       const fen = document.getElementById("bb-fen").value.trim();
       const err = await newGame(fen);
-      if (err) document.getElementById("bb-setup-err").textContent = err;
+      if (err) document.getElementById("bb-setup-err").textContent = t("fenHelp");
       else document.getElementById("bb-setup").classList.remove("open");
     }
     else if (act === "pit") { await inputIndex(parseInt(el.dataset.i, 10)); }
@@ -506,24 +546,37 @@ INDEX_JS = r"""
     if (e.target === o) o.classList.remove("open");
   }));
 
+  // Kazakh keyboard number row maps to the same digit inputs (item 5.2).
+  const KZ_DIGIT = { "«": "1", "ә": "2", "і": "3", "ң": "4", "ғ": "5", "ұ": "9", "қ": "0" };
+  // WASD navigation, case-insensitive, plus the letters those keys type on a
+  // Kazakh/Russian layout: W→ц, A→ф, S→ы, D→в (items 5.3 / 5.4).
+  const NAV = { w: "up", a: "left", s: "down", d: "right",
+                "ц": "up", "ф": "left", "ы": "down", "в": "right" };
+
   document.addEventListener("keydown", (e) => {
     if (anyModalOpen()) { if (e.key === "Escape") document.querySelectorAll(".bb-overlay.open").forEach((o) => o.classList.remove("open")); return; }
     const tag = (document.activeElement && document.activeElement.tagName) || "";
     if (tag === "TEXTAREA" || tag === "INPUT" || tag === "SELECT") return;
-    if (e.key >= "0" && e.key <= "5") { inputIndex(parseInt(e.key, 10)); e.preventDefault(); }
-    else if (e.key === "ArrowRight") { go(cursor + 1); e.preventDefault(); }
-    else if (e.key === "ArrowLeft") { go(cursor - 1); e.preventDefault(); }
-    else if (e.key === "ArrowUp") { go(0); e.preventDefault(); }
-    else if (e.key === "ArrowDown") { go(line.length - 1); e.preventDefault(); }
+
+    let key = e.key;
+    if (KZ_DIGIT[key] !== undefined) key = KZ_DIGIT[key];   // normalise Kazakh row to digits
+    const nav = NAV[key.toLowerCase()];                     // WASD / Kazakh nav (case-insensitive)
+
+    if ((key >= "0" && key <= "5") || key === "9") { inputIndex(parseInt(key, 10)); e.preventDefault(); }
+    else if (e.key === "ArrowRight" || nav === "right") { go(cursor + 1); e.preventDefault(); }
+    else if (e.key === "ArrowLeft" || nav === "left") { go(cursor - 1); e.preventDefault(); }
+    else if (e.key === "ArrowUp" || nav === "up") { go(0); e.preventDefault(); }
+    else if (e.key === "ArrowDown" || nav === "down") { go(line.length - 1); e.preventDefault(); }
   });
 
   const boot = setInterval(() => {
     if (document.querySelector("#oracle_in textarea") && document.querySelector("#oracle_btn")) {
-      clearInterval(boot); newGame(DEFAULT);
+      clearInterval(boot); newGame(DEFAULT_FEN);
     }
   }, 100);
 }
-"""
+""".replace("__I18N_JSON__", json.dumps(TRANSLATIONS, ensure_ascii=False)) \
+   .replace("__NAMES_JSON__", json.dumps({"white": PLAYER_WHITE, "black": PLAYER_BLACK}, ensure_ascii=False))
 
 ensure_query_binary()
 ensure_tablebase()
