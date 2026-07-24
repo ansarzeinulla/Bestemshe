@@ -1,44 +1,87 @@
+---
+license: cc-by-nc-4.0
+task_categories:
+- reinforcement-learning
+language:
+- en
+tags:
+- Bestemshe
+- Togyzkumalak
+- Togyzqumalaq
+- Mancala
+- Game-Theory
+- Retrograde-Analysis
+- Tablebase
+- Strong-Solution
+pretty_name: Bestemshe TableBase — Strong Solution Proof
+size_categories:
+- 10B<n<100B
+---
+
 # Bestemshe Table Base — Strong Solution Proof
 
-**Authors:** Ansar Zeinulla & Murat Manassov
+**Authors:** Ansar Zeinulla & Murat Manassov  
+**Affiliation:** Nazarbayev University, Kazakhstan  
+**Code Repository:** [github.com/ansarzeinulla/Bestemshe](https://github.com/ansarzeinulla/Bestemshe)  
+**Live Interactive Explorer:** [huggingface.co/spaces/ansarzeinulla/Bestemshe-God-Algorithm](https://huggingface.co/spaces/ansarzeinulla/bestemshe-god-algorithm)
 
-Bestemshe is a traditional Kazakh two-player mancala-style game. This artifact is
-a **strong solution** of the game: for every reachable, legal position the exact
-game-theoretic value (win / draw for the side to move) has been computed by
-retrograde analysis and stored, so perfect play is available by direct lookup —
-no search at run time. Together with the solver that produced it, the table base
-constitutes a machine-verifiable proof of the game's outcome under optimal play.
+Bestemshe is a traditional Kazakh two-player mancala-style game (5 pits per player, 50 total stones). This artifact is a **strong solution** of the game: for every reachable, legal position the exact game-theoretic value (win / draw for the side to move) has been computed by retrograde analysis and stored, enabling perfect play via direct $O(1)$ memory-mapped lookup without runtime search. 
 
-## Game encoding
+Together with the solver that produced it, this tablebase constitutes a machine-verifiable proof of the game's outcome under optimal play: **a forced win for the second player (Follower)**.
 
-A position is described by the two kazans (captured-stone stores) `K1` (side to
-move) and `K2` (opponent), and ten pits of 0..N stones. The 50 stones are
-conserved: `sum(pits) + K1 + K2 = 50`. Captures are always even, so each kazan is
-even; a kazan reaching 26 decides the game immediately and lies outside the
-stored range. Positions are stored canonically from the **side-to-move**
-perspective.
+---
 
-## Layer layout
+## Game Encoding
 
-The table base is sharded into **layers indexed by the kazan pair `(K1, K2)`**,
-each kazan even in `0..24` (13 values each → 169 pairs). Every pair has two
-compressed files:
+A position is described by the two Kazans (captured-stone stores) `K1` (side to move) and `K2` (opponent), and ten pits of `0..N` stones. The 50 stones are conserved:
+$$\sum_{i=1}^{10} \text{pits}[i] + K_1 + K_2 = 50$$
 
-- `layer_<K1>_<K2>_win.bin` — the WIN/LOSS bitset for that layer
-- `layer_<K1>_<K2>_draw.bin` — the DRAW bitset for that layer
+Captures are strictly even, so each Kazan score is an even integer. A Kazan reaching $\ge 26$ decides the game immediately and lies outside the stored range ($0 \le K_1, K_2 \le 24$). Positions are stored canonically from the **side-to-move** perspective.
 
-Files are Zstandard-compressed bitsets indexed by a combinatorial ranking of the
-pit configuration (`StateIndex`).
+---
 
-## Summary
+## Layer Layout
+
+The tablebase is sharded into **layers indexed by the Kazan pair `(K1, K2)`**, where each Kazan is even in $0..24$ ($13 \times 13 = 169$ pairs). Every pair consists of two Zstandard-compressed bitset files:
+
+- `layer_<K1>_<K2>_win.bin.zst` — The WIN/LOSS bitset for that layer.
+- `layer_<K1>_<K2>_draw.bin.zst` — The DRAW bitset for that layer.
+
+Files are Zstandard-compressed bitsets indexed by a combinatorial ranking of the pit configuration (`StateIndex`).
+
+---
+
+## Summary Statistics
 
 | Metric | Value |
-| --- | --- |
-| Layer pairs `(K1, K2)` | 169 |
-| Total files | 338 (169 win + 169 draw) |
-| WIN files total | 6.0 GB |
-| DRAW files total | 2.4 GB |
-| **Grand total** | **8.3 GB** (8,962,782,421 bytes) |
+| :--- | :--- |
+| **Layer pairs `(K1, K2)`** | 169 |
+| **Total files** | 338 (169 win + 169 draw) |
+| **WIN files total size** | 6.0 GB |
+| **DRAW files total size** | 2.4 GB |
+| **Grand Total Size** | **8.3 GB** (8,962,782,421 bytes) |
+
+---
+
+## How to Query (Quickstart)
+
+```python
+import zstandard as zstd
+
+# Example: Loading a specific layer in Python
+def load_layer(k1, k2, result_type="win"):
+    filename = f"data/layer_{k1}_{k2}_{result_type}.bin.zst"
+    with open(filename, 'rb') as fh:
+        dctx = zstd.ZstdDecompressor()
+        decompressed_data = dctx.decompress(fh.read())
+    return decompressed_data
+
+# Query bit at index
+def is_winning_state(decompressed_bytes, state_index):
+    byte_idx = state_index // 8
+    bit_idx = state_index % 8
+    return bool((decompressed_bytes[byte_idx] >> bit_idx) & 1)
+```
 
 ## Per-layer file sizes
 
@@ -213,3 +256,18 @@ pit configuration (`StateIndex`).
 | 24 | 20 | 587.0 B | 157.0 B |
 | 24 | 22 | 243.0 B | 157.0 B |
 | 24 | 24 | 164.0 B | 157.0 B |
+
+
+## Citation
+
+If you use this tablebase, solver architecture, or game-theoretic proof in your research, please cite:
+
+```Bibtex
+@misc{zeinulla2026bestemshe,
+  title={Strongly Solving Bestemshe: A 10-Gigabyte Retrograde Tablebase Proof},
+  author={Zeinulla, Ansar and Manassov, Murat},
+  year={2026},
+  publisher={Hugging Face Datasets},
+  howpublished={\url{https://huggingface.co/datasets/ansarzeinulla/bestemshe-tablebase}}
+}
+```
