@@ -1,11 +1,31 @@
-.DS_Store
-.claude/
-docs/
+# Tablebase data — 8.3 GB, lives on Hugging Face, never in git.
 layers/
-error.txt
+*.raw
+*.bin
+*.zst
+
+# Model checkpoints and training shards.
+*.pt
+shards/
+generation_status.json
+training_stats.json
+
+# Build output.
+build/
 *.o
 *.so
-build/
-__pycache__/
 bestemshe
 query
+generateTasks
+generateVictory
+
+# Generated books.
+*.pdf
+
+# Python / editors / OS.
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.DS_Store
+.claude/

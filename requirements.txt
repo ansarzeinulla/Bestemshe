@@ -1,3 +1,13 @@
-gradio>=4.0
-huggingface_hub
-spaces
+# Core runtime for the oracle client, tests, and task tooling.
+requests>=2.31          # HTTP Range lookups against the Hugging Face tablebase
+zstandard>=0.22         # decoding the solver's 4 MiB zstd blocks
+numpy>=1.24             # state sampling and shard packing
+tqdm>=4.66              # progress bars in the long-running pipelines
+pytest>=8.0             # tests/
+
+# Training and inference (training/, evaluation/).
+torch>=2.2
+huggingface_hub>=0.23   # checkpoint download and push
+
+# PDF puzzle books (tasks/book/). Optional.
+reportlab>=4.0

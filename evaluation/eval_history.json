@@ -1,0 +1,737 @@
+{
+  "description": "Aggregated per-checkpoint evaluation history for the Bestemshe ResMLP distillation. One record per distinct training step, produced by training/eval.py against the tablebase oracle.",
+  "n_checkpoints": 36,
+  "source_files": 41,
+  "step_range": [
+    1,
+    158976
+  ],
+  "checkpoints": [
+    {
+      "step": 1,
+      "model_path": "/ckpt/model_1.pt",
+      "n_positions": 1,
+      "n_games": 1,
+      "wdl_acc": 0.0,
+      "optimal_move_rate": 1.0,
+      "incidents": 0,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": true,
+        "incidents": true
+      },
+      "evaluated_at": "2026-07-30 08:23:27"
+    },
+    {
+      "step": 6,
+      "model_path": "/ckpt/model_6.pt",
+      "n_positions": 10,
+      "n_games": 5,
+      "wdl_acc": 0.2,
+      "optimal_move_rate": 0.6,
+      "incidents": 2,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 08:31:27"
+    },
+    {
+      "step": 26,
+      "model_path": "/ckpt/model_26.pt",
+      "n_positions": 100,
+      "n_games": 20,
+      "wdl_acc": 0.53,
+      "optimal_move_rate": 0.59,
+      "incidents": 10,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 08:49:19"
+    },
+    {
+      "step": 76,
+      "model_path": "/ckpt/model_76.pt",
+      "n_positions": 1000,
+      "n_games": 100,
+      "wdl_acc": 0.676,
+      "optimal_move_rate": 0.712,
+      "incidents": 50,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 09:23:07"
+    },
+    {
+      "step": 176,
+      "model_path": "/ckpt/model_176.pt",
+      "n_positions": 1000,
+      "n_games": 100,
+      "wdl_acc": 0.755,
+      "optimal_move_rate": 0.746,
+      "incidents": 50,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 09:48:53"
+    },
+    {
+      "step": 476,
+      "model_path": "/ckpt/model_476.pt",
+      "n_positions": 50000,
+      "n_games": 1000,
+      "wdl_acc": 0.81714,
+      "optimal_move_rate": 0.8254495269716183,
+      "incidents": 500,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 10:19:51"
+    },
+    {
+      "step": 976,
+      "model_path": "/ckpt/model_976.pt",
+      "n_positions": 100000,
+      "n_games": 2000,
+      "wdl_acc": 0.84553,
+      "optimal_move_rate": 0.8887044352217611,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 10:31:31"
+    },
+    {
+      "step": 1976,
+      "model_path": "/ckpt/model_1976.pt",
+      "n_positions": 200000,
+      "n_games": 3000,
+      "wdl_acc": 0.853525,
+      "optimal_move_rate": 0.9190185214817186,
+      "incidents": 1500,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 10:49:59"
+    },
+    {
+      "step": 3976,
+      "model_path": "/ckpt/model_3976.pt",
+      "n_positions": 300000,
+      "n_games": 5000,
+      "wdl_acc": 0.8787233333333333,
+      "optimal_move_rate": 0.9384784116062619,
+      "incidents": 5000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 11:26:53"
+    },
+    {
+      "step": 8976,
+      "model_path": "/ckpt/model_8976.pt",
+      "n_positions": 500000,
+      "n_games": 8000,
+      "wdl_acc": 0.911764,
+      "optimal_move_rate": 0.9546889188464815,
+      "incidents": 4000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 12:33:03"
+    },
+    {
+      "step": 18976,
+      "model_path": "/ckpt/model_18976.pt",
+      "n_positions": 10000,
+      "n_games": 100,
+      "wdl_acc": 0.9192,
+      "optimal_move_rate": 0.9661966196619662,
+      "incidents": 100,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 13:14:21"
+    },
+    {
+      "step": 28976,
+      "model_path": "/ckpt/model_28976.pt",
+      "n_positions": 10000,
+      "n_games": 100,
+      "wdl_acc": 0.9224,
+      "optimal_move_rate": 0.9678967896789679,
+      "incidents": 100,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 14:30:20"
+    },
+    {
+      "step": 38976,
+      "model_path": "/ckpt/model_38976.pt",
+      "n_positions": 100000,
+      "n_games": 10000,
+      "wdl_acc": 0.92632,
+      "optimal_move_rate": 0.9672283614180709,
+      "incidents": 10000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 15:47:13"
+    },
+    {
+      "step": 48976,
+      "model_path": "/ckpt/model_48976.pt",
+      "n_positions": 1000,
+      "n_games": 100,
+      "wdl_acc": 0.931,
+      "optimal_move_rate": 0.97,
+      "incidents": 100,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 16:35:57"
+    },
+    {
+      "step": 53976,
+      "model_path": "/ckpt/model_53976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9239,
+      "optimal_move_rate": 0.9695969596959696,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 19:34:16"
+    },
+    {
+      "step": 58976,
+      "model_path": "/ckpt/model_58976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9237,
+      "optimal_move_rate": 0.968996899689969,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 20:02:24"
+    },
+    {
+      "step": 63976,
+      "model_path": "/ckpt/model_63976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9231,
+      "optimal_move_rate": 0.9684968496849685,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 20:31:03"
+    },
+    {
+      "step": 68976,
+      "model_path": "/ckpt/model_68976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9232,
+      "optimal_move_rate": 0.9684968496849685,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 20:59:37"
+    },
+    {
+      "step": 73976,
+      "model_path": "/ckpt/model_73976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.923,
+      "optimal_move_rate": 0.9684968496849685,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 21:27:11"
+    },
+    {
+      "step": 78976,
+      "model_path": "/ckpt/model_78976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9229,
+      "optimal_move_rate": 0.9684968496849685,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 21:54:37"
+    },
+    {
+      "step": 83976,
+      "model_path": "/ckpt/model_83976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9225,
+      "optimal_move_rate": 0.9685968596859686,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 22:22:24"
+    },
+    {
+      "step": 88976,
+      "model_path": "/ckpt/model_88976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9222,
+      "optimal_move_rate": 0.9684968496849685,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 22:49:54"
+    },
+    {
+      "step": 93976,
+      "model_path": "/ckpt/model_93976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9221,
+      "optimal_move_rate": 0.9684968496849685,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 23:17:31"
+    },
+    {
+      "step": 98976,
+      "model_path": "/ckpt/model_98976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9223,
+      "optimal_move_rate": 0.9682968296829683,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-30 23:45:18"
+    },
+    {
+      "step": 103976,
+      "model_path": "/ckpt/model_103976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9223,
+      "optimal_move_rate": 0.9681968196819682,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 00:12:43"
+    },
+    {
+      "step": 108976,
+      "model_path": "/ckpt/model_108976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9224,
+      "optimal_move_rate": 0.9681968196819682,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 00:40:06"
+    },
+    {
+      "step": 113976,
+      "model_path": "/ckpt/model_113976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.922,
+      "optimal_move_rate": 0.9680968096809681,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 01:07:44"
+    },
+    {
+      "step": 118976,
+      "model_path": "/ckpt/model_118976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9219,
+      "optimal_move_rate": 0.9680968096809681,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 01:35:12"
+    },
+    {
+      "step": 123976,
+      "model_path": "/ckpt/model_123976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9217,
+      "optimal_move_rate": 0.967996799679968,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 02:02:35"
+    },
+    {
+      "step": 128976,
+      "model_path": "/ckpt/model_128976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9217,
+      "optimal_move_rate": 0.9680968096809681,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 02:30:29"
+    },
+    {
+      "step": 133976,
+      "model_path": "/ckpt/model_133976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9217,
+      "optimal_move_rate": 0.9680968096809681,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 02:58:01"
+    },
+    {
+      "step": 138976,
+      "model_path": "/ckpt/model_138976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9216,
+      "optimal_move_rate": 0.9680968096809681,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 03:26:25"
+    },
+    {
+      "step": 143976,
+      "model_path": "/ckpt/model_143976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9216,
+      "optimal_move_rate": 0.9680968096809681,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 03:54:23"
+    },
+    {
+      "step": 148976,
+      "model_path": "/ckpt/model_148976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9214,
+      "optimal_move_rate": 0.9677967796779678,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 04:22:31"
+    },
+    {
+      "step": 153976,
+      "model_path": "/ckpt/model_153976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9215,
+      "optimal_move_rate": 0.9678967896789679,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 04:50:18"
+    },
+    {
+      "step": 158976,
+      "model_path": "/ckpt/model_158976.pt",
+      "n_positions": 10000,
+      "n_games": 1000,
+      "wdl_acc": 0.9216,
+      "optimal_move_rate": 0.967996799679968,
+      "incidents": 1000,
+      "targets": {
+        "wdl_acc": 0.999,
+        "optimal_move_rate": 0.995,
+        "incidents": 0
+      },
+      "pass": {
+        "wdl_acc": false,
+        "optimal_move_rate": false,
+        "incidents": false
+      },
+      "evaluated_at": "2026-07-31 05:18:13"
+    }
+  ],
+  "caveats": [
+    "wdl_acc and optimal_move_rate come from training/eval.py, which scores a GREEDY 1-ply engine over uniformly sampled positions. They saturate near 0.968; the 0.9969 headline figure in vs_god_results.json comes from the 3-ply minimax engine in evaluation/vs_god.py.",
+    "The `incidents` column is not a diversity-bearing metric: every game in training/eval.py starts from the same root (0,0,[5]*10) with a deterministic engine and a deterministic oracle reply, so all games of a given parity are byte-identical and `incidents` scales linearly with --games (it equals n_games in 27 of 36 records). This degeneracy is exactly why evaluation/vs_god.py samples random symmetric starts instead; treat vs_god_results.json as the benchmark of record.",
+    "n_positions and n_games vary across checkpoints (1 to 500,000 positions), so accuracy values from different rows carry different confidence. The 10,000-position rows from step 53976 onward are directly comparable to one another."
+  ],
+  "note_on_steps": "Steps 1..158976 were logged by training/eval.py during the continuous-learning run. The final match in vs_god_results.json was played by the step-394852 checkpoint, which post-dates this history."
+}

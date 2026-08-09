@@ -11,7 +11,7 @@ mkdir -p layers/compressed
 # ------------------------------------------------------------------------------
 # Format: ./bestemshe --solve-pair <M> <K1> <K2>
 # Example for M=10, K1=2, K2=8:
-./bestemshe --solve-pair 10 2 8
+./build/bestemshe --solve-pair 10 2 8
 
 # This automatically loads the strictly necessary reachable layers (e.g., M=12, M=14)
 # and writes two files to disk: 
@@ -24,7 +24,7 @@ mkdir -p layers/compressed
 # ------------------------------------------------------------------------------
 # Format: ./bestemshe --verify-pair <M> <K1> <K2>
 # Example:
-./bestemshe --verify-pair 10 2 8
+./build/bestemshe --verify-pair 10 2 8
 
 # This does a local lock-free forward sweep to ensure the generated .raw files
 # are 100% mathematically consistent. If this fails, the node corrupted the data.
@@ -36,8 +36,8 @@ mkdir -p layers/compressed
 # Format: ./bestemshe --compress <input.raw> <output.bin>
 # Note: Block size and Algorithm are hardcoded now, no extra args needed.
 
-./bestemshe --compress layers/layer_2_8_win.raw layers/compressed/layer_2_8_win.bin
-./bestemshe --compress layers/layer_2_8_draw.raw layers/compressed/layer_2_8_draw.bin
+./build/bestemshe --compress layers/layer_2_8_win.raw layers/compressed/layer_2_8_win.bin
+./build/bestemshe --compress layers/layer_2_8_draw.raw layers/compressed/layer_2_8_draw.bin
 
 
 # ------------------------------------------------------------------------------
@@ -52,6 +52,6 @@ rm layers/layer_2_8_draw.raw
 # ENDGAME: THE GOD QUERY
 # ------------------------------------------------------------------------------
 # When you finally solve M=0 (K1=0, K2=0), run:
-./bestemshe --root
+./build/bestemshe --root
 
 # This will load layer_0_0 and output the absolute game-theoretic truth of Bestemshe.

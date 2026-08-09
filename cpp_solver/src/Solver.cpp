@@ -2,7 +2,9 @@
 #include <chrono>
 #include <iostream>
 #include <fstream>
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 #include <algorithm>
 #include <filesystem>
 #include <csignal>

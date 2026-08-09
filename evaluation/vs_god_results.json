@@ -1,0 +1,29 @@
+{
+  "step": 394852,
+  "device": "mps",
+  "n_positions": 1000,
+  "n_games": 2000,
+  "start_wdl_accuracy": 0.835,
+  "theoretical_start_values_for_side_to_move": {
+    "win": 536,
+    "draw": 36,
+    "loss": 428
+  },
+  "results_model_first": {
+    "win": 244,
+    "draw": 469,
+    "loss": 287
+  },
+  "results_god_first": {
+    "win": 194,
+    "draw": 456,
+    "loss": 350
+  },
+  "total_model_moves": 226933,
+  "optimal_model_moves": 226232,
+  "suboptimal_model_moves": 701,
+  "optimal_move_rate": 0.9969109825366959,
+  "blunders_from_win_or_draw": 701,
+  "games_below_theoretical_result": 556,
+  "evaluated_at": "2026-08-08 17:20:13"
+}
