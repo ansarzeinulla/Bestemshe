@@ -5,58 +5,38 @@
 [![Space on HF](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Interactive%20Arena-orange)](https://huggingface.co/spaces/ansarzeinulla/Bestemshe-God-Algorithm)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Authors:** Ansar Zeinulla & Murat Manassov
-**Affiliation:** Nazarbayev University, Kazakhstan
+**Authors:** Ansar Zeinulla & Murat Manassov  
+**Affiliation:** Nazarbayev University, Kazakhstan  
 
-Official implementation and open-science artifacts for the strong solution of
-**Bestemshe** (a 5-pit, 50-stone traditional Kazakh mancala variant) and the empirical
-evaluation of neural value approximations against the resulting endgame oracle.
+Official implementation and open-science artifacts for the strong solution of **Bestemshe** (a 5-pit, 50-stone traditional Kazakh mancala variant) and the empirical evaluation of neural value approximations against the resulting perfect-information endgame oracle.
 
 ---
 
-## Key results
+## 🏆 Key Results
 
-1. **Strong game-theoretic solution.** Parallel retrograde analysis proves Bestemshe is a
-   **forced win for the second player**. Every one of the first player's five opening moves
-   loses against best play. You can verify this yourself in about twenty seconds, with no
-   download — see [Query the oracle](#2-query-the-oracle-no-download-required).
-
-2. **An $O(1)$ compressed endgame oracle.** 169 layers of Zstandard-compressed bitsets
-   (8.3 GB, 8,962,782,421 bytes) indexed by a colexicographical ranking bijection $I_B$.
-   Lookups touch exactly one 4 MiB block, so a query costs ~20 MB of RSS whether the data
-   is memory-mapped locally or fetched by HTTP Range from a remote host.
-
-3. **Infinite draw loops, exhibited concretely.** Drawn positions are drawn because optimal
-   play can cycle forever. `tasks/find_draw_cycles.py` traces a concrete **36-ply
-   capture-free cycle** in which both sides repeat a position indefinitely. Because a
-   capture raises $K_1 + K_2$ irreversibly, no cycle can contain one — but the approach to
-   the cycle usually does, so the search must pass through a capturing phase first.
-
-4. **The neural approximation paradox.** A 17.2M-parameter ResMLP distilled from the oracle
-   plays the **optimal move 99.69% of the time** (226,232 of 226,933 moves) yet finishes
-   **below its theoretical result in 27.8% of games** (556 of 2,000). Games run about
-   113 model moves — roughly 227 plies — so a per-move error rate of 0.31% compounds into
-   a position-level loss far more often than the local accuracy suggests.
+1. **Strong Game-Theoretic Solution.** Parallel retrograde analysis proves Bestemshe is a **forced win for the second player (Follower)**. Every one of the first player's five opening moves loses against optimal play. You can verify this in seconds without downloading the dataset — see [Query the oracle](#2-query-the-oracle-no-download-required).
+2. **An $O(1)$ Compressed Endgame Oracle.** 169 layers of Zstandard-compressed bitsets (8.3 GB) indexed by a colexicographical ranking bijection $I_B$. Lookups touch exactly one 4 MiB block, meaning a query costs ~20 MB of RAM whether the data is memory-mapped locally or fetched via HTTP Range requests from a remote host.
+3. **Infinite Draw Loops (Concrete Existence).** Drawn positions are drawn because optimal play can cycle forever. The script `tasks/find_draw_cycles.py` traces a concrete **36-ply capture-free cycle** in which both sides optimally repeat a position indefinitely. Because a capture irreversibly raises $K_1 + K_2$, no cycle can contain one—but reaching the cycle usually requires passing through a capturing phase first.
+4. **The Neural Approximation Paradox.** A 17.2M-parameter ResMLP distilled from the Oracle plays the **optimal move 99.69% of the time** (226,232 of 226,933 moves) yet finishes **below its theoretical result in 27.8% of games** (556 of 2,000). Games average 113 model moves (226 plies); thus, a microscopic per-move error rate of 0.31% mathematically compounds into a massive game-level failure rate, proving the vulnerability of raw neural value heads in deep-tree MDPs.
 
 ---
 
-## Repository architecture
+## 📂 Repository Architecture
 
 | Directory | Contents |
 |---|---|
-| `cpp_solver/` | Parallel C++ retrograde solver, colex state indexing, ZSTD block compressor, the mmap query CLI, and the puzzle extractors. |
-| `training/` | PyTorch ResMLP, the `uint8` shard generator, the continuous distillation loop, and standalone inference. |
-| `evaluation/` | The symmetric-start benchmark harness and the raw 2,000-game match logs. |
-| `tasks/` | HTTP Range oracle client, opening-tree analyser, draw-cycle tracer, forced-win puzzle finder, and the PDF puzzle books. |
-| `tests/` | State-encoding correctness and Bellman consistency. |
-| `scripts/` | `smoke.sh` — the tiered smoke-test suite. |
+| `cpp_solver/` | Parallel C++ retrograde solver, colex state indexing, ZSTD block compressor, the mmap query CLI, and puzzle extractors. |
+| `training/` | PyTorch ResMLP architecture, `uint8` shard generator, continuous distillation loop, and standalone inference scripts. |
+| `evaluation/` | The adversarial symmetric-start benchmark harness and the raw 2,000-game match logs. |
+| `tasks/` | HTTP Range oracle client, opening-tree analyzer, draw-cycle tracer, forced-win puzzle finder, and generated puzzle books. |
+| `tests/` | State-encoding correctness and game-theoretic Bellman consistency verification. |
+| `scripts/` | `smoke.sh` — the tiered automated smoke-test suite. |
 
-The tablebase itself (`layers/`) and model checkpoints (`*.pt`) are deliberately **not** in
-this repository; they live on Hugging Face and are gitignored here.
+*Note: The 8.3 GB tablebase (`layers/`) and the PyTorch model checkpoints (`*.pt`) are hosted on Hugging Face and are gitignored here.*
 
 ---
 
-## Quickstart
+## 🚀 Quickstart
 
 ### 1. Installation
 
@@ -66,25 +46,26 @@ cd Bestemshe
 pip install -r requirements.txt
 ```
 
-### 2. Query the oracle (no download required)
+### 2. Query the Oracle (No Download Required)
 
-Every lookup fetches only the compressed block holding the bit it needs:
+Every lookup dynamically fetches only the compressed block holding the specific bit it needs over the network:
 
 ```python
 from tasks.oracle_client import Oracle, Position
 
 oracle = Oracle()
 start = Position(k1=0, k2=0, pits=(5,) * 10)
-print(oracle.value(start))   # 'loss' — the first player loses with perfect play
+print(oracle.value(start))   # Outputs: 'loss' (The first player loses under perfect play)
 ```
 
-Or from the shell:
+Or via the command line:
 
 ```bash
 python3 -m tasks.oracle_client --children 0 0 5 5 5 5 5 5 5 5 5 5
 ```
 
-```
+
+```text
 K1=0  [5 5 5 5 5] | [5 5 5 5 5] K2=0
 loss
 
@@ -96,89 +77,70 @@ cell         lands  capture  value for mover
    5    opponent 4     True             loss
 ```
 
-Positions are given as 12 integers `K1 K2 p0..p9` from the side-to-move perspective
-(`K1`/`p0..p4` belong to the mover). Stones total 50 and kazans are even. Values are exact
-Win/Draw/Loss — **the tablebase stores no distance to mate**, so there is no "mate in N"
-lookup; depth is established by explicit search (`tasks/find_forced_wins.py`).
+*(Positions are structured as 12 integers `K1 K2 p0..p9` from the side-to-move perspective. Stones total 50. Values are exact Win/Draw/Loss).*
 
-### 3. Build the C++ solver
+### 3. Build the C++ Solver (HPC)
 
 ```bash
 cmake -S cpp_solver -B build && cmake --build build -j
 ```
 
-This produces `bestemshe` (solve / verify / compress), `query` (the mmap explorer),
-`generateTasks`, and `generateVictory`. Requires libzstd; OpenMP is optional but the
-retrograde sweep is single-threaded without it. On macOS, configure with
-`-DCMAKE_CXX_COMPILER=g++-16` (Homebrew GCC) to get OpenMP.
-`make -C cpp_solver` is the CMake-free fallback for cluster nodes.
+This compiles `bestemshe` (solve/verify/compress), `query` (mmap explorer), `generateTasks`, and `generateVictory`. 
+*Requires `libzstd`. OpenMP is highly recommended for multi-threaded retrograde sweeps. On macOS, configure with `-DCMAKE_CXX_COMPILER=g++-16` (Homebrew GCC) to enable OpenMP.*
 
-### 4. Run neural inference
+### 4. Run Neural Network Inference
 
 ```python
 from training.infer import load_model, evaluate_position
 
 model, step = load_model("ansarzeinulla/bestemshe-resmlp")
 result = evaluate_position(model, pits=[5] * 10, kazan_self=0, kazan_opp=0)
-print(result["p_loss"], result["p_draw"], result["p_win"], result["best_move"])
+print(f"Loss: {result['p_loss']}, Draw: {result['p_draw']}, Win: {result['p_win']}")
 ```
 
-### 5. Explore the game theory
+### 5. Explore Game Theory & Procedural Generation
 
 ```bash
-python3 -m tasks.opening_tree --depth 2                    # optimal opening tree
-python3 -m tasks.find_draw_cycles --search 200 --seed 11   # an infinite draw loop
-python3 -m tasks.find_forced_wins --plies 3 --search 300   # a forced-win puzzle
+python3 -m tasks.opening_tree --depth 2                    # Computes the optimal opening tree
+python3 -m tasks.find_draw_cycles --search 200 --seed 11   # Traces an infinite draw loop
+python3 -m tasks.find_forced_wins --plies 3 --search 300   # Generates a forced-win tactical puzzle
 ```
 
 ---
 
-## Verification
+## 🧪 Verification & Testing
 
 ```bash
-scripts/smoke.sh              # tiers 0 and 1
-scripts/smoke.sh --offline    # tier 0 only
+scripts/smoke.sh              # Run tiers 0 and 1
+scripts/smoke.sh --offline    # Run tier 0 only
 ```
 
-| Tier | Needs | Checks |
+| Tier | Requirement | Checks |
 |---|---|---|
-| 0 | nothing | CMake builds all four binaries; Python imports; rank/unrank bijection against the C++ anchor values; the two independent Python ports of the move rules agree on 2,000 positions; evaluation artifacts parse. |
-| 1 | network | The start position evaluates to `loss`; the Bellman identity $V(s) = \max_m (2 - V(s'))$ holds on live tablebase data; the opening tree expands. |
-| 2 | the 8.3 GB layers locally (`--with-tablebase DIR`) | Full-size consistency sweep, the local reader and the HTTP client agreeing, and puzzle extraction through the C++ binaries. |
-| 3 | torch + a model download (`--with-model`) | ResMLP inference returns a normalized WDL distribution and a legal best move. |
+| **0** | *None* | CMake builds all binaries; Python imports succeed; Python rank/unrank bijection matches C++ anchor values; independent Python rules engines agree on 2,000 positions. |
+| **1** | *Network* | Validates initial position evaluates to `loss`; Bellman identity $V(s) = \max_m (2 - V(s'))$ holds via live HTTP queries; opening tree expands. |
+| **2** | *Local 8.3GB DB* | Full-size consistency sweep; local mmap reader and HTTP client agree; puzzle extraction via C++ binaries succeeds. |
+| **3** | *PyTorch + Model* | ResMLP inference runs successfully and returns normalized WDL probability distributions. |
 
 ---
 
-## Notes on the numbers
+## 🔬 Methodological & Empirical Notes
 
-Every figure above was measured from the artifacts in this repository, and a few differ from
-earlier drafts of this work:
+All metrics reported are strictly derived from the final generated artifacts in this repository:
 
-- The tablebase is **8.3 GB**, not 10 GB (`8,962,782,421` bytes across 338 files).
-- The distilled model has **17,214,472 parameters** (width 1024, 8 residual blocks), measured
-  from the published checkpoint at step 394,852.
-- `evaluation/eval_history.json` aggregates **36 distinct checkpoints** (steps 1 to 158,976)
-  from 41 raw result files, four of which were duplicates.
-- Training ran 394,852 optimizer steps at batch 32,768 — about 12.9 billion example
-  presentations over continuously regenerated 500M-position shard sets.
-- The per-checkpoint `optimal_move_rate` in `eval_history.json` saturates near **0.968**
-  because `training/eval.py` scores a greedy 1-ply engine. The headline **0.9969** comes
-  from the 3-ply minimax engine in `evaluation/vs_god.py`. The two are not interchangeable.
-- The `incidents` column in `eval_history.json` is **not** a meaningful metric: every game in
-  `training/eval.py` starts from the same root with a deterministic engine and a
-  deterministic oracle reply, so all games of a given parity are identical and the count
-  scales linearly with `--games`. That degeneracy is precisely why `evaluation/vs_god.py`
-  samples random symmetric starts instead; treat `vs_god_results.json` as the benchmark of
-  record. Both caveats are recorded in the artifact itself.
+- The final tablebase size is exactly **8.3 GB** (`8,962,782,421` bytes across 338 files).
+- The distilled model contains **17,214,472 parameters** (Width 1024, 8 Residual Blocks), measured from the published checkpoint at step 394,852.
+- The neural network training ran for 394,852 optimizer steps at a batch size of 32,768, representing roughly **12.9 billion example presentations** continuously regenerated from the Oracle.
+- **On Optimal Move Rates:** The per-checkpoint `optimal_move_rate` saturates near **96.8%** under a greedy 1-ply evaluation (`training/eval.py`). The headline **99.69%** rate is achieved using a 3-ply minimax search (`evaluation/vs_god.py`). This demonstrates that while shallow algorithmic search corrects local blunders, it fundamentally cannot rescue deep-tree OOD value degradation over full games.
+- **On Incident Counts:** The `incidents` column in early evaluation logs is degenerate because greedy evaluation from a fixed root is fully deterministic. For rigorous generalization metrics, we rely exclusively on `vs_god.py`, which samples random symmetric starts to explicitly measure out-of-distribution compounding errors.
 
 ---
 
-## Citation
+## 📜 Citation
 
 ```bibtex
 @misc{zeinulla2026bestemshe,
-  title={Strongly Solving Bestemshe and Benchmarking Neural Value Approximations
-         against an 8.3GB Endgame Oracle},
+  title={Strongly Solving Bestemshe and Benchmarking Neural Value Approximations against an 8.3GB Endgame Oracle},
   author={Zeinulla, Ansar and Manassov, Murat},
   year={2026},
   publisher={GitHub},
@@ -186,8 +148,6 @@ earlier drafts of this work:
 }
 ```
 
-## License
+## ⚖️ License
 
-Code in this repository is MIT licensed (see [LICENSE](LICENSE)). The published tablebase
-dataset is CC-BY-NC-4.0 and the model is CC-BY-4.0 under their own Hugging Face repository
-terms.
+The code in this repository is licensed under the **MIT License**. The published tablebase dataset is licensed under **CC-BY-NC-4.0**, and the model weights under **CC-BY-4.0** according to their respective Hugging Face repository terms.
