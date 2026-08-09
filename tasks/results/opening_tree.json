@@ -1,0 +1,806 @@
+{
+  "position": {
+    "k1": 0,
+    "k2": 0,
+    "pits": [
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5
+    ]
+  },
+  "value_for_side_to_move": "loss",
+  "moves": [
+    {
+      "move": "15",
+      "from_cell": 1,
+      "lands_on": "own",
+      "land_cell": 5,
+      "capture": false,
+      "terminal": false,
+      "optimal": true,
+      "value_for_mover": "loss",
+      "reply": {
+        "position": {
+          "k1": 0,
+          "k2": 0,
+          "pits": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            1,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        "value_for_side_to_move": "win",
+        "moves": [
+          {
+            "move": "15",
+            "from_cell": 1,
+            "lands_on": "own",
+            "land_cell": 5,
+            "capture": false,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 0,
+                "k2": 0,
+                "pits": [
+                  1,
+                  6,
+                  6,
+                  6,
+                  6,
+                  1,
+                  6,
+                  6,
+                  6,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          },
+          {
+            "move": "21",
+            "from_cell": 2,
+            "lands_on": "opponent",
+            "land_cell": 1,
+            "capture": true,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 0,
+                "k2": 2,
+                "pits": [
+                  0,
+                  6,
+                  6,
+                  6,
+                  6,
+                  5,
+                  1,
+                  6,
+                  6,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          },
+          {
+            "move": "32",
+            "from_cell": 3,
+            "lands_on": "opponent",
+            "land_cell": 2,
+            "capture": false,
+            "terminal": false,
+            "optimal": true,
+            "value_for_mover": "win",
+            "reply": {
+              "position": {
+                "k1": 0,
+                "k2": 0,
+                "pits": [
+                  2,
+                  7,
+                  6,
+                  6,
+                  6,
+                  5,
+                  5,
+                  1,
+                  6,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "loss",
+              "moves": []
+            }
+          },
+          {
+            "move": "43",
+            "from_cell": 4,
+            "lands_on": "opponent",
+            "land_cell": 3,
+            "capture": false,
+            "terminal": false,
+            "optimal": true,
+            "value_for_mover": "win",
+            "reply": {
+              "position": {
+                "k1": 0,
+                "k2": 0,
+                "pits": [
+                  2,
+                  7,
+                  7,
+                  6,
+                  6,
+                  5,
+                  5,
+                  5,
+                  1,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "loss",
+              "moves": []
+            }
+          },
+          {
+            "move": "54",
+            "from_cell": 5,
+            "lands_on": "opponent",
+            "land_cell": 4,
+            "capture": false,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 0,
+                "k2": 0,
+                "pits": [
+                  2,
+                  7,
+                  7,
+                  7,
+                  6,
+                  5,
+                  5,
+                  5,
+                  5,
+                  1
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "move": "21",
+      "from_cell": 2,
+      "lands_on": "opponent",
+      "land_cell": 1,
+      "capture": true,
+      "terminal": false,
+      "optimal": true,
+      "value_for_mover": "loss",
+      "reply": {
+        "position": {
+          "k1": 0,
+          "k2": 6,
+          "pits": [
+            0,
+            5,
+            5,
+            5,
+            5,
+            5,
+            1,
+            6,
+            6,
+            6
+          ]
+        },
+        "value_for_side_to_move": "win",
+        "moves": [
+          {
+            "move": "21",
+            "from_cell": 2,
+            "lands_on": "opponent",
+            "land_cell": 1,
+            "capture": true,
+            "terminal": false,
+            "optimal": true,
+            "value_for_mover": "win",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 6,
+                "pits": [
+                  0,
+                  1,
+                  6,
+                  6,
+                  6,
+                  0,
+                  1,
+                  6,
+                  6,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "loss",
+              "moves": []
+            }
+          },
+          {
+            "move": "32",
+            "from_cell": 3,
+            "lands_on": "opponent",
+            "land_cell": 2,
+            "capture": true,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 2,
+                "pits": [
+                  6,
+                  0,
+                  6,
+                  6,
+                  6,
+                  0,
+                  5,
+                  1,
+                  6,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          },
+          {
+            "move": "43",
+            "from_cell": 4,
+            "lands_on": "opponent",
+            "land_cell": 3,
+            "capture": false,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 0,
+                "pits": [
+                  6,
+                  2,
+                  7,
+                  6,
+                  6,
+                  0,
+                  5,
+                  5,
+                  1,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          },
+          {
+            "move": "54",
+            "from_cell": 5,
+            "lands_on": "opponent",
+            "land_cell": 4,
+            "capture": false,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 0,
+                "pits": [
+                  6,
+                  2,
+                  7,
+                  7,
+                  6,
+                  0,
+                  5,
+                  5,
+                  5,
+                  1
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "move": "32",
+      "from_cell": 3,
+      "lands_on": "opponent",
+      "land_cell": 2,
+      "capture": true,
+      "terminal": false,
+      "optimal": true,
+      "value_for_mover": "loss",
+      "reply": {
+        "position": {
+          "k1": 0,
+          "k2": 6,
+          "pits": [
+            6,
+            0,
+            5,
+            5,
+            5,
+            5,
+            5,
+            1,
+            6,
+            6
+          ]
+        },
+        "value_for_side_to_move": "win",
+        "moves": [
+          {
+            "move": "11",
+            "from_cell": 1,
+            "lands_on": "opponent",
+            "land_cell": 1,
+            "capture": true,
+            "terminal": false,
+            "optimal": true,
+            "value_for_mover": "win",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 6,
+                "pits": [
+                  0,
+                  5,
+                  1,
+                  6,
+                  6,
+                  1,
+                  1,
+                  6,
+                  6,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "loss",
+              "moves": []
+            }
+          },
+          {
+            "move": "32",
+            "from_cell": 3,
+            "lands_on": "opponent",
+            "land_cell": 2,
+            "capture": true,
+            "terminal": false,
+            "optimal": true,
+            "value_for_mover": "win",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 6,
+                "pits": [
+                  6,
+                  0,
+                  1,
+                  6,
+                  6,
+                  6,
+                  0,
+                  1,
+                  6,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "loss",
+              "moves": []
+            }
+          },
+          {
+            "move": "43",
+            "from_cell": 4,
+            "lands_on": "opponent",
+            "land_cell": 3,
+            "capture": true,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 2,
+                "pits": [
+                  6,
+                  6,
+                  0,
+                  6,
+                  6,
+                  6,
+                  0,
+                  5,
+                  1,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          },
+          {
+            "move": "54",
+            "from_cell": 5,
+            "lands_on": "opponent",
+            "land_cell": 4,
+            "capture": false,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 0,
+                "pits": [
+                  6,
+                  6,
+                  2,
+                  7,
+                  6,
+                  6,
+                  0,
+                  5,
+                  5,
+                  1
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "move": "43",
+      "from_cell": 4,
+      "lands_on": "opponent",
+      "land_cell": 3,
+      "capture": true,
+      "terminal": false,
+      "optimal": true,
+      "value_for_mover": "loss",
+      "reply": {
+        "position": {
+          "k1": 0,
+          "k2": 6,
+          "pits": [
+            6,
+            6,
+            0,
+            5,
+            5,
+            5,
+            5,
+            5,
+            1,
+            6
+          ]
+        },
+        "value_for_side_to_move": "win",
+        "moves": [
+          {
+            "move": "11",
+            "from_cell": 1,
+            "lands_on": "opponent",
+            "land_cell": 1,
+            "capture": true,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 6,
+                "pits": [
+                  0,
+                  5,
+                  5,
+                  1,
+                  6,
+                  1,
+                  7,
+                  1,
+                  6,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          },
+          {
+            "move": "22",
+            "from_cell": 2,
+            "lands_on": "opponent",
+            "land_cell": 2,
+            "capture": true,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 6,
+                "pits": [
+                  6,
+                  0,
+                  5,
+                  1,
+                  6,
+                  6,
+                  1,
+                  1,
+                  6,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          },
+          {
+            "move": "43",
+            "from_cell": 4,
+            "lands_on": "opponent",
+            "land_cell": 3,
+            "capture": true,
+            "terminal": false,
+            "optimal": true,
+            "value_for_mover": "win",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 6,
+                "pits": [
+                  6,
+                  6,
+                  0,
+                  1,
+                  6,
+                  6,
+                  6,
+                  0,
+                  1,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "loss",
+              "moves": []
+            }
+          },
+          {
+            "move": "54",
+            "from_cell": 5,
+            "lands_on": "opponent",
+            "land_cell": 4,
+            "capture": true,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 2,
+                "pits": [
+                  6,
+                  6,
+                  6,
+                  0,
+                  6,
+                  6,
+                  6,
+                  0,
+                  5,
+                  1
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "move": "54",
+      "from_cell": 5,
+      "lands_on": "opponent",
+      "land_cell": 4,
+      "capture": true,
+      "terminal": false,
+      "optimal": true,
+      "value_for_mover": "loss",
+      "reply": {
+        "position": {
+          "k1": 0,
+          "k2": 6,
+          "pits": [
+            6,
+            6,
+            6,
+            0,
+            5,
+            5,
+            5,
+            5,
+            5,
+            1
+          ]
+        },
+        "value_for_side_to_move": "win",
+        "moves": [
+          {
+            "move": "11",
+            "from_cell": 1,
+            "lands_on": "opponent",
+            "land_cell": 1,
+            "capture": true,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 6,
+                "pits": [
+                  0,
+                  5,
+                  5,
+                  5,
+                  1,
+                  1,
+                  7,
+                  7,
+                  1,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          },
+          {
+            "move": "22",
+            "from_cell": 2,
+            "lands_on": "opponent",
+            "land_cell": 2,
+            "capture": true,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 6,
+                "pits": [
+                  6,
+                  0,
+                  5,
+                  5,
+                  1,
+                  6,
+                  1,
+                  7,
+                  1,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          },
+          {
+            "move": "33",
+            "from_cell": 3,
+            "lands_on": "opponent",
+            "land_cell": 3,
+            "capture": true,
+            "terminal": false,
+            "optimal": false,
+            "value_for_mover": "loss",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 6,
+                "pits": [
+                  6,
+                  6,
+                  0,
+                  5,
+                  1,
+                  6,
+                  6,
+                  1,
+                  1,
+                  6
+                ]
+              },
+              "value_for_side_to_move": "win",
+              "moves": []
+            }
+          },
+          {
+            "move": "54",
+            "from_cell": 5,
+            "lands_on": "opponent",
+            "land_cell": 4,
+            "capture": true,
+            "terminal": false,
+            "optimal": true,
+            "value_for_mover": "win",
+            "reply": {
+              "position": {
+                "k1": 6,
+                "k2": 6,
+                "pits": [
+                  6,
+                  6,
+                  6,
+                  0,
+                  1,
+                  6,
+                  6,
+                  6,
+                  0,
+                  1
+                ]
+              },
+              "value_for_side_to_move": "loss",
+              "moves": []
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
