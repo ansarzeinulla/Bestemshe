@@ -123,11 +123,14 @@ def main():
     ap.add_argument("--val-frac", type=float, default=0.002)
     ap.add_argument("--ckpt-min", type=int, default=30)
     ap.add_argument("--hub-repo", default="")
-    ap.add_argument("--hub-token", default="")
+    ap.add_argument("--hub-token", default=os.environ.get("HF_TOKEN", ""),
+                    help="defaults to $HF_TOKEN; never written into checkpoints")
     ap.add_argument("--resume", default="", help="path to a checkpoint to continue training from")
     ap.add_argument("--consume-shards", action="store_true",
                     help="delete the .bin shards from --data after the first completed epoch")
     a = ap.parse_args()
+    # checkpoints keep the run's arguments, but never the Hub token
+    saved_args = {k: v for k, v in vars(a).items() if k != "hub_token"}
     os.makedirs(a.ckpt, exist_ok=True)
 
     ds = ShardData(a.data)
@@ -178,7 +181,7 @@ def main():
             if time.time() - t_ckpt > a.ckpt_min * 60 or step == a.steps:
                 path = os.path.join(a.ckpt, f"model_{step}.pt")
                 torch.save({"step": step, "model": model.state_dict(),
-                            "optimizer": opt.state_dict(), "args": vars(a)}, path)
+                            "optimizer": opt.state_dict(), "args": saved_args}, path)
                 tqdm.write(f"checkpoint: {path}")
                 if a.hub_repo:              # backup copy + metrics to the HF Hub
                     stats_path = os.path.join(a.ckpt, "training_stats.json")
@@ -222,7 +225,7 @@ def main():
     # so the Hub is guaranteed to hold the last model once training finishes.
     final_path = os.path.join(a.ckpt, f"model_{step}.pt")
     torch.save({"step": step, "model": model.state_dict(),
-                "optimizer": opt.state_dict(), "args": vars(a)}, final_path)
+                "optimizer": opt.state_dict(), "args": saved_args}, final_path)
     if a.hub_repo:
         stats_path = os.path.join(a.ckpt, "training_stats.json")
         with open(stats_path, "w") as f:
