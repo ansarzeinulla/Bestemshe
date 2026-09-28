@@ -1,0 +1,75 @@
+{
+  "checkpoint_step": 394852,
+  "n_positions": 4000,
+  "n_bins": 15,
+  "seed": 42,
+  "accuracy": 0.85725,
+  "mean_confidence": 0.8599481582641602,
+  "ece": 0.009834566876292214,
+  "overconfidence": 0.0026981582641601998,
+  "mean_confidence_when_wrong": 0.6729081869125366,
+  "mean_confidence_when_right": 0.8910942077636719,
+  "frac_errors_above_0.99_confidence": 0.0017513134851138354,
+  "critical": {
+    "n": 2112,
+    "accuracy": 0.8503787878787878,
+    "mean_confidence": 0.8680971264839172,
+    "ece": 0.01958474499935454
+  },
+  "forgiving": {
+    "n": 1888,
+    "accuracy": 0.8649364406779662,
+    "mean_confidence": 0.8508323431015015,
+    "ece": 0.023611768401401546
+  },
+  "true_class_distribution": {
+    "loss": 1405,
+    "draw": 146,
+    "win": 2449
+  },
+  "confusion_true_by_pred": [
+    [
+      1187,
+      0,
+      218
+    ],
+    [
+      66,
+      0,
+      80
+    ],
+    [
+      207,
+      0,
+      2242
+    ]
+  ],
+  "draw_head": {
+    "n_true_draws": 146,
+    "n_predicted_draw": 0,
+    "max_p_draw_anywhere": 0.35872966051101685,
+    "mean_p_draw_all": 0.035248029977083206,
+    "mean_p_draw_on_true_draws": 0.11355233192443848,
+    "draw_is_second_choice_rate": 0.22525,
+    "draw_is_second_choice_rate_on_true_draws": 0.2534246575342466,
+    "recall_draw": 0.0
+  },
+  "latent_boundary": {
+    "knn_k": 20,
+    "mean_heterogeneity": 0.2766375,
+    "error_rate_by_heterogeneity_decile": [
+      0.0,
+      0.0,
+      0.0,
+      0.01,
+      0.0075,
+      0.0275,
+      0.0725,
+      0.175,
+      0.335,
+      0.8
+    ],
+    "mean_heterogeneity_when_wrong": 0.6843257443082311,
+    "mean_heterogeneity_when_right": 0.20874890638670165
+  }
+}

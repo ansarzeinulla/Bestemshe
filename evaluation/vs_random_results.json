@@ -1,0 +1,29 @@
+{
+  "opponent": "random_legal_move_bot",
+  "n_positions": 50,
+  "n_positions_done": 50,
+  "n_games": 100,
+  "n_games_done": 100,
+  "theoretical_start_values_for_side_to_move": {
+    "win": 29,
+    "draw": 1,
+    "loss": 20
+  },
+  "results_bot_first": {
+    "win": 4,
+    "draw": 3,
+    "loss": 43
+  },
+  "results_god_first": {
+    "win": 7,
+    "draw": 3,
+    "loss": 40
+  },
+  "total_applied_bot_moves": 4911,
+  "optimal_applied_moves": 4787,
+  "suboptimal_applied_moves": 124,
+  "optimal_move_rate": 0.9747505599674201,
+  "blunders_from_win_or_draw": 124,
+  "games_below_theoretical_result": 43,
+  "evaluated_at": "2026-08-09 23:12:50"
+}
