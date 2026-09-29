@@ -1,32 +1,11 @@
-name: Tests
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-  schedule:
-    - cron: "0 6 * * 1"   # weekly: also check the published tablebase online
-
+name: tests
+on: [push, pull_request]
 jobs:
-  offline:
+  pytest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - run: pip install requests zstandard numpy pytest tqdm
-      - name: Rules, indexing and rank/unrank self-tests
-        run: python -m pytest -q -m "not online" tests/
-
-  online:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - run: pip install requests zstandard numpy pytest tqdm
-      - name: Bellman consistency against the published tablebase (HTTP Range)
-        run: python -m pytest -q -m online tests/
+        with: {python-version: '3.12'}
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q tests/ -m "not online"

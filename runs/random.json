@@ -1,0 +1,9892 @@
+{
+  "step": 394852,
+  "device": "mps",
+  "mover": "random",
+  "depth": 3,
+  "backup": "minimax",
+  "max_plies": 400,
+  "seed": 42,
+  "n_positions": 1000,
+  "n_positions_done": 164,
+  "n_games": 328,
+  "n_games_done": 328,
+  "n_games_planned": 2000,
+  "start_wdl_accuracy": 0.8353658536585366,
+  "theoretical_start_values_for_side_to_move": {
+    "win": 91,
+    "draw": 6,
+    "loss": 67
+  },
+  "results_model_first": {
+    "win": 6,
+    "draw": 34,
+    "loss": 124
+  },
+  "results_god_first": {
+    "win": 15,
+    "draw": 23,
+    "loss": 126
+  },
+  "total_applied_model_moves": 16772,
+  "optimal_applied_moves": 16614,
+  "suboptimal_applied_moves": 158,
+  "optimal_move_rate": 0.9905795373241116,
+  "blunders_from_win_or_draw": 158,
+  "games_below_theoretical_result": 147,
+  "degradable_games": 170,
+  "degraded_games": 147,
+  "degradation_rate_degradable": 0.8647058823529412,
+  "degradable_games_with_blunder": 149,
+  "degraded_games_without_blunder": 0,
+  "capped_games": 57,
+  "capped_degraded_games": 20,
+  "model_moves_in_won_or_drawn_positions": 508,
+  "blunder_rate_nonlost": 0.3110236220472441,
+  "p_optimal_nonlost": 0.6889763779527559,
+  "mean_L_nonlost_per_degradable_game": 2.988235294117647,
+  "predicted_blunder_free_rate_p_pow_L": 0.4481278793167949,
+  "observed_blunder_free_rate_degradable": 0.12352941176470589,
+  "evaluated_at": "2026-09-29 16:08:13",
+  "games": [
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          1,
+          2,
+          10,
+          10,
+          2,
+          4,
+          13,
+          4,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 23,
+      "capped": false,
+      "model_moves": 11,
+      "model_moves_nonlost": 1,
+      "optimal": 10,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          1,
+          2,
+          10,
+          10,
+          2,
+          4,
+          13,
+          4,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 46,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 0,
+      "optimal": 23,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          3,
+          4,
+          2,
+          1,
+          5,
+          3,
+          2,
+          7,
+          2,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 21,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 0,
+      "optimal": 10,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          3,
+          4,
+          2,
+          1,
+          5,
+          3,
+          2,
+          7,
+          2,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 46,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 1,
+      "optimal": 22,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          1,
+          4,
+          1,
+          1,
+          1,
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          1,
+          4,
+          1,
+          1,
+          1,
+          0,
+          1,
+          3,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 44,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 3,
+      "optimal": 21,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          3,
+          0,
+          1,
+          1,
+          4,
+          1,
+          2,
+          0,
+          5,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 51,
+      "capped": false,
+      "model_moves": 25,
+      "model_moves_nonlost": 2,
+      "optimal": 24,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          3,
+          0,
+          1,
+          1,
+          4,
+          1,
+          2,
+          0,
+          5,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 44,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 0,
+      "optimal": 22,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          6,
+          2,
+          6,
+          5,
+          8,
+          2,
+          2,
+          7,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 45,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 0,
+      "optimal": 22,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          6,
+          2,
+          6,
+          5,
+          8,
+          2,
+          2,
+          7,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 19,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 10,
+      "optimal": 10,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          0,
+          11,
+          0,
+          0,
+          0,
+          0,
+          0,
+          11,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 61,
+      "capped": false,
+      "model_moves": 30,
+      "model_moves_nonlost": 3,
+      "optimal": 29,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          0,
+          11,
+          0,
+          0,
+          0,
+          0,
+          0,
+          11,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 58,
+      "capped": false,
+      "model_moves": 29,
+      "model_moves_nonlost": 0,
+      "optimal": 29,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 8,
+      "capped": false,
+      "model_moves": 4,
+      "model_moves_nonlost": 4,
+      "optimal": 4,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          6,
+          2,
+          2,
+          3,
+          2,
+          2,
+          1,
+          1,
+          10,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 129,
+      "capped": false,
+      "model_moves": 64,
+      "model_moves_nonlost": 0,
+      "optimal": 64,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          6,
+          2,
+          2,
+          3,
+          2,
+          2,
+          1,
+          1,
+          10,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 36,
+      "capped": false,
+      "model_moves": 18,
+      "model_moves_nonlost": 6,
+      "optimal": 17,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 6,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          2,
+          0,
+          6,
+          3,
+          2,
+          2,
+          0,
+          8,
+          1,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 47,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 1,
+      "optimal": 22,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          2,
+          0,
+          6,
+          3,
+          2,
+          2,
+          0,
+          8,
+          1,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 56,
+      "capped": false,
+      "model_moves": 28,
+      "model_moves_nonlost": 0,
+      "optimal": 28,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          0,
+          1,
+          0,
+          2,
+          0,
+          2,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 30,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 15,
+      "optimal": 15,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          0,
+          1,
+          0,
+          2,
+          0,
+          2,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          2,
+          2,
+          2,
+          0,
+          1,
+          3,
+          0,
+          1,
+          2,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          2,
+          2,
+          2,
+          0,
+          1,
+          3,
+          0,
+          1,
+          2,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 10,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 10,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          13,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          4,
+          11,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 6,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 3,
+      "optimal": 3,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          13,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          4,
+          11,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 8,
+      "capped": false,
+      "model_moves": 4,
+      "model_moves_nonlost": 0,
+      "optimal": 4,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          1,
+          2,
+          6,
+          0,
+          6,
+          3,
+          0,
+          5,
+          2,
+          5
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 5,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 0,
+      "optimal": 2,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          1,
+          2,
+          6,
+          0,
+          6,
+          3,
+          0,
+          5,
+          2,
+          5
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 1,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 6,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 3,
+      "optimal": 3,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          5,
+          3,
+          3,
+          0,
+          2,
+          1,
+          1,
+          0,
+          8,
+          3
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 43,
+      "capped": false,
+      "model_moves": 21,
+      "model_moves_nonlost": 0,
+      "optimal": 21,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          5,
+          3,
+          3,
+          0,
+          2,
+          1,
+          1,
+          0,
+          8,
+          3
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 6,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 6,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          9,
+          9,
+          3,
+          3,
+          1,
+          9,
+          1,
+          3,
+          1,
+          11
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          9,
+          9,
+          3,
+          3,
+          1,
+          9,
+          1,
+          3,
+          1,
+          11
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 230,
+      "capped": false,
+      "model_moves": 115,
+      "model_moves_nonlost": 4,
+      "optimal": 113,
+      "suboptimal": 2,
+      "blunders": 2,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          4,
+          1,
+          6,
+          1,
+          3,
+          1,
+          4,
+          2,
+          5,
+          3
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          4,
+          1,
+          6,
+          1,
+          3,
+          1,
+          4,
+          2,
+          5,
+          3
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 0,
+      "plies": 40,
+      "capped": false,
+      "model_moves": 20,
+      "model_moves_nonlost": 2,
+      "optimal": 19,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          5,
+          0,
+          0,
+          8,
+          0,
+          0,
+          2,
+          0,
+          0,
+          11
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 59,
+      "capped": false,
+      "model_moves": 29,
+      "model_moves_nonlost": 0,
+      "optimal": 29,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          5,
+          0,
+          0,
+          8,
+          0,
+          0,
+          2,
+          0,
+          0,
+          11
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 36,
+      "capped": false,
+      "model_moves": 18,
+      "model_moves_nonlost": 2,
+      "optimal": 17,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          0,
+          1,
+          4,
+          1,
+          1,
+          1,
+          4,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 25,
+      "capped": false,
+      "model_moves": 12,
+      "model_moves_nonlost": 6,
+      "optimal": 11,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 6,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          0,
+          1,
+          4,
+          1,
+          1,
+          1,
+          4,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          7,
+          1,
+          1,
+          2,
+          6,
+          9,
+          4,
+          2,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 5,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 1,
+      "optimal": 1,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          7,
+          1,
+          1,
+          2,
+          6,
+          9,
+          4,
+          2,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 80,
+      "capped": false,
+      "model_moves": 40,
+      "model_moves_nonlost": 0,
+      "optimal": 40,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          0,
+          15,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          15
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 33,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 1,
+      "optimal": 15,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          0,
+          15,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          15
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 36,
+      "capped": false,
+      "model_moves": 18,
+      "model_moves_nonlost": 0,
+      "optimal": 18,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          11,
+          0,
+          12,
+          0,
+          0,
+          0,
+          1,
+          22,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 35,
+      "capped": false,
+      "model_moves": 17,
+      "model_moves_nonlost": 1,
+      "optimal": 16,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          11,
+          0,
+          12,
+          0,
+          0,
+          0,
+          1,
+          22,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 68,
+      "capped": false,
+      "model_moves": 34,
+      "model_moves_nonlost": 0,
+      "optimal": 34,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          0,
+          0,
+          0,
+          12,
+          1,
+          0,
+          0,
+          5,
+          0,
+          8
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 9,
+      "capped": false,
+      "model_moves": 4,
+      "model_moves_nonlost": 0,
+      "optimal": 4,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          0,
+          0,
+          0,
+          12,
+          1,
+          0,
+          0,
+          5,
+          0,
+          8
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 0,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 1,
+      "optimal": 15,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 8,
+      "capped": false,
+      "model_moves": 4,
+      "model_moves_nonlost": 4,
+      "optimal": 4,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          0,
+          0,
+          0,
+          5,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 64,
+      "capped": false,
+      "model_moves": 32,
+      "model_moves_nonlost": 0,
+      "optimal": 32,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          0,
+          0,
+          1,
+          5,
+          0,
+          1,
+          0,
+          3,
+          3
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 17,
+      "capped": false,
+      "model_moves": 8,
+      "model_moves_nonlost": 0,
+      "optimal": 8,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          0,
+          0,
+          1,
+          5,
+          0,
+          1,
+          0,
+          3,
+          3
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 56,
+      "capped": false,
+      "model_moves": 28,
+      "model_moves_nonlost": 1,
+      "optimal": 27,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          11,
+          3,
+          2,
+          1,
+          2,
+          2,
+          5,
+          2,
+          1,
+          9
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 15,
+      "optimal": 198,
+      "suboptimal": 2,
+      "blunders": 2,
+      "first_blunder_model_move": 14,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          11,
+          3,
+          2,
+          1,
+          2,
+          2,
+          5,
+          2,
+          1,
+          9
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 16,
+      "capped": false,
+      "model_moves": 8,
+      "model_moves_nonlost": 0,
+      "optimal": 8,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 291,
+      "capped": false,
+      "model_moves": 145,
+      "model_moves_nonlost": 1,
+      "optimal": 144,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          21,
+          21,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 9,
+      "capped": false,
+      "model_moves": 4,
+      "model_moves_nonlost": 0,
+      "optimal": 4,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          21,
+          21,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 38,
+      "capped": false,
+      "model_moves": 19,
+      "model_moves_nonlost": 3,
+      "optimal": 18,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          5,
+          1,
+          0,
+          9,
+          0,
+          0,
+          1,
+          6,
+          8
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 25,
+      "capped": false,
+      "model_moves": 12,
+      "model_moves_nonlost": 0,
+      "optimal": 12,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          5,
+          1,
+          0,
+          9,
+          0,
+          0,
+          1,
+          6,
+          8
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 42,
+      "capped": false,
+      "model_moves": 21,
+      "model_moves_nonlost": 3,
+      "optimal": 19,
+      "suboptimal": 2,
+      "blunders": 2,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 21,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 5,
+      "optimal": 9,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 5,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          0,
+          3,
+          1,
+          0,
+          5,
+          1,
+          0,
+          3,
+          0,
+          5
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 21,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 0,
+      "optimal": 10,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          0,
+          3,
+          1,
+          0,
+          5,
+          1,
+          0,
+          3,
+          0,
+          5
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 36,
+      "capped": false,
+      "model_moves": 18,
+      "model_moves_nonlost": 3,
+      "optimal": 17,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0,
+          9
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 3,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0,
+          9
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 21,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 1,
+      "optimal": 9,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          7,
+          5,
+          0,
+          3,
+          0,
+          0,
+          6,
+          5,
+          0,
+          4
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 175,
+      "capped": false,
+      "model_moves": 87,
+      "model_moves_nonlost": 1,
+      "optimal": 86,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          7,
+          5,
+          0,
+          3,
+          0,
+          0,
+          6,
+          5,
+          0,
+          4
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 6,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 0,
+      "optimal": 3,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 29,
+      "capped": false,
+      "model_moves": 14,
+      "model_moves_nonlost": 1,
+      "optimal": 13,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 80,
+      "capped": false,
+      "model_moves": 40,
+      "model_moves_nonlost": 0,
+      "optimal": 40,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          3,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 27,
+      "capped": false,
+      "model_moves": 13,
+      "model_moves_nonlost": 7,
+      "optimal": 12,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 7,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          3,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 4,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 0,
+      "optimal": 2,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          0,
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0,
+          9,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 55,
+      "capped": false,
+      "model_moves": 27,
+      "model_moves_nonlost": 2,
+      "optimal": 26,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          0,
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0,
+          9,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          0,
+          0,
+          11,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          11
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 1,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          0,
+          0,
+          11,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          11
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 20,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 0,
+      "optimal": 10,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          7,
+          0,
+          0,
+          0,
+          0,
+          7
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 14,
+      "capped": false,
+      "model_moves": 7,
+      "model_moves_nonlost": 7,
+      "optimal": 7,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          7,
+          0,
+          0,
+          0,
+          0,
+          7
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          2,
+          3,
+          7,
+          2,
+          7,
+          2,
+          3,
+          6,
+          2,
+          8
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 27,
+      "capped": false,
+      "model_moves": 13,
+      "model_moves_nonlost": 1,
+      "optimal": 12,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          2,
+          3,
+          7,
+          2,
+          7,
+          2,
+          3,
+          6,
+          2,
+          8
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 36,
+      "capped": false,
+      "model_moves": 18,
+      "model_moves_nonlost": 0,
+      "optimal": 18,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          2,
+          0,
+          8,
+          0,
+          3,
+          1,
+          0,
+          5,
+          0,
+          7
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 51,
+      "capped": false,
+      "model_moves": 25,
+      "model_moves_nonlost": 2,
+      "optimal": 24,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          2,
+          0,
+          8,
+          0,
+          3,
+          1,
+          0,
+          5,
+          0,
+          7
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 18,
+      "capped": false,
+      "model_moves": 9,
+      "model_moves_nonlost": 0,
+      "optimal": 9,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          5,
+          3,
+          8,
+          5,
+          1,
+          0,
+          7,
+          5,
+          8
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 57,
+      "capped": false,
+      "model_moves": 28,
+      "model_moves_nonlost": 0,
+      "optimal": 28,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          5,
+          3,
+          8,
+          5,
+          1,
+          0,
+          7,
+          5,
+          8
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 52,
+      "capped": false,
+      "model_moves": 26,
+      "model_moves_nonlost": 3,
+      "optimal": 25,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          11,
+          3,
+          7,
+          0,
+          2,
+          9,
+          0,
+          10,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 67,
+      "capped": false,
+      "model_moves": 33,
+      "model_moves_nonlost": 0,
+      "optimal": 33,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          11,
+          3,
+          7,
+          0,
+          2,
+          9,
+          0,
+          10,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 46,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 1,
+      "optimal": 22,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          7,
+          1,
+          1,
+          1,
+          9,
+          3,
+          2,
+          2,
+          2,
+          10
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 1,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 2,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          7,
+          1,
+          1,
+          1,
+          9,
+          3,
+          2,
+          2,
+          2,
+          10
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 1,
+      "start_value_for_side_to_move": 1,
+      "start_prediction": 0,
+      "plies": 74,
+      "capped": false,
+      "model_moves": 37,
+      "model_moves_nonlost": 3,
+      "optimal": 36,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          9,
+          11,
+          3,
+          1,
+          1,
+          12,
+          7,
+          1,
+          4,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 41,
+      "capped": false,
+      "model_moves": 20,
+      "model_moves_nonlost": 0,
+      "optimal": 20,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          9,
+          11,
+          3,
+          1,
+          1,
+          12,
+          7,
+          1,
+          4,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 48,
+      "capped": false,
+      "model_moves": 24,
+      "model_moves_nonlost": 1,
+      "optimal": 23,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          3,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 17,
+      "capped": false,
+      "model_moves": 8,
+      "model_moves_nonlost": 4,
+      "optimal": 7,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 4,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          3,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          21,
+          0,
+          0,
+          0,
+          21,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 49,
+      "capped": false,
+      "model_moves": 24,
+      "model_moves_nonlost": 4,
+      "optimal": 23,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 4,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          21,
+          0,
+          0,
+          0,
+          21,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 50,
+      "capped": false,
+      "model_moves": 25,
+      "model_moves_nonlost": 0,
+      "optimal": 25,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 2,
+      "capped": false,
+      "model_moves": 1,
+      "model_moves_nonlost": 1,
+      "optimal": 1,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          13,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          3,
+          16
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 31,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 0,
+      "optimal": 15,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          13,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          3,
+          16
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 48,
+      "capped": false,
+      "model_moves": 24,
+      "model_moves_nonlost": 8,
+      "optimal": 23,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 8,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 51,
+      "capped": false,
+      "model_moves": 25,
+      "model_moves_nonlost": 1,
+      "optimal": 24,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 4,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 2,
+      "optimal": 2,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          13,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          13,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 33,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 1,
+      "optimal": 15,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          13,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          13,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 64,
+      "capped": false,
+      "model_moves": 32,
+      "model_moves_nonlost": 0,
+      "optimal": 32,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          0,
+          25,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          25
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 33,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 0,
+      "optimal": 16,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          0,
+          25,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          25
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 42,
+      "capped": false,
+      "model_moves": 21,
+      "model_moves_nonlost": 2,
+      "optimal": 20,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          4,
+          1,
+          7,
+          0,
+          3,
+          4,
+          3,
+          5,
+          3,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 59,
+      "capped": false,
+      "model_moves": 29,
+      "model_moves_nonlost": 1,
+      "optimal": 28,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          4,
+          1,
+          7,
+          0,
+          3,
+          4,
+          3,
+          5,
+          3,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 38,
+      "capped": false,
+      "model_moves": 19,
+      "model_moves_nonlost": 0,
+      "optimal": 19,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          5,
+          5,
+          0,
+          1,
+          2,
+          1,
+          0,
+          4,
+          2,
+          6
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          5,
+          5,
+          0,
+          1,
+          2,
+          1,
+          0,
+          4,
+          2,
+          6
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 82,
+      "capped": false,
+      "model_moves": 41,
+      "model_moves_nonlost": 4,
+      "optimal": 40,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 4,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          5,
+          5,
+          3,
+          0,
+          2,
+          7,
+          5,
+          1,
+          2,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 63,
+      "capped": false,
+      "model_moves": 31,
+      "model_moves_nonlost": 0,
+      "optimal": 31,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          5,
+          5,
+          3,
+          0,
+          2,
+          7,
+          5,
+          1,
+          2,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 16,
+      "capped": false,
+      "model_moves": 8,
+      "model_moves_nonlost": 1,
+      "optimal": 7,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          0,
+          1,
+          2,
+          5,
+          3,
+          0,
+          2,
+          6,
+          2,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 7,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 0,
+      "optimal": 3,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          0,
+          1,
+          2,
+          5,
+          3,
+          0,
+          2,
+          6,
+          2,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 0,
+      "plies": 30,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 1,
+      "optimal": 14,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          2,
+          3,
+          0,
+          2,
+          0,
+          1,
+          0,
+          0,
+          1,
+          5
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          2,
+          3,
+          0,
+          2,
+          0,
+          1,
+          0,
+          0,
+          1,
+          5
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 8,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 8,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          4,
+          19,
+          0,
+          0,
+          0,
+          17,
+          6,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 5,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 1,
+      "optimal": 1,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          4,
+          19,
+          0,
+          0,
+          0,
+          17,
+          6,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 50,
+      "capped": false,
+      "model_moves": 25,
+      "model_moves_nonlost": 0,
+      "optimal": 25,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 18,
+      "capped": false,
+      "model_moves": 9,
+      "model_moves_nonlost": 5,
+      "optimal": 8,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 5,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          1,
+          2,
+          1,
+          2,
+          1,
+          1,
+          1,
+          2,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          1,
+          2,
+          1,
+          2,
+          1,
+          1,
+          1,
+          2,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 26,
+      "capped": false,
+      "model_moves": 13,
+      "model_moves_nonlost": 2,
+      "optimal": 12,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          5,
+          1,
+          0,
+          1,
+          0,
+          0,
+          2,
+          4,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 37,
+      "capped": false,
+      "model_moves": 18,
+      "model_moves_nonlost": 1,
+      "optimal": 17,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          5,
+          1,
+          0,
+          1,
+          0,
+          0,
+          2,
+          4,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 34,
+      "capped": false,
+      "model_moves": 17,
+      "model_moves_nonlost": 0,
+      "optimal": 17,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          0,
+          8,
+          4,
+          0,
+          1,
+          0,
+          10,
+          0,
+          2,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 55,
+      "capped": false,
+      "model_moves": 27,
+      "model_moves_nonlost": 0,
+      "optimal": 27,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          0,
+          8,
+          4,
+          0,
+          1,
+          0,
+          10,
+          0,
+          2,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 96,
+      "capped": false,
+      "model_moves": 48,
+      "model_moves_nonlost": 6,
+      "optimal": 47,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 6,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 5,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 0,
+      "optimal": 2,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 5,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 3,
+      "optimal": 3,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          19,
+          0,
+          0,
+          0,
+          19,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 31,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 0,
+      "optimal": 15,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          19,
+          0,
+          0,
+          0,
+          19,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 88,
+      "capped": false,
+      "model_moves": 44,
+      "model_moves_nonlost": 10,
+      "optimal": 43,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 10,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          2,
+          2,
+          7,
+          1,
+          1,
+          4,
+          1,
+          3,
+          1,
+          4
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 21,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 0,
+      "optimal": 10,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          2,
+          2,
+          7,
+          1,
+          1,
+          4,
+          1,
+          3,
+          1,
+          4
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 30,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 2,
+      "optimal": 14,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          2,
+          2,
+          1,
+          2,
+          1,
+          0,
+          4,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 53,
+      "capped": false,
+      "model_moves": 26,
+      "model_moves_nonlost": 0,
+      "optimal": 26,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          2,
+          2,
+          1,
+          2,
+          1,
+          0,
+          4,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 28,
+      "capped": false,
+      "model_moves": 14,
+      "model_moves_nonlost": 9,
+      "optimal": 13,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 9,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          21,
+          0,
+          0,
+          0,
+          0,
+          21,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 1,
+      "plies": 13,
+      "capped": false,
+      "model_moves": 6,
+      "model_moves_nonlost": 1,
+      "optimal": 5,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          21,
+          0,
+          0,
+          0,
+          0,
+          21,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 1,
+      "start_value_for_side_to_move": 1,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 2,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          14,
+          0,
+          0,
+          7,
+          0,
+          0,
+          18,
+          3,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 1,
+      "plies": 67,
+      "capped": false,
+      "model_moves": 33,
+      "model_moves_nonlost": 2,
+      "optimal": 32,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          14,
+          0,
+          0,
+          7,
+          0,
+          0,
+          18,
+          3,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 1,
+      "start_value_for_side_to_move": 1,
+      "start_prediction": 0,
+      "plies": 30,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 1,
+      "optimal": 14,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          4,
+          2,
+          0,
+          0,
+          5,
+          0,
+          0,
+          1,
+          8,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 33,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 0,
+      "optimal": 16,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          4,
+          2,
+          0,
+          0,
+          5,
+          0,
+          0,
+          1,
+          8,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 42,
+      "capped": false,
+      "model_moves": 21,
+      "model_moves_nonlost": 6,
+      "optimal": 20,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 6,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          1,
+          2,
+          0,
+          0,
+          0,
+          0,
+          2,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 17,
+      "capped": false,
+      "model_moves": 8,
+      "model_moves_nonlost": 0,
+      "optimal": 8,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          1,
+          2,
+          0,
+          0,
+          0,
+          0,
+          2,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 20,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 5,
+      "optimal": 9,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 5,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          0,
+          15,
+          2,
+          6,
+          17,
+          0,
+          5,
+          0,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 7,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 1,
+      "optimal": 2,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          0,
+          15,
+          2,
+          6,
+          17,
+          0,
+          5,
+          0,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 14,
+      "capped": false,
+      "model_moves": 7,
+      "model_moves_nonlost": 0,
+      "optimal": 7,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          3,
+          2,
+          1,
+          0,
+          1,
+          1,
+          4,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 37,
+      "capped": false,
+      "model_moves": 18,
+      "model_moves_nonlost": 0,
+      "optimal": 18,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          3,
+          2,
+          1,
+          0,
+          1,
+          1,
+          4,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 26,
+      "capped": false,
+      "model_moves": 13,
+      "model_moves_nonlost": 1,
+      "optimal": 12,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          0,
+          0,
+          4,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          4
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 15,
+      "capped": false,
+      "model_moves": 7,
+      "model_moves_nonlost": 0,
+      "optimal": 7,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          0,
+          0,
+          4,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          4
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 16,
+      "capped": false,
+      "model_moves": 8,
+      "model_moves_nonlost": 1,
+      "optimal": 7,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          19,
+          0,
+          0,
+          0,
+          6,
+          0,
+          0,
+          1,
+          24,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 1,
+      "capped": false,
+      "model_moves": 0,
+      "model_moves_nonlost": 0,
+      "optimal": 0,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          19,
+          0,
+          0,
+          0,
+          6,
+          0,
+          0,
+          1,
+          24,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 1,
+      "capped": false,
+      "model_moves": 1,
+      "model_moves_nonlost": 1,
+      "optimal": 1,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 15,
+      "capped": false,
+      "model_moves": 7,
+      "model_moves_nonlost": 0,
+      "optimal": 7,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 1,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          0,
+          0,
+          3,
+          0,
+          10,
+          0,
+          8,
+          0,
+          5,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          0,
+          0,
+          3,
+          0,
+          10,
+          0,
+          8,
+          0,
+          5,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 46,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 2,
+      "optimal": 22,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          5,
+          0,
+          4,
+          0,
+          0,
+          0,
+          8,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 61,
+      "capped": false,
+      "model_moves": 30,
+      "model_moves_nonlost": 0,
+      "optimal": 30,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          5,
+          0,
+          4,
+          0,
+          0,
+          0,
+          8,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 46,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 7,
+      "optimal": 22,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 7,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          1,
+          4,
+          5,
+          9,
+          0,
+          6,
+          3,
+          5,
+          0,
+          5
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 25,
+      "capped": false,
+      "model_moves": 12,
+      "model_moves_nonlost": 0,
+      "optimal": 12,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          1,
+          4,
+          5,
+          9,
+          0,
+          6,
+          3,
+          5,
+          0,
+          5
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 48,
+      "capped": false,
+      "model_moves": 24,
+      "model_moves_nonlost": 1,
+      "optimal": 23,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          0,
+          23,
+          0,
+          0,
+          23,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 77,
+      "capped": false,
+      "model_moves": 38,
+      "model_moves_nonlost": 0,
+      "optimal": 38,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          0,
+          23,
+          0,
+          0,
+          23,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 50,
+      "capped": false,
+      "model_moves": 25,
+      "model_moves_nonlost": 2,
+      "optimal": 24,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 2,
+      "capped": false,
+      "model_moves": 1,
+      "model_moves_nonlost": 1,
+      "optimal": 1,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 2,
+      "capped": false,
+      "model_moves": 1,
+      "model_moves_nonlost": 0,
+      "optimal": 1,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          3,
+          3,
+          1,
+          0,
+          0,
+          3,
+          2,
+          0,
+          0,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 63,
+      "capped": false,
+      "model_moves": 31,
+      "model_moves_nonlost": 5,
+      "optimal": 30,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 5,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          3,
+          3,
+          1,
+          0,
+          0,
+          3,
+          2,
+          0,
+          0,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 72,
+      "capped": false,
+      "model_moves": 36,
+      "model_moves_nonlost": 0,
+      "optimal": 36,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          0,
+          8,
+          3,
+          8,
+          0,
+          0,
+          5,
+          12,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 25,
+      "capped": false,
+      "model_moves": 12,
+      "model_moves_nonlost": 1,
+      "optimal": 11,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          0,
+          8,
+          3,
+          8,
+          0,
+          0,
+          5,
+          12,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 20,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 0,
+      "optimal": 10,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          2,
+          13,
+          0,
+          0,
+          0,
+          11,
+          4,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 45,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 0,
+      "optimal": 22,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          2,
+          13,
+          0,
+          0,
+          0,
+          11,
+          4,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 2,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          5,
+          15,
+          1,
+          0,
+          0,
+          4,
+          15,
+          0,
+          2,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 9,
+      "capped": false,
+      "model_moves": 4,
+      "model_moves_nonlost": 0,
+      "optimal": 4,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          5,
+          15,
+          1,
+          0,
+          0,
+          4,
+          15,
+          0,
+          2,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 264,
+      "capped": false,
+      "model_moves": 132,
+      "model_moves_nonlost": 1,
+      "optimal": 131,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          11,
+          3,
+          2,
+          3,
+          0,
+          3,
+          10,
+          4,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 47,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 0,
+      "optimal": 23,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          11,
+          3,
+          2,
+          3,
+          0,
+          3,
+          10,
+          4,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 34,
+      "capped": false,
+      "model_moves": 17,
+      "model_moves_nonlost": 1,
+      "optimal": 16,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          7,
+          1,
+          3,
+          1,
+          5,
+          9,
+          1,
+          5,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 15,
+      "capped": false,
+      "model_moves": 7,
+      "model_moves_nonlost": 0,
+      "optimal": 7,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          7,
+          1,
+          3,
+          1,
+          5,
+          9,
+          1,
+          5,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 58,
+      "capped": false,
+      "model_moves": 29,
+      "model_moves_nonlost": 3,
+      "optimal": 27,
+      "suboptimal": 2,
+      "blunders": 2,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 11,
+      "capped": false,
+      "model_moves": 5,
+      "model_moves_nonlost": 1,
+      "optimal": 4,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          21,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          21,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 39,
+      "capped": false,
+      "model_moves": 19,
+      "model_moves_nonlost": 2,
+      "optimal": 18,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          21,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          21,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 48,
+      "capped": false,
+      "model_moves": 24,
+      "model_moves_nonlost": 0,
+      "optimal": 24,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          9,
+          5,
+          5,
+          0,
+          0,
+          0,
+          2,
+          0,
+          12,
+          5
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 19,
+      "capped": false,
+      "model_moves": 9,
+      "model_moves_nonlost": 0,
+      "optimal": 9,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          9,
+          5,
+          5,
+          0,
+          0,
+          0,
+          2,
+          0,
+          12,
+          5
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 20,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 5,
+      "optimal": 9,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 5,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 15,
+      "capped": false,
+      "model_moves": 7,
+      "model_moves_nonlost": 1,
+      "optimal": 6,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 0,
+      "optimal": 16,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          0,
+          11,
+          0,
+          0,
+          0,
+          11,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 103,
+      "capped": false,
+      "model_moves": 51,
+      "model_moves_nonlost": 6,
+      "optimal": 50,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 6,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          0,
+          11,
+          0,
+          0,
+          0,
+          11,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 40,
+      "capped": false,
+      "model_moves": 20,
+      "model_moves_nonlost": 0,
+      "optimal": 20,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          1,
+          6,
+          5,
+          3,
+          10,
+          3,
+          8,
+          3,
+          7,
+          4
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 1,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          1,
+          6,
+          5,
+          3,
+          10,
+          3,
+          8,
+          3,
+          7,
+          4
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 0,
+      "optimal": 16,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          9,
+          0,
+          0,
+          0,
+          10,
+          0,
+          0,
+          0,
+          18,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 2,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          9,
+          0,
+          0,
+          0,
+          10,
+          0,
+          0,
+          0,
+          18,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 50,
+      "capped": false,
+      "model_moves": 25,
+      "model_moves_nonlost": 0,
+      "optimal": 25,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          0,
+          15,
+          0,
+          8,
+          0,
+          0,
+          9,
+          14,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          0,
+          15,
+          0,
+          8,
+          0,
+          0,
+          9,
+          14,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 84,
+      "capped": false,
+      "model_moves": 42,
+      "model_moves_nonlost": 4,
+      "optimal": 40,
+      "suboptimal": 2,
+      "blunders": 2,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          0,
+          6,
+          0,
+          13,
+          18,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 21,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 0,
+      "optimal": 10,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          0,
+          0,
+          6,
+          0,
+          13,
+          18,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 26,
+      "capped": false,
+      "model_moves": 13,
+      "model_moves_nonlost": 2,
+      "optimal": 12,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          6,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          2,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 23,
+      "capped": false,
+      "model_moves": 11,
+      "model_moves_nonlost": 0,
+      "optimal": 11,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          6,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          2,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 3,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          4,
+          1,
+          0,
+          3,
+          11,
+          1,
+          0,
+          1,
+          2,
+          15
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 85,
+      "capped": false,
+      "model_moves": 42,
+      "model_moves_nonlost": 0,
+      "optimal": 42,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          4,
+          1,
+          0,
+          3,
+          11,
+          1,
+          0,
+          1,
+          2,
+          15
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 1,
+      "optimal": 15,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          5,
+          3,
+          3,
+          0,
+          0,
+          6,
+          0,
+          4,
+          0,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 8,
+      "capped": false,
+      "model_moves": 4,
+      "model_moves_nonlost": 4,
+      "optimal": 4,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          5,
+          3,
+          3,
+          0,
+          0,
+          6,
+          0,
+          4,
+          0,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 30,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 0,
+      "optimal": 15,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          19,
+          0,
+          4,
+          0,
+          9,
+          0,
+          0,
+          0,
+          14
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 5,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 0,
+      "optimal": 2,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          19,
+          0,
+          4,
+          0,
+          9,
+          0,
+          0,
+          0,
+          14
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 1,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          0,
+          0,
+          6,
+          15,
+          0,
+          0,
+          9,
+          12,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 13,
+      "capped": false,
+      "model_moves": 6,
+      "model_moves_nonlost": 0,
+      "optimal": 6,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          0,
+          0,
+          6,
+          15,
+          0,
+          0,
+          9,
+          12,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 46,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 1,
+      "optimal": 22,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          0,
+          0,
+          0,
+          9,
+          4,
+          0,
+          0,
+          10,
+          3,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 49,
+      "capped": false,
+      "model_moves": 24,
+      "model_moves_nonlost": 1,
+      "optimal": 23,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          0,
+          0,
+          0,
+          9,
+          4,
+          0,
+          0,
+          10,
+          3,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 46,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 0,
+      "optimal": 23,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          1,
+          2,
+          2,
+          1,
+          1,
+          2,
+          1,
+          2,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 51,
+      "capped": false,
+      "model_moves": 25,
+      "model_moves_nonlost": 0,
+      "optimal": 25,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          1,
+          2,
+          2,
+          1,
+          1,
+          2,
+          1,
+          2,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 1,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 2,
+      "capped": false,
+      "model_moves": 1,
+      "model_moves_nonlost": 1,
+      "optimal": 1,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 2,
+      "capped": false,
+      "model_moves": 1,
+      "model_moves_nonlost": 0,
+      "optimal": 1,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          13,
+          0,
+          0,
+          8,
+          0,
+          0,
+          0,
+          12,
+          9
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 1,
+      "plies": 39,
+      "capped": false,
+      "model_moves": 19,
+      "model_moves_nonlost": 2,
+      "optimal": 18,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          13,
+          0,
+          0,
+          8,
+          0,
+          0,
+          0,
+          12,
+          9
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 1,
+      "start_value_for_side_to_move": 1,
+      "start_prediction": 0,
+      "plies": 12,
+      "capped": false,
+      "model_moves": 6,
+      "model_moves_nonlost": 1,
+      "optimal": 5,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          0,
+          0,
+          0,
+          13,
+          0,
+          0,
+          0,
+          0,
+          13,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          0,
+          0,
+          0,
+          13,
+          0,
+          0,
+          0,
+          0,
+          13,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 0,
+      "plies": 54,
+      "capped": false,
+      "model_moves": 27,
+      "model_moves_nonlost": 4,
+      "optimal": 26,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 4,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          0,
+          2,
+          1,
+          4,
+          0,
+          0,
+          1,
+          5,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 75,
+      "capped": false,
+      "model_moves": 37,
+      "model_moves_nonlost": 0,
+      "optimal": 37,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          0,
+          2,
+          1,
+          4,
+          0,
+          0,
+          1,
+          5,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 286,
+      "capped": false,
+      "model_moves": 143,
+      "model_moves_nonlost": 2,
+      "optimal": 142,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          0,
+          0,
+          5,
+          1,
+          0,
+          2,
+          2,
+          3,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 77,
+      "capped": false,
+      "model_moves": 38,
+      "model_moves_nonlost": 6,
+      "optimal": 37,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 6,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          1,
+          0,
+          0,
+          5,
+          1,
+          0,
+          2,
+          2,
+          3,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 40,
+      "capped": false,
+      "model_moves": 20,
+      "model_moves_nonlost": 0,
+      "optimal": 20,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          5,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          10,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 161,
+      "capped": false,
+      "model_moves": 80,
+      "model_moves_nonlost": 0,
+      "optimal": 80,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          5,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          10,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 52,
+      "capped": false,
+      "model_moves": 26,
+      "model_moves_nonlost": 3,
+      "optimal": 25,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          5,
+          0,
+          0,
+          16,
+          14,
+          7,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 25,
+      "capped": false,
+      "model_moves": 12,
+      "model_moves_nonlost": 0,
+      "optimal": 12,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          5,
+          0,
+          0,
+          16,
+          14,
+          7,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 40,
+      "capped": false,
+      "model_moves": 20,
+      "model_moves_nonlost": 3,
+      "optimal": 19,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          0,
+          9,
+          0,
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 7,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 3,
+      "optimal": 2,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          0,
+          9,
+          0,
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 4,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 2,
+      "optimal": 2,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 4,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 0,
+      "optimal": 2,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          0,
+          21,
+          0,
+          0,
+          0,
+          0,
+          0,
+          21,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 99,
+      "capped": false,
+      "model_moves": 49,
+      "model_moves_nonlost": 4,
+      "optimal": 48,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 4,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          0,
+          21,
+          0,
+          0,
+          0,
+          0,
+          0,
+          21,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 40,
+      "capped": false,
+      "model_moves": 20,
+      "model_moves_nonlost": 0,
+      "optimal": 20,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          1,
+          1,
+          2,
+          1,
+          6,
+          1,
+          1,
+          7,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 87,
+      "capped": false,
+      "model_moves": 43,
+      "model_moves_nonlost": 0,
+      "optimal": 43,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          1,
+          1,
+          2,
+          1,
+          6,
+          1,
+          1,
+          7,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 1,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          2,
+          4,
+          1,
+          10,
+          2,
+          1,
+          6,
+          7,
+          2,
+          3
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          2,
+          4,
+          1,
+          10,
+          2,
+          1,
+          6,
+          7,
+          2,
+          3
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 0,
+      "plies": 48,
+      "capped": false,
+      "model_moves": 24,
+      "model_moves_nonlost": 1,
+      "optimal": 23,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          6,
+          1,
+          7,
+          6,
+          3,
+          15,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 7,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 0,
+      "optimal": 3,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          6,
+          1,
+          7,
+          6,
+          3,
+          15,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 16,
+      "capped": false,
+      "model_moves": 8,
+      "model_moves_nonlost": 1,
+      "optimal": 7,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          4,
+          3,
+          0,
+          0,
+          2,
+          0,
+          4,
+          0,
+          3,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 29,
+      "capped": false,
+      "model_moves": 14,
+      "model_moves_nonlost": 0,
+      "optimal": 14,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          4,
+          3,
+          0,
+          0,
+          2,
+          0,
+          4,
+          0,
+          3,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 3,
+      "optimal": 15,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          16,
+          1,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          13
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 39,
+      "capped": false,
+      "model_moves": 19,
+      "model_moves_nonlost": 0,
+      "optimal": 19,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          16,
+          1,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          13
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 78,
+      "capped": false,
+      "model_moves": 39,
+      "model_moves_nonlost": 2,
+      "optimal": 38,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          5,
+          3,
+          9,
+          0,
+          0,
+          2,
+          2,
+          0,
+          0,
+          13
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 77,
+      "capped": false,
+      "model_moves": 38,
+      "model_moves_nonlost": 0,
+      "optimal": 38,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          5,
+          3,
+          9,
+          0,
+          0,
+          2,
+          2,
+          0,
+          0,
+          13
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 1,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 31,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 1,
+      "optimal": 14,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 46,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 0,
+      "optimal": 23,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          1,
+          5,
+          5,
+          2,
+          10,
+          5,
+          7,
+          1,
+          2,
+          8
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 39,
+      "capped": false,
+      "model_moves": 19,
+      "model_moves_nonlost": 0,
+      "optimal": 19,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          1,
+          5,
+          5,
+          2,
+          10,
+          5,
+          7,
+          1,
+          2,
+          8
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 11,
+      "capped": false,
+      "model_moves": 6,
+      "model_moves_nonlost": 6,
+      "optimal": 6,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          0,
+          7,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 25,
+      "capped": false,
+      "model_moves": 12,
+      "model_moves_nonlost": 3,
+      "optimal": 11,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          0,
+          7,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          9,
+          0,
+          0,
+          10,
+          0,
+          3,
+          0,
+          0,
+          16,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 21,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 0,
+      "optimal": 10,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          9,
+          0,
+          0,
+          10,
+          0,
+          3,
+          0,
+          0,
+          16,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 2,
+      "optimal": 15,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          2,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          2,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 62,
+      "capped": false,
+      "model_moves": 31,
+      "model_moves_nonlost": 2,
+      "optimal": 30,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 2,
+      "capped": false,
+      "model_moves": 1,
+      "model_moves_nonlost": 1,
+      "optimal": 1,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 2,
+      "capped": false,
+      "model_moves": 1,
+      "model_moves_nonlost": 0,
+      "optimal": 1,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          7,
+          1,
+          4,
+          8,
+          5,
+          4,
+          9,
+          1,
+          9,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 45,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 0,
+      "optimal": 22,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          7,
+          1,
+          4,
+          8,
+          5,
+          4,
+          9,
+          1,
+          9,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 92,
+      "capped": false,
+      "model_moves": 46,
+      "model_moves_nonlost": 16,
+      "optimal": 45,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 16,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          0,
+          0,
+          15,
+          0,
+          0,
+          0,
+          15,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 51,
+      "capped": false,
+      "model_moves": 25,
+      "model_moves_nonlost": 5,
+      "optimal": 24,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 5,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          0,
+          0,
+          15,
+          0,
+          0,
+          0,
+          15,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 44,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 0,
+      "optimal": 22,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          6,
+          3,
+          0,
+          6,
+          2,
+          1,
+          9,
+          0,
+          4,
+          3
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 9,
+      "capped": false,
+      "model_moves": 4,
+      "model_moves_nonlost": 0,
+      "optimal": 4,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          6,
+          3,
+          0,
+          6,
+          2,
+          1,
+          9,
+          0,
+          4,
+          3
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 2,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          4,
+          2,
+          7,
+          1,
+          5,
+          5,
+          6,
+          1,
+          1,
+          6
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 65,
+      "capped": false,
+      "model_moves": 32,
+      "model_moves_nonlost": 1,
+      "optimal": 31,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          4,
+          2,
+          7,
+          1,
+          5,
+          5,
+          6,
+          1,
+          1,
+          6
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 0,
+      "optimal": 16,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 6,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 3,
+      "optimal": 3,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 6,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 0,
+      "optimal": 3,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          2,
+          5,
+          7,
+          0,
+          1,
+          0,
+          6,
+          4,
+          3,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 33,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 0,
+      "optimal": 16,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          2,
+          5,
+          7,
+          0,
+          1,
+          0,
+          6,
+          4,
+          3,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 44,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 1,
+      "optimal": 21,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          0,
+          4,
+          0,
+          0,
+          1,
+          0,
+          4,
+          0,
+          0,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 45,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 1,
+      "optimal": 21,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          0,
+          4,
+          0,
+          0,
+          1,
+          0,
+          4,
+          0,
+          0,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 22,
+      "capped": false,
+      "model_moves": 11,
+      "model_moves_nonlost": 0,
+      "optimal": 11,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          5,
+          8,
+          6,
+          6,
+          0,
+          15,
+          1,
+          0,
+          6,
+          3
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 1,
+      "plies": 5,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 1,
+      "optimal": 1,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          5,
+          8,
+          6,
+          6,
+          0,
+          15,
+          1,
+          0,
+          6,
+          3
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 1,
+      "start_value_for_side_to_move": 1,
+      "start_prediction": 2,
+      "plies": 26,
+      "capped": false,
+      "model_moves": 13,
+      "model_moves_nonlost": 1,
+      "optimal": 12,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          1,
+          4,
+          1,
+          10,
+          3,
+          5,
+          10,
+          1,
+          2,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 21,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 0,
+      "optimal": 10,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          1,
+          4,
+          1,
+          10,
+          3,
+          5,
+          10,
+          1,
+          2,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 44,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 1,
+      "optimal": 21,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          4,
+          4,
+          4,
+          3,
+          4,
+          3,
+          4,
+          4,
+          5,
+          3
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 41,
+      "capped": false,
+      "model_moves": 20,
+      "model_moves_nonlost": 0,
+      "optimal": 20,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          4,
+          4,
+          4,
+          3,
+          4,
+          3,
+          4,
+          4,
+          5,
+          3
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 28,
+      "capped": false,
+      "model_moves": 14,
+      "model_moves_nonlost": 1,
+      "optimal": 13,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          4,
+          1,
+          11,
+          2,
+          7,
+          18,
+          2,
+          1,
+          1,
+          3
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 27,
+      "capped": false,
+      "model_moves": 13,
+      "model_moves_nonlost": 0,
+      "optimal": 13,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          4,
+          1,
+          11,
+          2,
+          7,
+          18,
+          2,
+          1,
+          1,
+          3
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 11,
+      "capped": false,
+      "model_moves": 6,
+      "model_moves_nonlost": 6,
+      "optimal": 6,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          6,
+          3,
+          3,
+          0,
+          7,
+          14,
+          1,
+          1,
+          0,
+          3
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 41,
+      "capped": false,
+      "model_moves": 20,
+      "model_moves_nonlost": 0,
+      "optimal": 20,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          6,
+          3,
+          3,
+          0,
+          7,
+          14,
+          1,
+          1,
+          0,
+          3
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 40,
+      "capped": false,
+      "model_moves": 20,
+      "model_moves_nonlost": 2,
+      "optimal": 19,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 18,
+      "capped": false,
+      "model_moves": 9,
+      "model_moves_nonlost": 5,
+      "optimal": 8,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 5,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          2,
+          5,
+          0,
+          4,
+          0,
+          0,
+          1,
+          0,
+          5,
+          5
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 33,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 0,
+      "optimal": 16,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 14,
+        "k2": 14,
+        "pits": [
+          2,
+          5,
+          0,
+          4,
+          0,
+          0,
+          1,
+          0,
+          5,
+          5
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 26,
+      "capped": false,
+      "model_moves": 13,
+      "model_moves_nonlost": 2,
+      "optimal": 12,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          3,
+          2,
+          2,
+          0,
+          0,
+          1,
+          0,
+          1,
+          5,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 65,
+      "capped": false,
+      "model_moves": 32,
+      "model_moves_nonlost": 0,
+      "optimal": 32,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          3,
+          2,
+          2,
+          0,
+          0,
+          1,
+          0,
+          1,
+          5,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 24,
+      "capped": false,
+      "model_moves": 12,
+      "model_moves_nonlost": 12,
+      "optimal": 11,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 12,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          2,
+          6,
+          12,
+          4,
+          1,
+          1,
+          7,
+          3,
+          7,
+          7
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 87,
+      "capped": false,
+      "model_moves": 43,
+      "model_moves_nonlost": 0,
+      "optimal": 43,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 0,
+        "k2": 0,
+        "pits": [
+          2,
+          6,
+          12,
+          4,
+          1,
+          1,
+          7,
+          3,
+          7,
+          7
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 14,
+      "capped": false,
+      "model_moves": 7,
+      "model_moves_nonlost": 2,
+      "optimal": 6,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          3,
+          0,
+          1,
+          3,
+          0,
+          4,
+          2,
+          1,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 5,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 5,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 18,
+        "k2": 18,
+        "pits": [
+          0,
+          3,
+          0,
+          1,
+          3,
+          0,
+          4,
+          2,
+          1,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          9,
+          2,
+          5,
+          0,
+          3,
+          13,
+          1,
+          3,
+          2,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          9,
+          2,
+          5,
+          0,
+          3,
+          13,
+          1,
+          3,
+          2,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 2,
+      "optimal": 15,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          0,
+          2,
+          1,
+          2,
+          1,
+          1,
+          0,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 47,
+      "capped": false,
+      "model_moves": 23,
+      "model_moves_nonlost": 0,
+      "optimal": 23,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          0,
+          2,
+          1,
+          2,
+          1,
+          1,
+          0,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 8,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 8,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          3,
+          0,
+          12,
+          0,
+          0,
+          13,
+          0,
+          0,
+          0,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 57,
+      "capped": false,
+      "model_moves": 28,
+      "model_moves_nonlost": 0,
+      "optimal": 28,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          3,
+          0,
+          12,
+          0,
+          0,
+          13,
+          0,
+          0,
+          0,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 1,
+      "optimal": 15,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          19,
+          0,
+          0,
+          2,
+          0,
+          6,
+          15,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 73,
+      "capped": false,
+      "model_moves": 36,
+      "model_moves_nonlost": 3,
+      "optimal": 34,
+      "suboptimal": 2,
+      "blunders": 2,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          0,
+          19,
+          0,
+          0,
+          2,
+          0,
+          6,
+          15,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 44,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 0,
+      "optimal": 22,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 4,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 2,
+      "optimal": 2,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 4,
+      "capped": false,
+      "model_moves": 2,
+      "model_moves_nonlost": 0,
+      "optimal": 2,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          1,
+          2,
+          7,
+          8,
+          3,
+          4,
+          3,
+          1,
+          12,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 15,
+      "capped": false,
+      "model_moves": 7,
+      "model_moves_nonlost": 0,
+      "optimal": 7,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          1,
+          2,
+          7,
+          8,
+          3,
+          4,
+          3,
+          1,
+          12,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 42,
+      "capped": false,
+      "model_moves": 21,
+      "model_moves_nonlost": 2,
+      "optimal": 19,
+      "suboptimal": 2,
+      "blunders": 2,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 7,
+      "capped": false,
+      "model_moves": 3,
+      "model_moves_nonlost": 0,
+      "optimal": 3,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 24,
+        "k2": 24,
+        "pits": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 7,
+      "capped": false,
+      "model_moves": 4,
+      "model_moves_nonlost": 4,
+      "optimal": 4,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "win"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 15,
+      "capped": false,
+      "model_moves": 7,
+      "model_moves_nonlost": 0,
+      "optimal": 7,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 22,
+        "k2": 22,
+        "pits": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 8,
+      "capped": false,
+      "model_moves": 4,
+      "model_moves_nonlost": 1,
+      "optimal": 3,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          0,
+          3,
+          0,
+          1,
+          0,
+          2,
+          2,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 17,
+      "capped": false,
+      "model_moves": 8,
+      "model_moves_nonlost": 0,
+      "optimal": 8,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 20,
+        "k2": 20,
+        "pits": [
+          1,
+          1,
+          0,
+          3,
+          0,
+          1,
+          0,
+          2,
+          2,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 1,
+      "optimal": 199,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          2,
+          11,
+          2,
+          0,
+          0,
+          7,
+          6,
+          0,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 1,
+      "plies": 29,
+      "capped": false,
+      "model_moves": 14,
+      "model_moves_nonlost": 1,
+      "optimal": 13,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          2,
+          11,
+          2,
+          0,
+          0,
+          7,
+          6,
+          0,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 1,
+      "start_value_for_side_to_move": 1,
+      "start_prediction": 0,
+      "plies": 22,
+      "capped": false,
+      "model_moves": 11,
+      "model_moves_nonlost": 1,
+      "optimal": 10,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          5,
+          3,
+          0,
+          2,
+          9,
+          0,
+          1,
+          3,
+          10,
+          5
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 123,
+      "capped": false,
+      "model_moves": 61,
+      "model_moves_nonlost": 5,
+      "optimal": 60,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 5,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          5,
+          3,
+          0,
+          2,
+          9,
+          0,
+          1,
+          3,
+          10,
+          5
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 0,
+      "optimal": 16,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          2,
+          5,
+          1,
+          4,
+          1,
+          2,
+          4,
+          1,
+          5,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 31,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 6,
+      "optimal": 14,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 6,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          2,
+          5,
+          1,
+          4,
+          1,
+          2,
+          4,
+          1,
+          5,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 2,
+      "plies": 94,
+      "capped": false,
+      "model_moves": 47,
+      "model_moves_nonlost": 0,
+      "optimal": 47,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          2,
+          3,
+          14,
+          0,
+          0,
+          0,
+          0,
+          2,
+          9,
+          8
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 15,
+      "capped": false,
+      "model_moves": 7,
+      "model_moves_nonlost": 0,
+      "optimal": 7,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 6,
+        "k2": 6,
+        "pits": [
+          2,
+          3,
+          14,
+          0,
+          0,
+          0,
+          0,
+          2,
+          9,
+          8
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 78,
+      "capped": false,
+      "model_moves": 39,
+      "model_moves_nonlost": 3,
+      "optimal": 38,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 3,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0,
+          0,
+          9,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 49,
+      "capped": false,
+      "model_moves": 24,
+      "model_moves_nonlost": 13,
+      "optimal": 23,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 13,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 16,
+        "k2": 16,
+        "pits": [
+          0,
+          0,
+          9,
+          0,
+          0,
+          0,
+          0,
+          0,
+          9,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          3,
+          2,
+          18,
+          0,
+          0,
+          4,
+          0,
+          13,
+          0,
+          6
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 21,
+      "capped": false,
+      "model_moves": 10,
+      "model_moves_nonlost": 0,
+      "optimal": 10,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          3,
+          2,
+          18,
+          0,
+          0,
+          4,
+          0,
+          13,
+          0,
+          6
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 36,
+      "capped": false,
+      "model_moves": 18,
+      "model_moves_nonlost": 1,
+      "optimal": 17,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          23,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          23
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 31,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 1,
+      "optimal": 14,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 2,
+        "k2": 2,
+        "pits": [
+          0,
+          23,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          23
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 36,
+      "capped": false,
+      "model_moves": 18,
+      "model_moves_nonlost": 0,
+      "optimal": 18,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          7,
+          0,
+          4,
+          2,
+          0,
+          2,
+          2,
+          9,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 49,
+      "capped": false,
+      "model_moves": 24,
+      "model_moves_nonlost": 0,
+      "optimal": 24,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          7,
+          0,
+          4,
+          2,
+          0,
+          2,
+          2,
+          9,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 38,
+      "capped": false,
+      "model_moves": 19,
+      "model_moves_nonlost": 3,
+      "optimal": 17,
+      "suboptimal": 2,
+      "blunders": 2,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          3,
+          10,
+          6,
+          1,
+          1,
+          8,
+          1,
+          1,
+          9,
+          2
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 400,
+      "capped": true,
+      "model_moves": 200,
+      "model_moves_nonlost": 0,
+      "optimal": 200,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "draw"
+    },
+    {
+      "start": {
+        "k1": 4,
+        "k2": 4,
+        "pits": [
+          3,
+          10,
+          6,
+          1,
+          1,
+          8,
+          1,
+          1,
+          9,
+          2
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 30,
+      "capped": false,
+      "model_moves": 15,
+      "model_moves_nonlost": 1,
+      "optimal": 14,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          0,
+          15,
+          0,
+          0,
+          15,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 3,
+      "capped": false,
+      "model_moves": 1,
+      "model_moves_nonlost": 0,
+      "optimal": 1,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          0,
+          0,
+          15,
+          0,
+          0,
+          15,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 42,
+      "capped": false,
+      "model_moves": 21,
+      "model_moves_nonlost": 2,
+      "optimal": 20,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          12,
+          0,
+          0,
+          0,
+          1,
+          3,
+          0,
+          10,
+          0,
+          0
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 29,
+      "capped": false,
+      "model_moves": 14,
+      "model_moves_nonlost": 0,
+      "optimal": 14,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 12,
+        "k2": 12,
+        "pits": [
+          12,
+          0,
+          0,
+          0,
+          1,
+          3,
+          0,
+          10,
+          0,
+          0
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 78,
+      "capped": false,
+      "model_moves": 39,
+      "model_moves_nonlost": 1,
+      "optimal": 38,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          2,
+          2,
+          2,
+          1,
+          8,
+          1,
+          4,
+          6,
+          3,
+          1
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 2,
+      "plies": 45,
+      "capped": false,
+      "model_moves": 22,
+      "model_moves_nonlost": 2,
+      "optimal": 21,
+      "suboptimal": 1,
+      "blunders": 1,
+      "first_blunder_model_move": 2,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 10,
+        "k2": 10,
+        "pits": [
+          2,
+          2,
+          2,
+          1,
+          8,
+          1,
+          4,
+          6,
+          3,
+          1
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 0,
+      "start_value_for_side_to_move": 0,
+      "start_prediction": 0,
+      "plies": 32,
+      "capped": false,
+      "model_moves": 16,
+      "model_moves_nonlost": 0,
+      "optimal": 16,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          2,
+          4,
+          3,
+          2,
+          6,
+          2,
+          5,
+          1,
+          1,
+          8
+        ]
+      },
+      "model_first": false,
+      "start_value_for_model": 0,
+      "plies": 37,
+      "capped": false,
+      "model_moves": 18,
+      "model_moves_nonlost": 0,
+      "optimal": 18,
+      "suboptimal": 0,
+      "blunders": 0,
+      "first_blunder_model_move": null,
+      "outcome_for_model": "loss"
+    },
+    {
+      "start": {
+        "k1": 8,
+        "k2": 8,
+        "pits": [
+          2,
+          4,
+          3,
+          2,
+          6,
+          2,
+          5,
+          1,
+          1,
+          8
+        ]
+      },
+      "model_first": true,
+      "start_value_for_model": 2,
+      "start_value_for_side_to_move": 2,
+      "start_prediction": 2,
+      "plies": 28,
+      "capped": false,
+      "model_moves": 14,
+      "model_moves_nonlost": 3,
+      "optimal": 12,
+      "suboptimal": 2,
+      "blunders": 2,
+      "first_blunder_model_move": 1,
+      "outcome_for_model": "loss"
+    }
+  ]
+}
