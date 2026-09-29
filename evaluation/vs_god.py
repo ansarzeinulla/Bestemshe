@@ -33,7 +33,15 @@ with the summary metrics:
 instead of a local copy: slow, but needs no download (smoke tests).
 
 Results are rewritten to --out after EVERY pair of games (oracle-first and
-model-first from the same position), so progress survives an interruption.
+model-first from the same position), via a temporary file and a rename, so an
+interrupted run cannot leave a truncated file. Re-running the same command
+CONTINUES that file from the next start position: the run's mover, depth,
+backup, ply cap, seed and checkpoint step must match, the totals are rebuilt
+from the per-game records, and the start sequence is replayed. Each position
+also has its own move seed, so a run done in several pieces gives the same
+games as the same run done in one sitting. --no-resume starts over, and
+--stop-after MINUTES stops cleanly at the next position boundary and exits 3.
+scripts/run_same_start.sh chains the paper's seven runs this way.
 
   python3 -m evaluation.vs_god --tb ~/Desktop/Bestemshe/layers/compressed \
       --model latest.pt --n 50
@@ -208,7 +216,7 @@ def play(tb, model, pos, god_first, stats, args, move_rng):
     """One game. Returns (outcome FOR THE MODEL, per-game record)."""
     god_turn = god_first
     rec = {"plies": 0, "capped": False, "model_moves": 0, "model_moves_nonlost": 0,
-           "blunders": 0, "first_blunder_model_move": None}
+           "optimal": 0, "suboptimal": 0, "blunders": 0, "first_blunder_model_move": None}
     outcome = None
     for _ in range(args.max_plies):
         if pos[1] >= 26 or sum(pos[2][:5]) == 0:       # the side to move has lost
@@ -235,8 +243,10 @@ def play(tb, model, pos, god_first, stats, args, move_rng):
                 rec["model_moves_nonlost"] += 1
             if (mask >> m) & 1:
                 stats["optimal_moves"] += 1
+                rec["optimal"] += 1
             else:
                 stats["suboptimal_moves"] += 1
+                rec["suboptimal"] += 1
                 if v_here >= 1:                        # threw away a win/draw
                     stats["blunders"] += 1
                     rec["blunders"] += 1
@@ -293,16 +303,24 @@ def main():
     ap.add_argument("--max-plies", type=int, default=400)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--out", default="vs_god_results.json")
+    ap.add_argument("--no-resume", dest="resume", action="store_false",
+                    help="start over instead of continuing an existing --out file")
+    ap.add_argument("--stop-after", type=float, default=0, metavar="MINUTES",
+                    help="stop cleanly after this many minutes and exit 3; "
+                         "re-run the same command to continue (0 = no limit)")
     a = ap.parse_args()
 
     tb = HttpTablebase() if a.tb == "http" else Tablebase(os.path.expanduser(a.tb), max_layers=10)
     model, step = load_model(a.model)
     rng = np.random.default_rng(a.seed)                # start positions only
-    move_rng = np.random.default_rng(a.seed + 1)       # random mover's choices
+    # seeded per start position, so resuming reproduces the same games
+    def rng_for(i):
+        return np.random.default_rng([a.seed + 1, i])
     label = a.mover if a.mover != "search" else f"search depth={a.depth} backup={a.backup}"
     print(f"device={DEV}  step={step}  positions={a.n}  mover={label}"
           f"  (2 games per position, {2 * a.n} games total)")
 
+    score = {"loss": 0, "draw": 1, "win": 2}
     stats = {"model_moves": 0, "model_moves_nonlost": 0, "optimal_moves": 0,
              "suboptimal_moves": 0, "blunders": 0}
     res = {k: {"win": 0, "draw": 0, "loss": 0}
@@ -317,7 +335,8 @@ def main():
             "step": step, "device": DEV, "mover": a.mover, "depth": a.depth,
             "backup": a.backup, "max_plies": a.max_plies, "seed": a.seed,
             "n_positions": a.n, "n_positions_done": n_done,
-            "n_games": 2 * a.n, "n_games_done": 2 * n_done,
+            "n_games": 2 * n_done, "n_games_done": 2 * n_done,
+            "n_games_planned": 2 * a.n,
             "start_wdl_accuracy": wdl_hit / max(1, n_done),
             "theoretical_start_values_for_side_to_move": dict(theo),
             "results_model_first": dict(res["model_first"]),
@@ -332,34 +351,83 @@ def main():
             "evaluated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
             "games": games,
         }
-        with open(a.out, "w") as f:
+        tmp = a.out + ".tmp"
+        with open(tmp, "w") as f:
             json.dump(out, f, indent=2, ensure_ascii=False)
+        os.replace(tmp, a.out)                      # atomic: Ctrl+C cannot truncate the file
         return out
 
-    pbar = tqdm(range(a.n), desc="positions", unit="pos")
+    # --- resume: continue an interrupted run from its own output file ---
+    start_at = 0
+    if a.resume and os.path.exists(a.out):
+        with open(a.out) as f:
+            prev = json.load(f)
+        if "games" not in prev:
+            sys.exit(f"{a.out} has no per-game records (written by an older version of this "
+                     "script), so it cannot be resumed. Use a different --out.")
+        same = {k: prev.get(k) for k in ("mover", "depth", "backup", "max_plies", "seed", "step")}
+        want = {"mover": a.mover, "depth": a.depth, "backup": a.backup,
+                "max_plies": a.max_plies, "seed": a.seed, "step": step}
+        if same != want:
+            sys.exit(f"{a.out} was written by a different configuration:\n  file: {same}\n  now : {want}\n"
+                     "Use a different --out, or delete that file to start over.")
+        games = prev.get("games", [])
+        if len(games) % 2:
+            games = games[:-1]                      # drop a half-finished pair
+        start_at = len(games) // 2
+        for g in games:                             # rebuild the running totals
+            stats["model_moves"] += g["model_moves"]
+            stats["model_moves_nonlost"] += g["model_moves_nonlost"]
+            stats["optimal_moves"] += g.get("optimal", 0)
+            stats["suboptimal_moves"] += g.get("suboptimal", 0)
+            stats["blunders"] += g["blunders"]
+            key = "model_first" if g["model_first"] else "god_first"
+            res[key][g["outcome_for_model"]] += 1
+            if score[g["outcome_for_model"]] < g["start_value_for_model"]:
+                underperf += 1
+            if g["model_first"]:
+                theo[["loss", "draw", "win"][g["start_value_for_side_to_move"]]] += 1
+                wdl_hit += (g["start_prediction"] == g["start_value_for_side_to_move"])
+        for _ in range(start_at):                   # keep the start sequence identical
+            sample_symmetric(rng)
+        if start_at >= a.n:
+            print(f"{a.out} already holds {start_at} positions (--n {a.n}); nothing to do.")
+            return
+        print(f"resuming from {a.out}: {start_at} of {a.n} positions done, "
+              f"{len(games)} games kept")
+
+    t_start = time.time()
+    stopped_early = False
+    pbar = tqdm(range(start_at, a.n), desc="positions", unit="pos", initial=start_at, total=a.n)
     for i in pbar:
         pos = sample_symmetric(rng)
         v0 = tb.value(pos)                            # ground truth for the side to move
         theo[["loss", "draw", "win"][v0]] += 1
-        wdl_hit += (predict(model, pos)[0] == v0)
+        start_pred = int(predict(model, pos)[0])
+        wdl_hit += (start_pred == v0)
         start = {"k1": pos[0], "k2": pos[1], "pits": list(pos[2])}
 
         # game 1: the oracle moves first -> the model plays second; its value is 2 - v0
-        r, rec = play(tb, model, (pos[0], pos[1], list(pos[2])), True, stats, a, move_rng)
+        r, rec = play(tb, model, (pos[0], pos[1], list(pos[2])), True, stats, a, rng_for(2 * i))
         res["god_first"][r] += 1
         games.append({"start": start, "model_first": False, "start_value_for_model": 2 - v0, **rec})
         if {"win": 2, "draw": 1, "loss": 0}[r] < 2 - v0:
             underperf += 1
         # game 2: the model moves first; its value is v0
-        r, rec = play(tb, model, (pos[0], pos[1], list(pos[2])), False, stats, a, move_rng)
+        r, rec = play(tb, model, (pos[0], pos[1], list(pos[2])), False, stats, a, rng_for(2 * i + 1))
         res["model_first"][r] += 1
-        games.append({"start": start, "model_first": True, "start_value_for_model": v0, **rec})
+        games.append({"start": start, "model_first": True, "start_value_for_model": v0,
+                      "start_value_for_side_to_move": v0, "start_prediction": start_pred, **rec})
         if {"win": 2, "draw": 1, "loss": 0}[r] < v0:
             underperf += 1
 
         out = snapshot(i + 1)                          # save after each pair of games
         pbar.set_postfix(opt_rate=f"{out['optimal_move_rate']:.4f}",
                          blunders=stats["blunders"], degraded=out["degraded_games"])
+        if a.stop_after and (time.time() - t_start) / 60 >= a.stop_after and i + 1 < a.n:
+            stopped_early = True
+            break
+    pbar.close()
 
     def pct(x):
         return "n/a" if x is None else f"{100 * x:.1f}%"
@@ -381,6 +449,11 @@ def main():
           f" vs p^L {pct(out['predicted_blunder_free_rate_p_pow_L'])}")
     print("=" * 70)
     print(f"results saved: {a.out}")
+    if stopped_early:
+        done = int(out["n_positions_done"])
+        print(f"\nSTOPPED after {(time.time() - t_start) / 60:.1f} min at {done} of {a.n} "
+              f"positions. Re-run the same command to continue from position {done}.")
+        sys.exit(3)
 
 
 if __name__ == "__main__":
