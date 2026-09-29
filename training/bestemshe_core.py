@@ -117,9 +117,17 @@ def _parse_container(data, expected):
 
 class Tablebase:
     """Access to the win/draw bitsets. Keeps up to max_layers decompressed layers
-    in RAM (the largest, (0,0)_win, is ~1.6 GB expanded)."""
+    in RAM (the largest, (0,0)_win, is ~1.6 GB expanded).
+
+    BESTEMSHE_MAX_LAYERS overrides max_layers for every caller. Lower it on a
+    machine with little RAM -- 8 low-kazan layers can hold ~10 GB at once, and
+    swapping costs far more than re-decompressing a layer. Raise it if the
+    machine has the memory and the access pattern jumps between layers."""
 
     def __init__(self, root, max_layers=8):
+        env = os.environ.get("BESTEMSHE_MAX_LAYERS")
+        if env:
+            max_layers = max(1, int(env))
         self.root, self.max_layers = root, max_layers
         self._cache = OrderedDict()
 
